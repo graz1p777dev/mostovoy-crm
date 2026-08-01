@@ -7,7 +7,6 @@ CRM-система для beauty/consulting бизнеса. Управление
 **Supabase Project Ref:** `rjzmxgiqleftwcsxgfte`
 **URL:** `https://rjzmxgiqleftwcsxgfte.supabase.co`
 
-> ⚠️ Этот ref может быть устаревшим — прод-деплой (Railway, сервис `CRM`) на момент 2026-07-09 использовал другой Supabase-проект (`hxjkswdmirfxnvdjmgjw`). См. [INFRASTRUCTURE.md](INFRASTRUCTURE.md) перед тем как доверять этому файлу по вопросам деплоя/инфраструктуры — там актуальная, вживую проверенная карта.
 
 ---
 

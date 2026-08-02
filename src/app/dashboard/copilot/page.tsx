@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Sparkles, Send, Check, Pencil, X } from 'lucide-react'
 import { botJson } from '@/lib/bot-api'
+import { askCrmCopilot } from '@/actions/crm-copilot'
 
 type ChatButton = { label: string; href: string }
 type ChatMessage = {
@@ -150,16 +151,16 @@ function HelpPageInner() {
     setMessages(prev => [...prev, optimisticUser])
 
     try {
-      const res = await botJson<{ conversation_id: number; message: ChatMessage; pending_action: PendingAction | null }>(
-        '/copilot/chat', 'POST',
-        // Keep sending page_context for every message in this conversation
-        // (not just the first) — otherwise a follow-up like "как добавить
-        // сотрудника" loses the page the user actually asked from.
-        { message: trimmed, conversation_id: conversationId, page_context: pageContextRef.current },
-      )
-      setConversationId(res.conversation_id)
-      setMessages(prev => [...prev, res.message])
-      setPendingAction(res.pending_action)
+      const res = await askCrmCopilot(trimmed)
+      if (!res.success) throw new Error(res.error)
+      setMessages(prev => [...prev, {
+        id: `ai-${Date.now()}`,
+        role: 'assistant',
+        buttons: [],
+        created_at: new Date().toISOString(),
+        content: res.reply,
+      }])
+      setPendingAction(null)
     } catch {
       setMessages(prev => [...prev, {
         id: `err-${Date.now()}`, role: 'assistant', buttons: [], created_at: null,

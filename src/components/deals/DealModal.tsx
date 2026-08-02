@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
-import { X, Trash2, MessagesSquare } from 'lucide-react'
+import { X, Trash2, Eraser, MessagesSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
@@ -20,6 +20,7 @@ import {
   createDeal,
   updateDeal,
   deleteDeal,
+  clearDealConversation,
   getDealConversation,
 } from '@/actions/deals'
 import type {
@@ -141,6 +142,20 @@ export default function DealModal({
         toast.success('Сделка удалена')
         onSaved()
         onClose()
+      } else {
+        toast.error(res.error)
+      }
+    })
+  }
+
+  const handleClearHistory = () => {
+    if (!deal || !window.confirm('Очистить переписку этого лида? Сделка и карточка клиента останутся.')) return
+    startTransition(async () => {
+      const res = await clearDealConversation(deal.id)
+      if (res.success) {
+        setMessages([])
+        setChatNote('История очищена')
+        toast.success('История лида очищена')
       } else {
         toast.error(res.error)
       }
@@ -298,6 +313,16 @@ export default function DealModal({
               <div className="flex items-center gap-2">
                 <MessagesSquare size={14} className="text-gray-400" />
                 <Label>Переписка</Label>
+                {me.role === 'owner' && messages && messages.length > 0 && (
+                  <button
+                    onClick={handleClearHistory}
+                    disabled={isPending}
+                    className="ml-auto inline-flex items-center gap-1 text-[11px] text-gray-400 transition-colors hover:text-[#c01818] disabled:opacity-50"
+                  >
+                    <Eraser size={12} />
+                    Очистить историю
+                  </button>
+                )}
               </div>
               {messages === null ? (
                 <p className="text-[12px] text-gray-400">Загружаем диалог…</p>

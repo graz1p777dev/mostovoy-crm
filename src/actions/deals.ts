@@ -341,3 +341,33 @@ export async function getDealConversation(dealId: string): Promise<DealConversat
   }))
   return { messages, note: messages.length ? null : 'Сообщений пока нет' }
 }
+
+/** Очищает историю внешнего диалога, но оставляет лид и его сделку в CRM. */
+export async function clearDealConversation(dealId: string): Promise<DealActionResult> {
+  const me = await getViewer()
+  if (!me) return { success: false, error: 'Нет авторизации' }
+  if (me.role !== 'owner') return { success: false, error: 'Недостаточно прав' }
+  if (!isMostovoyConfigured()) return { success: false, error: 'Интеграция с витриной не настроена' }
+
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('deals')
+    .select('external_key')
+    .eq('id', dealId)
+    .is('deleted_at', null)
+    .maybeSingle()
+  const deal = data as { external_key: string | null } | null
+  if (!deal?.external_key || deal.external_key.startsWith('wazzup:')) {
+    return { success: false, error: 'Для этого лида нет истории витрины' }
+  }
+
+  const list = await mostovoyFetch<{ conversations: ShopConversation[] }>('/crm/conversations')
+  if (!list.ok) return { success: false, error: list.error }
+  const conversation = (list.data.conversations ?? []).find(item => item.externalKey === deal.external_key)
+  if (!conversation) return { success: false, error: 'Диалог на витрине не найден' }
+
+  const result = await mostovoyFetch(`/crm/conversations/${conversation.id}/clear-history`, { method: 'POST' })
+  if (!result.ok) return { success: false, error: result.error }
+  revalidatePath('/dashboard/deals')
+  return { success: true }
+}

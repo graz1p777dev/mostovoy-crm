@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { botGet, botJson } from '@/lib/bot-api'
+import { getShopBotSettings } from '@/actions/mostovoy-bot-settings'
 import { MetricIconBadge } from '@/components/common/MetricIconBadge'
 import GlowOrb from '@/components/common/GlowOrb'
 
@@ -44,14 +45,16 @@ export default function BotReportsPage() {
   const [newReason, setNewReason] = useState('')
   const [newWord, setNewWord] = useState('')
   const [loading, setLoading] = useState(true)
+  const [approvalEnabled, setApprovalEnabled] = useState(true)
 
   const load = async () => {
-    const [d, f, m, bl, sw] = await Promise.allSettled([
+    const [d, f, m, bl, sw, settings] = await Promise.allSettled([
       botGet<DayRow[]>('/admin/reports/daily?days=365'),
       botGet<FunnelRow[]>('/admin/analytics/funnel'),
       botGet<ManagerRow[]>('/admin/analytics/managers'),
       botGet<BlacklistEntry[]>('/admin/blacklist'),
       botGet<{ words: string[] }>('/admin/stop-words'),
+      getShopBotSettings(),
     ])
     if (d.status === 'fulfilled') {
       setDaily(d.value)
@@ -61,6 +64,7 @@ export default function BotReportsPage() {
     if (m.status === 'fulfilled') setManagers(m.value)
     if (bl.status === 'fulfilled') setBlacklist(bl.value)
     if (sw.status === 'fulfilled') setStopWords(sw.value.words)
+    if (settings.status === 'fulfilled' && settings.value.ok) setApprovalEnabled(settings.value.data.approvalEnabled)
     setLoading(false)
   }
 
@@ -145,7 +149,7 @@ export default function BotReportsPage() {
           </div>
         </Card>
 
-        <Card title="Активность менеджеров" icon="people">
+        {approvalEnabled && <Card title="Активность менеджеров" icon="people">
           <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
             <thead>
               <tr className="text-xs uppercase" style={{ color: '#6b6063' }}>
@@ -169,7 +173,7 @@ export default function BotReportsPage() {
               {managers.length === 0 && <tr><td colSpan={5} className="py-4 text-center" style={{ color: '#6b6063' }}>Нет данных</td></tr>}
             </tbody>
           </table>
-        </Card>
+        </Card>}
       </div>
 
       <Card title="Стоп-слова" icon="ban">

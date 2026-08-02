@@ -156,8 +156,9 @@ export function describe(log: BotActionLog): string {
       return d.was_edited ? 'Сохранил правку менеджера в обучающие примеры' : 'Сохранил ответ в обучающие примеры'
 
     default:
-      // Новое действие бота не должно ломать ленту — показываем сырое имя.
-      return log.action
+      // У магазина события приходят из bot_events: человеческий текст уже
+      // формируется бэкендом, поэтому не заменяем его техническим именем.
+      return typeof d.message === 'string' && d.message.trim() ? d.message : log.action
   }
 }
 

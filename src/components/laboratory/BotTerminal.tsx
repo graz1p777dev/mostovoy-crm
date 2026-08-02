@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Terminal, Pause, Play, Eraser, CircleDot } from 'lucide-react'
-import { botGet } from '@/lib/bot-api'
 import { describe, statusColor, timeOf } from '@/lib/bot-log'
-import type { BotActionLog, BotActionLogDetail, BotActionLogPage } from '@/types'
+import type { BotActionLog, BotActionLogPage } from '@/types'
 
 // Бот пишет каждый свой шаг в action_logs. Терминал — окно в эту таблицу:
 // первый запрос забирает хвост, дальше только новое по курсору after_id.
@@ -28,7 +27,6 @@ export default function BotTerminal() {
   const [paused, setPaused] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [openId, setOpenId] = useState<number | null>(null)
-  const [detail, setDetail] = useState<BotActionLogDetail | null>(null)
 
   const cursor = useRef<number | null>(null)
   const boxRef = useRef<HTMLDivElement>(null)
@@ -57,7 +55,9 @@ export default function BotTerminal() {
       if (filter) params.set('action', filter)
 
       try {
-        const page = await botGet<BotActionLogPage>(`/admin/action-logs?${params.toString()}`)
+        const response = await fetch(`/api/mostovoy/bot-events?${params.toString()}`, { cache: 'no-store' })
+        if (!response.ok) throw new Error('Mostovoy bot events unavailable')
+        const page = await response.json() as BotActionLogPage
         if (cancelled) return
         setError(null)
         if (page.items.length === 0) return
@@ -89,16 +89,9 @@ export default function BotTerminal() {
   async function toggleRow(id: number) {
     if (openId === id) {
       setOpenId(null)
-      setDetail(null)
       return
     }
     setOpenId(id)
-    setDetail(null)
-    try {
-      setDetail(await botGet<BotActionLogDetail>(`/admin/action-logs/${id}`))
-    } catch {
-      setDetail(null)
-    }
   }
 
   return (
@@ -194,7 +187,7 @@ export default function BotTerminal() {
                 className="my-1 ml-[86px] p-2.5 rounded-lg overflow-x-auto text-[10.5px]"
                 style={{ backgroundColor: '#f1ebeb', color: '#574d4f' }}
               >
-                {detail ? JSON.stringify(detail, null, 2) : 'Загружаю…'}
+                {JSON.stringify(rows.find((row) => row.id === openId)?.detail ?? {}, null, 2)}
               </pre>
             )}
           </div>

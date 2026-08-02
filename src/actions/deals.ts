@@ -357,8 +357,15 @@ export async function clearDealConversation(dealId: string): Promise<DealActionR
     .is('deleted_at', null)
     .maybeSingle()
   const deal = data as { external_key: string | null } | null
-  if (!deal?.external_key || deal.external_key.startsWith('wazzup:')) {
-    return { success: false, error: 'Для этого лида нет истории витрины' }
+  if (!deal?.external_key) return { success: false, error: 'Для этого лида нет переписки' }
+
+  if (deal.external_key.startsWith('wazzup:')) {
+    const phone = deal.external_key.slice('wazzup:'.length)
+    const admin = createAdminClient()
+    const { error } = await admin.from('whatsapp_messages').delete().eq('phone', phone)
+    if (error) return { success: false, error: error.message }
+    revalidatePath('/dashboard/deals')
+    return { success: true }
   }
 
   const list = await mostovoyFetch<{ conversations: ShopConversation[] }>('/crm/conversations')

@@ -28,6 +28,7 @@ import {
 import type {
   Deal,
   DealCurrency,
+  DealOrderType,
   DealEmployee,
   DealMessage,
   DealStage,
@@ -51,6 +52,7 @@ interface FormState {
   stage_id: string
   amount: string
   currency: DealCurrency
+  order_type: DealOrderType
   customer_name: string
   customer_phone: string
   customer_username: string
@@ -79,6 +81,7 @@ export default function DealModal({
     stage_id: deal?.stage_id ?? defaultStageId,
     amount: deal?.amount !== null && deal?.amount !== undefined ? String(deal.amount) : '',
     currency: deal?.currency ?? 'KGS',
+    order_type: deal?.order_type ?? 'standard',
     customer_name: deal?.customer_name ?? '',
     customer_phone: deal?.customer_phone ?? '',
     customer_username: deal?.customer_username ?? '',
@@ -120,6 +123,7 @@ export default function DealModal({
       stage_id: form.stage_id,
       amount,
       currency: form.currency,
+      order_type: form.order_type,
       customer_name: form.customer_name || null,
       customer_phone: form.customer_phone || null,
       customer_username: form.customer_username || null,
@@ -308,6 +312,18 @@ export default function DealModal({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Тип заказа</Label>
+            <Select value={form.order_type} onValueChange={(v) => set('order_type', v as DealOrderType)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="standard">Обычная покупка</SelectItem>
+                <SelectItem value="installment">Рассрочка</SelectItem>
+                <SelectItem value="trade_in">Trade-in</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-3 gap-3">

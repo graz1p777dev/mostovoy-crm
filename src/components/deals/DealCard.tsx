@@ -54,6 +54,7 @@ export default function DealCard({
     ? employees.get(deal.responsible_employee_id)
     : undefined
   const customer = deal.customer_name || deal.customer_username || deal.customer_phone
+  const orderType = deal.order_type === 'installment' ? 'Рассрочка' : deal.order_type === 'trade_in' ? 'Trade-in' : null
 
   return (
     <div
@@ -95,6 +96,12 @@ export default function DealCard({
           <SourceIcon size={11} />
           {source.label}
         </span>
+
+        {orderType && (
+          <span className="inline-flex items-center rounded-md bg-[#fff0f1] px-1.5 py-0.5 text-[10px] font-semibold text-[#e51c23]">
+            {orderType}
+          </span>
+        )}
 
         {deal.amount !== null && (
           <span className="inline-flex items-center rounded-md bg-[#fdecec] px-1.5 py-0.5 text-[10px] font-semibold text-[#c01818]">

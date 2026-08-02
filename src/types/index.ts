@@ -526,6 +526,7 @@ export type DealStageKind = 'normal' | 'won' | 'lost'
 export type DealSource = 'telegram' | 'whatsapp' | 'instagram' | 'manual' | 'site'
 export type DealStatus = 'open' | 'won' | 'lost'
 export type DealCurrency = 'KGS' | 'USD' | 'RUB'
+export type DealOrderType = 'standard' | 'installment' | 'trade_in'
 
 export interface DealStage {
   id: string
@@ -542,6 +543,7 @@ export interface Deal {
   stage_id: string
   amount: number | null
   currency: DealCurrency
+  order_type: DealOrderType
   customer_name: string | null
   customer_phone: string | null
   customer_username: string | null

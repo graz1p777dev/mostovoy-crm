@@ -282,6 +282,7 @@ export interface DealConversation {
   messages: DealMessage[]
   /** Почему переписки нет — показываем вместо пустоты. */
   note: string | null
+  aiEnabled: boolean | null
 }
 
 /**
@@ -290,7 +291,7 @@ export interface DealConversation {
  */
 export async function getDealConversation(dealId: string): Promise<DealConversation> {
   const me = await getViewer()
-  if (!me) return { messages: [], note: 'Нет авторизации' }
+  if (!me) return { messages: [], note: 'Нет авторизации', aiEnabled: null }
 
   const supabase = await createClient()
   const { data } = await supabase
@@ -299,7 +300,7 @@ export async function getDealConversation(dealId: string): Promise<DealConversat
     .eq('id', dealId)
     .maybeSingle()
   const deal = data as { external_key: string | null; customer_phone: string | null } | null
-  if (!deal) return { messages: [], note: 'Сделка недоступна' }
+  if (!deal) return { messages: [], note: 'Сделка недоступна', aiEnabled: null }
 
   if (deal.external_key?.startsWith('wazzup:')) {
     const phone = deal.external_key.slice('wazzup:'.length)
@@ -310,28 +311,28 @@ export async function getDealConversation(dealId: string): Promise<DealConversat
       .order('created_at')
       .limit(200)
     const messages = (rows ?? []) as DealMessage[]
-    return { messages, note: messages.length ? null : 'Сообщений пока нет' }
+    return { messages, note: messages.length ? null : 'Сообщений пока нет', aiEnabled: null }
   }
 
   if (!deal.external_key) {
-    return { messages: [], note: 'Сделка заведена вручную — переписки нет' }
+    return { messages: [], note: 'Сделка заведена вручную — переписки нет', aiEnabled: null }
   }
   if (!isMostovoyConfigured()) {
-    return { messages: [], note: 'Интеграция с витриной не настроена' }
+    return { messages: [], note: 'Интеграция с витриной не настроена', aiEnabled: null }
   }
 
   // У витрины диалог адресуется числовым id, а в сделке лежит external_key —
   // сначала находим id в списке диалогов.
   const list = await mostovoyFetch<{ conversations: ShopConversation[] }>('/crm/conversations')
-  if (!list.ok) return { messages: [], note: list.error }
+  if (!list.ok) return { messages: [], note: list.error, aiEnabled: null }
 
   const found = (list.data.conversations ?? []).find(c => c.externalKey === deal.external_key)
-  if (!found) return { messages: [], note: 'Диалог на витрине не найден' }
+  if (!found) return { messages: [], note: 'Диалог на витрине не найден', aiEnabled: null }
 
   const detail = await mostovoyFetch<{ messages: ShopMessage[] }>(
     `/crm/conversations/${found.id}`
   )
-  if (!detail.ok) return { messages: [], note: detail.error }
+  if (!detail.ok) return { messages: [], note: detail.error, aiEnabled: null }
 
   const messages: DealMessage[] = (detail.data.messages ?? []).map(m => ({
     id: String(m.id),
@@ -339,7 +340,57 @@ export async function getDealConversation(dealId: string): Promise<DealConversat
     text: m.text,
     created_at: m.createdAt,
   }))
-  return { messages, note: messages.length ? null : 'Сообщений пока нет' }
+  return { messages, note: messages.length ? null : 'Сообщений пока нет', aiEnabled: Boolean((detail.data as { conversation?: { aiEnabled?: boolean } }).conversation?.aiEnabled) }
+}
+
+async function getShopConversationForDeal(dealId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('deals')
+    .select('external_key')
+    .eq('id', dealId)
+    .is('deleted_at', null)
+    .maybeSingle()
+  const deal = data as { external_key: string | null } | null
+  if (!deal?.external_key) return { error: 'У лида нет подключённого канала связи' } as const
+  if (!isMostovoyConfigured()) return { error: 'Интеграция с витриной не настроена' } as const
+
+  const list = await mostovoyFetch<{ conversations: ShopConversation[] }>('/crm/conversations')
+  if (!list.ok) return { error: list.error } as const
+  const conversation = (list.data.conversations ?? []).find((item) => item.externalKey === deal.external_key)
+  if (!conversation) return { error: 'Диалог на витрине не найден' } as const
+  return { conversation } as const
+}
+
+/** Ручной ответ уходит в тот же Telegram / WhatsApp / Instagram-диалог, что и бот. */
+export async function sendDealMessage(dealId: string, text: string): Promise<DealActionResult> {
+  const me = await getViewer()
+  if (!me) return { success: false, error: 'Нет авторизации' }
+  const value = text.trim()
+  if (!value) return { success: false, error: 'Введите сообщение' }
+
+  const found = await getShopConversationForDeal(dealId)
+  if ('error' in found) return { success: false, error: found.error ?? 'Диалог на витрине не найден' }
+  const result = await mostovoyFetch(`/crm/conversations/${found.conversation.id}/messages`, {
+    method: 'POST', body: { text: value },
+  })
+  if (!result.ok) return { success: false, error: result.error }
+  revalidatePath('/dashboard/deals')
+  return { success: true }
+}
+
+/** Менеджер берёт диалог на себя или возвращает его ИИ. */
+export async function setDealAiControl(dealId: string, aiEnabled: boolean): Promise<DealActionResult> {
+  const me = await getViewer()
+  if (!me) return { success: false, error: 'Нет авторизации' }
+  const found = await getShopConversationForDeal(dealId)
+  if ('error' in found) return { success: false, error: found.error ?? 'Диалог на витрине не найден' }
+  const result = await mostovoyFetch(`/crm/conversations/${found.conversation.id}`, {
+    method: 'PATCH', body: { aiEnabled },
+  })
+  if (!result.ok) return { success: false, error: result.error }
+  revalidatePath('/dashboard/deals')
+  return { success: true }
 }
 
 /** Очищает историю внешнего диалога, но оставляет лид и его сделку в CRM. */

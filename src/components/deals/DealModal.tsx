@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
-import { X, Trash2, Eraser, MessagesSquare } from 'lucide-react'
+import { X, Trash2, Eraser, MessagesSquare, Send, Bot, UserRound } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
@@ -22,6 +22,8 @@ import {
   deleteDeal,
   clearDealConversation,
   getDealConversation,
+  sendDealMessage,
+  setDealAiControl,
 } from '@/actions/deals'
 import type {
   Deal,
@@ -69,6 +71,8 @@ export default function DealModal({
   const [isPending, startTransition] = useTransition()
   const [messages, setMessages] = useState<DealMessage[] | null>(null)
   const [chatNote, setChatNote] = useState<string | null>(null)
+  const [aiEnabled, setAiEnabled] = useState<boolean | null>(null)
+  const [reply, setReply] = useState('')
 
   const [form, setForm] = useState<FormState>(() => ({
     title: deal?.title ?? '',
@@ -93,6 +97,7 @@ export default function DealModal({
       if (!alive) return
       setMessages(res.messages)
       setChatNote(res.note)
+      setAiEnabled(res.aiEnabled)
     })
     return () => {
       alive = false
@@ -162,12 +167,47 @@ export default function DealModal({
     })
   }
 
+  const reloadConversation = async () => {
+    if (!deal) return
+    const res = await getDealConversation(deal.id)
+    setMessages(res.messages)
+    setChatNote(res.note)
+    setAiEnabled(res.aiEnabled)
+  }
+
+  const handleSend = () => {
+    if (!deal || !reply.trim()) return
+    startTransition(async () => {
+      const res = await sendDealMessage(deal.id, reply)
+      if (!res.success) {
+        toast.error(res.error)
+        return
+      }
+      setReply('')
+      await reloadConversation()
+    })
+  }
+
+  const handleAiControl = () => {
+    if (!deal || aiEnabled === null) return
+    const next = !aiEnabled
+    startTransition(async () => {
+      const res = await setDealAiControl(deal.id, next)
+      if (!res.success) {
+        toast.error(res.error)
+        return
+      }
+      setAiEnabled(next)
+      toast.success(next ? 'Управление возвращено ИИ' : 'Диалог передан менеджеру')
+    })
+  }
+
   const source = deal ? DEAL_SOURCE[deal.source] : DEAL_SOURCE.manual
   const SourceIcon = source.icon
 
   return (
     <Modal onClose={onClose}>
-      <div className="flex max-h-[88vh] w-[min(620px,94vw)] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div className="ml-auto flex h-[100dvh] w-[min(720px,100vw)] flex-col overflow-hidden bg-white shadow-2xl">
         {/* Шапка */}
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
           <div className="flex items-center gap-2.5">
@@ -307,12 +347,21 @@ export default function DealModal({
             />
           </div>
 
-          {/* Переписка — только чтение, вести её продолжают там, где начали */}
+          {/* Переписка и управление каналом */}
           {!isNew && (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <MessagesSquare size={14} className="text-gray-400" />
                 <Label>Переписка</Label>
+                {aiEnabled !== null && (
+                  <button
+                    onClick={handleAiControl}
+                    disabled={isPending}
+                    className={cn('ml-auto inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-colors disabled:opacity-50', aiEnabled ? 'bg-[#fdecec] text-[#c01818]' : 'bg-gray-900 text-white')}
+                  >
+                    {aiEnabled ? <><Bot size={13} /> ИИ отвечает</> : <><UserRound size={13} /> Менеджер отвечает</>}
+                  </button>
+                )}
                 {me.role === 'owner' && messages && messages.length > 0 && (
                   <button
                     onClick={handleClearHistory}
@@ -331,7 +380,7 @@ export default function DealModal({
                   {chatNote ?? 'Переписки нет'}
                 </div>
               ) : (
-                <div className="max-h-56 space-y-1.5 overflow-y-auto rounded-xl bg-gray-50/70 p-3 scroll-hidden">
+                <div className="max-h-72 space-y-1.5 overflow-y-auto rounded-xl bg-gray-50/70 p-3 scroll-hidden">
                   {messages.map((m) => (
                     <div
                       key={m.id}
@@ -347,6 +396,21 @@ export default function DealModal({
                   ))}
                 </div>
               )}
+              <div className="flex gap-2 pt-1">
+                <Textarea
+                  value={reply}
+                  onChange={(e) => setReply(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
+                  rows={2}
+                  placeholder="Написать клиенту…"
+                  className="min-h-0 resize-none"
+                  disabled={isPending || !deal?.external_key}
+                />
+                <Button onClick={handleSend} disabled={isPending || !reply.trim() || !deal?.external_key} className="h-auto px-3">
+                  <Send size={16} />
+                </Button>
+              </div>
+              {aiEnabled === null && <p className="text-[11px] text-gray-400">Для этого лида нет диалога, которым можно управлять через бот.</p>}
             </div>
           )}
         </div>

@@ -28,7 +28,7 @@ export default async function BotAnalyticsPage() {
 
   return (
     <main className="p-4 md:p-8 space-y-5">
-      <section className="rounded-3xl bg-gradient-to-br from-[#171113] to-[#3a1014] p-6 text-white">
+      <section className="rounded-3xl bg-gradient-to-br from-[#ff2638] via-[#ed151f] to-[#c90816] p-6 text-white shadow-[0_18px_44px_rgba(225,29,29,0.24)]">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-red-200">ИИ-менеджер магазина</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
           <div>

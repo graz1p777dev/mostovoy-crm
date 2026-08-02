@@ -210,8 +210,8 @@ export default function DealModal({
   const SourceIcon = source.icon
 
   return (
-    <Modal onClose={onClose}>
-      <div className="ml-auto flex h-[100dvh] w-[min(720px,100vw)] flex-col overflow-hidden bg-white shadow-2xl">
+    <Modal onClose={onClose} variant="right">
+      <div className="flex h-[100dvh] w-[min(720px,100vw)] flex-col overflow-hidden bg-white shadow-2xl animate-in slide-in-from-right duration-200">
         {/* Шапка */}
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
           <div className="flex items-center gap-2.5">

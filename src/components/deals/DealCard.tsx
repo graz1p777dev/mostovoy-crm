@@ -10,6 +10,7 @@ interface Props {
   deal: Deal
   employees: Map<string, DealEmployee>
   stageColor: string
+  selected: boolean
   dragging: boolean
   onDragStart: () => void
   onDragEnd: () => void
@@ -43,6 +44,7 @@ export default function DealCard({
   deal,
   employees,
   stageColor,
+  selected,
   dragging,
   onDragStart,
   onDragEnd,
@@ -69,9 +71,10 @@ export default function DealCard({
       className={cn(
         'group relative cursor-pointer select-none rounded-xl border border-gray-100 bg-white p-3 shadow-sm',
         'transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md hover:border-gray-200',
-        dragging && 'opacity-40 rotate-[1.5deg]'
+        dragging && 'opacity-40 rotate-[1.5deg]',
+        selected && 'border-[#e51c23] bg-[#fff5f5] ring-2 ring-[#e51c23]/20'
       )}
-      style={{ borderLeft: `3px solid ${stageColor}` }}
+      style={{ borderLeft: `3px solid ${selected ? '#e51c23' : stageColor}` }}
     >
       <div
         className="absolute right-1.5 top-2.5 text-gray-300 opacity-0 transition-opacity group-hover:opacity-100"

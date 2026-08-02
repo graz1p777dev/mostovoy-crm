@@ -280,6 +280,7 @@ export default function DealsBoard({ initialStages, initialDeals, employees, me 
                     deal={deal}
                     employees={employeeMap}
                     stageColor={stage.color}
+                    selected={modal.open && modal.deal?.id === deal.id}
                     dragging={dragId === deal.id}
                     onDragStart={() => beginDrag(deal.id)}
                     onDragEnd={endDrag}

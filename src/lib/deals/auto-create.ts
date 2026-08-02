@@ -47,6 +47,13 @@ export interface UpsertDealResult {
   error?: string
 }
 
+export interface AdvanceDealResult {
+  moved: boolean
+  id: string | null
+  stageName?: string
+  error?: string
+}
+
 /**
  * Создаёт сделку в этапе по умолчанию («Неразобранное»), если её ещё нет.
  * Существующую не трогает — менеджер мог уже изменить заголовок и сумму.
@@ -94,4 +101,56 @@ export async function upsertDealFromInbound(input: InboundDeal): Promise<UpsertD
 
   const row = (inserted ?? [])[0] as { id: string } | undefined
   return { created: Boolean(row), id: row?.id ?? null }
+}
+
+/**
+ * После первого содержательного ответа бота переводит новую сделку из
+ * этапа по умолчанию в первый рабочий этап воронки. Сделку, которую уже
+ * передвинул менеджер или другой процесс, не трогает.
+ */
+export async function advanceDealToPrimaryContact(externalKey: string): Promise<AdvanceDealResult> {
+  const key = externalKey.trim()
+  if (!key) return { moved: false, id: null, error: 'external_key пустой' }
+
+  const supabase = createAdminClient()
+  const [{ data: deal, error: dealError }, { data: defaultStage, error: defaultStageError }] = await Promise.all([
+    supabase.from('deals').select('id, stage_id').eq('external_key', key).maybeSingle(),
+    supabase.from('deal_stages').select('id').eq('is_default', true).maybeSingle(),
+  ])
+
+  if (dealError) return { moved: false, id: null, error: dealError.message }
+  if (!deal) return { moved: false, id: null, error: 'Сделка не найдена' }
+  const row = deal as { id: string; stage_id: string }
+  if (defaultStageError || !defaultStage) {
+    return { moved: false, id: row.id, error: 'Не найден этап по умолчанию' }
+  }
+  const defaultStageId = (defaultStage as { id: string }).id
+  if (row.stage_id !== defaultStageId) return { moved: false, id: row.id }
+
+  const { data: nextStage, error: nextStageError } = await supabase
+    .from('deal_stages')
+    .select('id, name')
+    .eq('kind', 'normal')
+    .eq('is_default', false)
+    .order('sort_order', { ascending: true })
+    .limit(1)
+    .maybeSingle()
+  if (nextStageError || !nextStage) {
+    return { moved: false, id: row.id, error: 'Не найден этап первичного контакта' }
+  }
+
+  const target = nextStage as { id: string; name: string }
+  const { data: updated, error: updateError } = await supabase
+    .from('deals')
+    .update({ stage_id: target.id })
+    .eq('id', row.id)
+    .eq('stage_id', defaultStageId)
+    .select('id')
+  if (updateError) return { moved: false, id: row.id, error: updateError.message }
+
+  return {
+    moved: Boolean(updated?.length),
+    id: row.id,
+    stageName: target.name,
+  }
 }

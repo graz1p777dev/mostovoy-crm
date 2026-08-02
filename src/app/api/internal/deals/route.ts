@@ -8,7 +8,7 @@
 // ответит клиенту, а сделка подтянется кнопкой «Синхронизировать».
 
 import { NextResponse } from 'next/server'
-import { upsertDealFromInbound } from '@/lib/deals/auto-create'
+import { advanceDealToPrimaryContact, upsertDealFromInbound } from '@/lib/deals/auto-create'
 import type { DealSource } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -61,4 +61,35 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ ok: true, created: result.created, id: result.id })
+}
+
+export async function PATCH(request: Request) {
+  const expectedToken = process.env.INTERNAL_NOTIFY_TOKEN
+  if (!expectedToken) {
+    return NextResponse.json({ error: 'Not configured' }, { status: 503 })
+  }
+  if (request.headers.get('x-internal-token') !== expectedToken) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  let payload: { externalKey?: string; action?: string }
+  try {
+    payload = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
+  if (!payload.externalKey?.trim()) {
+    return NextResponse.json({ error: 'externalKey is required' }, { status: 400 })
+  }
+  if (payload.action !== 'primary_contact') {
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+  }
+
+  const result = await advanceDealToPrimaryContact(payload.externalKey)
+  if (result.error) {
+    const status = result.error === 'Сделка не найдена' ? 404 : 500
+    console.error('internal/deals advance failed', result.error)
+    return NextResponse.json({ error: result.error }, { status })
+  }
+  return NextResponse.json({ ok: true, ...result })
 }

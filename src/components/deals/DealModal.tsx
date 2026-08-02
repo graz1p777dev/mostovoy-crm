@@ -208,6 +208,7 @@ export default function DealModal({
 
   const source = deal ? DEAL_SOURCE[deal.source] : DEAL_SOURCE.manual
   const SourceIcon = source.icon
+  const selectedStage = stages.find((stage) => stage.id === form.stage_id)
 
   return (
     <Modal onClose={onClose} variant="right">
@@ -253,7 +254,9 @@ export default function DealModal({
             <div className="space-y-1.5">
               <Label>Этап</Label>
               <Select value={form.stage_id} onValueChange={(v) => set('stage_id', v as string)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue>{selectedStage?.name ?? 'Выберите этап'}</SelectValue>
+                </SelectTrigger>
                 <SelectContent>
                   {stages.map((s) => (
                     <SelectItem key={s.id} value={s.id}>

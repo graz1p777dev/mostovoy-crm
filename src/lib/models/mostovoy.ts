@@ -200,5 +200,31 @@ export interface ShopAiUsage {
     withoutEdits: number
     rejected: number
   }
+  customers: {
+    total: number
+    newToday: number
+    activeToday: number
+    active7d: number
+    returning: number
+    telegram: number
+    whatsapp: number
+    instagram: number
+  }
   periods: Record<'today' | 'averageDay' | 'month' | 'year' | 'all', { tokens: number; costUsd: number }>
+}
+
+export interface ShopBotApproval {
+  id: number
+  conversationId: number
+  customerName: string
+  source: string
+  customerMessage: string
+  aiReply: string
+  editedReply: string | null
+  rejectReason: string | null
+  summary: string | null
+  model: string
+  status: 'pending' | 'approved' | 'rejected'
+  createdAt: string
+  decidedAt: string | null
 }

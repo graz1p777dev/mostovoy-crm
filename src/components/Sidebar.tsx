@@ -18,9 +18,10 @@ function isActiveLink(pathname: string, href: string, exact?: boolean): boolean 
 interface SidebarProps {
   mobileOpen?: boolean
   onClose?: () => void
+  approvalEnabled?: boolean
 }
 
-export default function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
+export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled = false }: SidebarProps) {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
   const role = user?.role as UserRole | undefined
@@ -40,7 +41,7 @@ export default function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
   const activeHref = (() => {
     for (const group of NAV_GROUPS) {
       for (const item of group.items) {
-        if (role && item.roles.includes(role) && isActiveLink(pathname, item.href, item.exact)) {
+        if (role && item.roles.includes(role) && (!item.requiresBotApproval || approvalEnabled) && isActiveLink(pathname, item.href, item.exact)) {
           return item.href
         }
       }
@@ -58,7 +59,6 @@ export default function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
     } else {
       setIndicator(prev => ({ ...prev, visible: false }))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeHref, role])
 
   // На мобильном: закрывать drawer при переходе на другую страницу
@@ -141,7 +141,7 @@ export default function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
           />
           {NAV_GROUPS.map((group) => {
             const visible = group.items.filter(
-              (item) => role && item.roles.includes(role)
+              (item) => role && item.roles.includes(role) && (!item.requiresBotApproval || approvalEnabled)
             )
             if (!visible.length) return null
 

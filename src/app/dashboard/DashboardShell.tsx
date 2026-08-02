@@ -5,7 +5,7 @@ import Sidebar from '@/components/Sidebar'
 import Topbar from '@/components/layout/Topbar'
 import { stopImpersonation } from '@/actions/auth'
 
-export default function DashboardShell({ children }: { children: React.ReactNode }) {
+export default function DashboardShell({ children, approvalEnabled = false }: { children: React.ReactNode; approvalEnabled?: boolean }) {
   const { user, impersonating } = useAuth()
   const [pending, startTransition] = useTransition()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -43,7 +43,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           onClick={() => setMenuOpen(false)}
         />
       )}
-      <Sidebar mobileOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <Sidebar mobileOpen={menuOpen} onClose={() => setMenuOpen(false)} approvalEnabled={approvalEnabled} />
       <div className="flex-1 flex flex-col min-w-0">
         {impersonating && (
           <div className="flex items-center justify-between px-4 py-2 text-sm font-medium shrink-0 bg-gradient-to-r from-amber-400 to-orange-400 text-amber-950">

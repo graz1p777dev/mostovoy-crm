@@ -45,16 +45,22 @@ export default function BotReportsPage() {
   const [newReason, setNewReason] = useState('')
   const [newWord, setNewWord] = useState('')
   const [loading, setLoading] = useState(true)
-  const [approvalEnabled, setApprovalEnabled] = useState(true)
+  const [approvalEnabled, setApprovalEnabled] = useState(false)
 
   const load = async () => {
-    const [d, f, m, bl, sw, settings] = await Promise.allSettled([
+    const settings = await getShopBotSettings()
+    if (!settings.ok || !settings.data.approvalEnabled) {
+      setApprovalEnabled(false)
+      setLoading(false)
+      return
+    }
+    setApprovalEnabled(true)
+    const [d, f, m, bl, sw] = await Promise.allSettled([
       botGet<DayRow[]>('/admin/reports/daily?days=365'),
       botGet<FunnelRow[]>('/admin/analytics/funnel'),
       botGet<ManagerRow[]>('/admin/analytics/managers'),
       botGet<BlacklistEntry[]>('/admin/blacklist'),
       botGet<{ words: string[] }>('/admin/stop-words'),
-      getShopBotSettings(),
     ])
     if (d.status === 'fulfilled') {
       setDaily(d.value)
@@ -64,11 +70,13 @@ export default function BotReportsPage() {
     if (m.status === 'fulfilled') setManagers(m.value)
     if (bl.status === 'fulfilled') setBlacklist(bl.value)
     if (sw.status === 'fulfilled') setStopWords(sw.value.words)
-    if (settings.status === 'fulfilled' && settings.value.ok) setApprovalEnabled(settings.value.data.approvalEnabled)
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    const timeout = window.setTimeout(() => { void load() }, 0)
+    return () => window.clearTimeout(timeout)
+  }, [])
 
   const addBlacklist = async () => {
     if (!newPhone.trim()) return
@@ -89,6 +97,15 @@ export default function BotReportsPage() {
     <div className="flex flex-col items-center justify-center gap-4 p-8" style={{ minHeight: '60vh' }}>
       <GlowOrb size={72} label="Загрузка отчётов" />
       <p className="text-sm" style={{ color: '#6b6063' }}>Загрузка отчётов...</p>
+    </div>
+  )
+
+  if (!approvalEnabled) return (
+    <div className="p-4 md:p-8">
+      <div className="rounded-2xl bg-white p-8 text-center shadow-sm">
+        <p className="font-semibold" style={{ color: '#1b1517' }}>Отчёты скрыты</p>
+        <p className="mt-1 text-sm" style={{ color: '#6b6063' }}>Они появятся автоматически после включения подтверждения ответов.</p>
+      </div>
     </div>
   )
 

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import DashboardShell from './DashboardShell'
+import { getShopBotSettings } from '@/actions/mostovoy-bot-settings'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   // Вызываем createClient() здесь, на уровне Layout (вне Suspense),
@@ -20,5 +21,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (emp?.must_change_password) redirect('/auth/change-password')
 
-  return <DashboardShell>{children}</DashboardShell>
+  const botSettings = await getShopBotSettings()
+  const approvalEnabled = botSettings.ok && botSettings.data.approvalEnabled
+
+  return <DashboardShell approvalEnabled={approvalEnabled}>{children}</DashboardShell>
 }

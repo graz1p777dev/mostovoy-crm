@@ -8,6 +8,7 @@ export interface NavItem {
   icon: LucideIcon
   roles: UserRole[]
   exact?: boolean
+  requiresBotApproval?: boolean
 }
 
 export interface NavGroup {
@@ -34,6 +35,7 @@ import {
   Newspaper,
   Eye,
   Handshake,
+  MessageSquareCheck,
 } from 'lucide-react'
 
 export const NAV_GROUPS: NavGroup[] = [
@@ -77,6 +79,14 @@ export const NAV_GROUPS: NavGroup[] = [
         label: 'Отчёты бота',
         icon: FileBarChart2,
         roles: ['owner', 'rop'],
+        requiresBotApproval: true,
+      },
+      {
+        href: '/dashboard/bot-approvals',
+        label: 'Подтверждение ответов',
+        icon: MessageSquareCheck,
+        roles: ['owner', 'rop'],
+        requiresBotApproval: true,
       },
       {
         href: '/dashboard/bot-settings',

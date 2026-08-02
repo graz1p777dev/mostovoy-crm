@@ -18,6 +18,17 @@ export default async function BotAnalyticsPage() {
 
   const { status, usage } = result.data
   const overview = usage.overview
+  const customers = usage.customers ?? {
+    total: overview.conversations,
+    newToday: 0,
+    activeToday: 0,
+    active7d: 0,
+    returning: 0,
+    telegram: 0,
+    whatsapp: 0,
+    instagram: 0,
+  }
+  const channelTotal = Math.max(1, customers.telegram + customers.whatsapp + customers.instagram)
   const periods = [
     ['Сегодня', usage.periods.today],
     ['Среднее за день', usage.periods.averageDay],
@@ -28,8 +39,11 @@ export default async function BotAnalyticsPage() {
 
   return (
     <main className="p-4 md:p-8 space-y-5">
-      <section className="rounded-3xl bg-gradient-to-br from-[#ff2638] via-[#ed151f] to-[#c90816] p-6 text-white shadow-[0_18px_44px_rgba(225,29,29,0.24)]">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-red-200">ИИ-менеджер магазина</p>
+      <section
+        className="rounded-3xl p-6 text-white shadow-[0_18px_44px_rgba(225,29,29,0.26)]"
+        style={{ background: 'linear-gradient(135deg, #ff3045 0%, #ef1727 52%, #d90718 100%)' }}
+      >
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/80">ИИ-менеджер магазина</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold">Аналитика бота</h1>
@@ -46,6 +60,44 @@ export default async function BotAnalyticsPage() {
         <Metric label="Сообщений клиентов и ответов" value={overview.messages} />
         <Metric label="Ответов ИИ" value={overview.aiReplies} accent />
         <Metric label="Ошибок за 24 часа" value={status.errors24h} />
+      </section>
+
+      <section className="rounded-2xl bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e11d1d]">Клиенты</p>
+            <h2 className="mt-1 text-lg font-bold text-[#1b1517]">Аналитика клиентов</h2>
+          </div>
+          <p className="text-xs text-[#6b6063]">Реальные диалоги Telegram, WhatsApp и Instagram</p>
+        </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <Metric label="Всего клиентов" value={customers.total} accent />
+          <Metric label="Новых сегодня" value={customers.newToday} />
+          <Metric label="Активны сегодня" value={customers.activeToday} />
+          <Metric label="Активны за 7 дней" value={customers.active7d} />
+          <Metric label="Вернулись повторно" value={customers.returning} />
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          {[
+            ['Telegram', customers.telegram, '#229ED9'],
+            ['WhatsApp', customers.whatsapp, '#22c55e'],
+            ['Instagram', customers.instagram, '#ef1727'],
+          ].map(([label, count, color]) => {
+            const value = Number(count)
+            const percent = Math.round(value / channelTotal * 100)
+            return (
+              <div key={String(label)} className="rounded-xl bg-[#faf8f7] p-4">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="font-semibold text-[#1b1517]">{label}</span>
+                  <span className="text-[#6b6063]">{value.toLocaleString('ru-RU')} · {percent}%</span>
+                </div>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#eee9e9]">
+                  <div className="h-full rounded-full" style={{ width: `${percent}%`, backgroundColor: String(color) }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </section>
 
       <section className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">

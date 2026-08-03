@@ -13,6 +13,7 @@
 
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { DealSource } from '@/types'
+import type { DealCurrency, DealOrderType } from '@/types'
 
 export interface InboundDeal {
   /** Стабильный ключ клиента в канале: telegram:<chat_id>, wazzup:<phone>. */
@@ -52,6 +53,17 @@ export interface AdvanceDealResult {
   id: string | null
   stageName?: string
   error?: string
+}
+
+export interface MarkDealOrderInput {
+  externalKey: string
+  productName: string
+  amount?: number | null
+  currency?: DealCurrency
+  orderType?: DealOrderType
+  customerName?: string | null
+  customerPhone?: string | null
+  note?: string | null
 }
 
 /**
@@ -153,4 +165,57 @@ export async function advanceDealToPrimaryContact(externalKey: string): Promise<
     id: row.id,
     stageName: target.name,
   }
+}
+
+/**
+ * Помечает существующую сделку как оформленный ботом заказ.
+ * Отдельную таблицу не создаём: карточка заказа остаётся той же сделкой,
+ * поэтому переписка, этап и ответственный не расходятся между экранами.
+ */
+export async function markDealAsOrder(input: MarkDealOrderInput): Promise<UpsertDealResult> {
+  const key = input.externalKey.trim()
+  const productName = input.productName.trim()
+  if (!key) return { created: false, id: null, error: 'external_key пустой' }
+  if (!productName) return { created: false, id: null, error: 'productName пустой' }
+
+  const supabase = createAdminClient()
+  const { data: deal, error: lookupError } = await supabase
+    .from('deals')
+    .select('id')
+    .eq('external_key', key)
+    .maybeSingle()
+  if (lookupError) return { created: false, id: null, error: lookupError.message }
+  if (!deal) return { created: false, id: null, error: 'Сделка не найдена' }
+
+  const row = deal as { id: string }
+  const orderType = input.orderType ?? 'standard'
+  const typeLabel = orderType === 'trade_in'
+    ? 'Trade-in'
+    : orderType === 'installment'
+      ? 'Рассрочка'
+      : 'Обычный заказ'
+  const orderNote = [
+    '[ORDER]',
+    `Товар: ${productName}`,
+    `Тип: ${typeLabel}`,
+    input.note?.trim() || null,
+  ].filter(Boolean).join('\n')
+
+  const update: Record<string, unknown> = {
+    title: productName,
+    amount: input.amount ?? null,
+    currency: input.currency ?? 'KGS',
+    order_type: orderType,
+    note: orderNote,
+  }
+  if (input.customerName?.trim()) update.customer_name = input.customerName.trim()
+  if (input.customerPhone?.trim()) update.customer_phone = input.customerPhone.trim()
+
+  const { data: updated, error } = await supabase
+    .from('deals')
+    .update(update)
+    .eq('id', row.id)
+    .select('id')
+  if (error) return { created: false, id: row.id, error: error.message }
+  return { created: false, id: (updated?.[0] as { id: string } | undefined)?.id ?? row.id }
 }

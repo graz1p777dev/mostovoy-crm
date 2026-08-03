@@ -84,6 +84,14 @@ export async function getDealsData(): Promise<DealsData> {
   }
 }
 
+export async function getOrdersData(): Promise<DealsData> {
+  const data = await getDealsData()
+  return {
+    ...data,
+    deals: data.deals.filter((deal) => deal.note?.startsWith('[ORDER]')),
+  }
+}
+
 // ─── Форма сделки ────────────────────────────────────────────────────────────
 
 const DealSchema = z.object({

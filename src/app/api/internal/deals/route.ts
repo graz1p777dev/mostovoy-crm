@@ -8,8 +8,9 @@
 // ответит клиенту, а сделка подтянется кнопкой «Синхронизировать».
 
 import { NextResponse } from 'next/server'
-import { advanceDealToPrimaryContact, upsertDealFromInbound } from '@/lib/deals/auto-create'
+import { advanceDealToPrimaryContact, markDealAsOrder, upsertDealFromInbound } from '@/lib/deals/auto-create'
 import type { DealSource } from '@/types'
+import type { DealCurrency, DealOrderType } from '@/types'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -72,7 +73,17 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  let payload: { externalKey?: string; action?: string }
+  let payload: {
+    externalKey?: string
+    action?: string
+    productName?: string
+    amount?: number | null
+    currency?: DealCurrency
+    orderType?: DealOrderType
+    customerName?: string | null
+    customerPhone?: string | null
+    note?: string | null
+  }
   try {
     payload = await request.json()
   } catch {
@@ -80,6 +91,27 @@ export async function PATCH(request: Request) {
   }
   if (!payload.externalKey?.trim()) {
     return NextResponse.json({ error: 'externalKey is required' }, { status: 400 })
+  }
+  if (payload.action === 'order') {
+    if (!payload.productName?.trim()) {
+      return NextResponse.json({ error: 'productName is required' }, { status: 400 })
+    }
+    const result = await markDealAsOrder({
+      externalKey: payload.externalKey,
+      productName: payload.productName,
+      amount: payload.amount,
+      currency: payload.currency,
+      orderType: payload.orderType,
+      customerName: payload.customerName,
+      customerPhone: payload.customerPhone,
+      note: payload.note,
+    })
+    if (result.error) {
+      const status = result.error === 'Сделка не найдена' ? 404 : 500
+      console.error('internal/deals order failed', result.error)
+      return NextResponse.json({ error: result.error }, { status })
+    }
+    return NextResponse.json({ ok: true, id: result.id })
   }
   if (payload.action !== 'primary_contact') {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })

@@ -32,6 +32,7 @@ import {
   KanbanSquare,
   Sparkles,
   ShoppingBag,
+  ShoppingCart,
   Newspaper,
   Eye,
   Handshake,
@@ -55,6 +56,12 @@ export const NAV_GROUPS: NavGroup[] = [
         href: '/dashboard/deals',
         label: 'Сделки',
         icon: Handshake,
+        roles: ['owner', 'rop', 'mp', 'lmai'],
+      },
+      {
+        href: '/dashboard/orders',
+        label: 'Заказы',
+        icon: ShoppingCart,
         roles: ['owner', 'rop', 'mp', 'lmai'],
       },
       {

@@ -205,7 +205,6 @@ export async function markDealAsOrder(input: MarkDealOrderInput): Promise<Upsert
     title: productName,
     amount: input.amount ?? null,
     currency: input.currency ?? 'KGS',
-    order_type: orderType,
     note: orderNote,
   }
   if (input.customerName?.trim()) update.customer_name = input.customerName.trim()

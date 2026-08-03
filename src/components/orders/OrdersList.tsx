@@ -19,6 +19,12 @@ const ORDER_TYPE_LABEL: Record<Deal['order_type'], string> = {
   trade_in: 'Trade-in',
 }
 
+function orderTypeLabel(order: Deal): string {
+  if (order.note?.includes('Тип: Trade-in')) return ORDER_TYPE_LABEL.trade_in
+  if (order.note?.includes('Тип: Рассрочка')) return ORDER_TYPE_LABEL.installment
+  return ORDER_TYPE_LABEL.standard
+}
+
 export default function OrdersList({ initialOrders, stages, employees, me }: Props) {
   const [orders, setOrders] = useState(initialOrders)
   const [selected, setSelected] = useState<Deal | null>(null)
@@ -80,7 +86,7 @@ export default function OrdersList({ initialOrders, stages, employees, me }: Pro
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-red-600">
-                      {ORDER_TYPE_LABEL[order.order_type]}
+                      {orderTypeLabel(order)}
                     </p>
                     <h2 className="mt-1 text-lg font-bold text-gray-950">{order.title}</h2>
                   </div>

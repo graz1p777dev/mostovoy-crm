@@ -55,6 +55,23 @@ export interface AdvanceDealResult {
   error?: string
 }
 
+export type DealStageAction =
+  | 'primary_contact'
+  | 'need_identified'
+  | 'options_offered'
+  | 'interest_confirmed'
+  | 'ready_to_buy'
+  | 'manager_handoff'
+
+const STAGE_BY_ACTION: Record<DealStageAction, string> = {
+  primary_contact: 'Заявка получена',
+  need_identified: 'Потребность выявлена',
+  options_offered: 'Варианты предложены',
+  interest_confirmed: 'Интерес подтверждён',
+  ready_to_buy: 'Готов к покупке',
+  manager_handoff: 'Передан менеджеру',
+}
+
 export interface MarkDealOrderInput {
   externalKey: string
   productName: string
@@ -116,55 +133,58 @@ export async function upsertDealFromInbound(input: InboundDeal): Promise<UpsertD
 }
 
 /**
- * После первого содержательного ответа бота переводит новую сделку из
- * этапа по умолчанию в первый рабочий этап воронки. Сделку, которую уже
- * передвинул менеджер или другой процесс, не трогает.
+ * Продвигает сделку к этапу, соответствующему событию диалога.
+ * Назад и из финальных этапов не двигает; при гонке параллельных событий
+ * повторно читает текущий этап, чтобы не потерять более поздний переход.
  */
-export async function advanceDealToPrimaryContact(externalKey: string): Promise<AdvanceDealResult> {
+export async function advanceDealToStage(
+  externalKey: string,
+  action: DealStageAction
+): Promise<AdvanceDealResult> {
   const key = externalKey.trim()
   if (!key) return { moved: false, id: null, error: 'external_key пустой' }
 
   const supabase = createAdminClient()
-  const [{ data: deal, error: dealError }, { data: defaultStage, error: defaultStageError }] = await Promise.all([
-    supabase.from('deals').select('id, stage_id').eq('external_key', key).maybeSingle(),
-    supabase.from('deal_stages').select('id').eq('is_default', true).maybeSingle(),
-  ])
-
-  if (dealError) return { moved: false, id: null, error: dealError.message }
-  if (!deal) return { moved: false, id: null, error: 'Сделка не найдена' }
-  const row = deal as { id: string; stage_id: string }
-  if (defaultStageError || !defaultStage) {
-    return { moved: false, id: row.id, error: 'Не найден этап по умолчанию' }
-  }
-  const defaultStageId = (defaultStage as { id: string }).id
-  if (row.stage_id !== defaultStageId) return { moved: false, id: row.id }
-
-  const { data: nextStage, error: nextStageError } = await supabase
+  const { data: stages, error: stagesError } = await supabase
     .from('deal_stages')
-    .select('id, name')
-    .eq('kind', 'normal')
-    .eq('is_default', false)
-    .order('sort_order', { ascending: true })
-    .limit(1)
-    .maybeSingle()
-  if (nextStageError || !nextStage) {
-    return { moved: false, id: row.id, error: 'Не найден этап первичного контакта' }
+    .select('id, name, sort_order, kind')
+  if (stagesError || !stages) return { moved: false, id: null, error: stagesError?.message || 'Этапы не найдены' }
+
+  const typedStages = stages as { id: string; name: string; sort_order: number; kind: string }[]
+  const target = typedStages.find((stage) => stage.name === STAGE_BY_ACTION[action])
+  if (!target) return { moved: false, id: null, error: `Не найден этап «${STAGE_BY_ACTION[action]}»` }
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const { data: deal, error: dealError } = await supabase
+      .from('deals')
+      .select('id, stage_id')
+      .eq('external_key', key)
+      .maybeSingle()
+    if (dealError) return { moved: false, id: null, error: dealError.message }
+    if (!deal) return { moved: false, id: null, error: 'Сделка не найдена' }
+
+    const row = deal as { id: string; stage_id: string }
+    const current = typedStages.find((stage) => stage.id === row.stage_id)
+    if (!current) return { moved: false, id: row.id, error: 'Текущий этап не найден' }
+    if (current.kind !== 'normal' || current.sort_order >= target.sort_order) {
+      return { moved: false, id: row.id, stageName: current.name }
+    }
+
+    const { data: updated, error: updateError } = await supabase
+      .from('deals')
+      .update({ stage_id: target.id })
+      .eq('id', row.id)
+      .eq('stage_id', current.id)
+      .select('id')
+    if (updateError) return { moved: false, id: row.id, error: updateError.message }
+    if (updated?.length) return { moved: true, id: row.id, stageName: target.name }
   }
 
-  const target = nextStage as { id: string; name: string }
-  const { data: updated, error: updateError } = await supabase
-    .from('deals')
-    .update({ stage_id: target.id })
-    .eq('id', row.id)
-    .eq('stage_id', defaultStageId)
-    .select('id')
-  if (updateError) return { moved: false, id: row.id, error: updateError.message }
+  return { moved: false, id: null, error: 'Не удалось синхронизировать этап после параллельного обновления' }
+}
 
-  return {
-    moved: Boolean(updated?.length),
-    id: row.id,
-    stageName: target.name,
-  }
+export async function advanceDealToPrimaryContact(externalKey: string): Promise<AdvanceDealResult> {
+  return advanceDealToStage(externalKey, 'primary_contact')
 }
 
 /**

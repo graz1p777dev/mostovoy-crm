@@ -8,7 +8,8 @@
 // ответит клиенту, а сделка подтянется кнопкой «Синхронизировать».
 
 import { NextResponse } from 'next/server'
-import { advanceDealToPrimaryContact, markDealAsOrder, resetDealOrder, upsertDealFromInbound } from '@/lib/deals/auto-create'
+import { advanceDealToStage, markDealAsOrder, resetDealOrder, upsertDealFromInbound } from '@/lib/deals/auto-create'
+import type { DealStageAction } from '@/lib/deals/auto-create'
 import type { DealSource } from '@/types'
 import type { DealCurrency, DealOrderType } from '@/types'
 
@@ -17,6 +18,15 @@ export const runtime = 'nodejs'
 
 const VALID_SOURCES: readonly DealSource[] = [
   'telegram', 'whatsapp', 'instagram', 'manual', 'site',
+]
+
+const VALID_STAGE_ACTIONS: readonly DealStageAction[] = [
+  'primary_contact',
+  'need_identified',
+  'options_offered',
+  'interest_confirmed',
+  'ready_to_buy',
+  'manager_handoff',
 ]
 
 export async function POST(request: Request) {
@@ -119,13 +129,18 @@ export async function PATCH(request: Request) {
       console.error('internal/deals order failed', result.error)
       return NextResponse.json({ error: result.error }, { status })
     }
-    return NextResponse.json({ ok: true, id: result.id })
+    const advanced = await advanceDealToStage(payload.externalKey, 'ready_to_buy')
+    if (advanced.error) {
+      console.error('internal/deals order stage advance failed', advanced.error)
+      return NextResponse.json({ error: advanced.error }, { status: 500 })
+    }
+    return NextResponse.json({ ok: true, id: result.id, moved: advanced.moved, stageName: advanced.stageName })
   }
-  if (payload.action !== 'primary_contact') {
+  if (!VALID_STAGE_ACTIONS.includes(payload.action as DealStageAction)) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   }
 
-  const result = await advanceDealToPrimaryContact(payload.externalKey)
+  const result = await advanceDealToStage(payload.externalKey, payload.action as DealStageAction)
   if (result.error) {
     const status = result.error === 'Сделка не найдена' ? 404 : 500
     console.error('internal/deals advance failed', result.error)

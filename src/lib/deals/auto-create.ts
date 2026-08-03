@@ -218,3 +218,45 @@ export async function markDealAsOrder(input: MarkDealOrderInput): Promise<Upsert
   if (error) return { created: false, id: row.id, error: error.message }
   return { created: false, id: (updated?.[0] as { id: string } | undefined)?.id ?? row.id }
 }
+
+/** Убирает ошибочную служебную отметку заказа, не удаляя саму сделку. */
+export async function resetDealOrder(externalKey: string): Promise<UpsertDealResult> {
+  const key = externalKey.trim()
+  if (!key) return { created: false, id: null, error: 'external_key пустой' }
+
+  const supabase = createAdminClient()
+  const { data: deal, error: lookupError } = await supabase
+    .from('deals')
+    .select('id, source, customer_name, customer_phone, customer_username, note')
+    .eq('external_key', key)
+    .maybeSingle()
+  if (lookupError) return { created: false, id: null, error: lookupError.message }
+  if (!deal) return { created: false, id: null, error: 'Сделка не найдена' }
+
+  const row = deal as {
+    id: string
+    source: DealSource
+    customer_name: string | null
+    customer_phone: string | null
+    customer_username: string | null
+    note: string | null
+  }
+  if (!row.note?.startsWith('[ORDER]')) return { created: false, id: row.id }
+
+  const { error } = await supabase
+    .from('deals')
+    .update({
+      title: dealTitleFor({
+        externalKey: key,
+        source: row.source,
+        customerName: row.customer_name,
+        customerPhone: row.customer_phone,
+        customerUsername: row.customer_username,
+      }),
+      amount: null,
+      note: null,
+    })
+    .eq('id', row.id)
+  if (error) return { created: false, id: row.id, error: error.message }
+  return { created: false, id: row.id }
+}

@@ -8,7 +8,7 @@
 // ответит клиенту, а сделка подтянется кнопкой «Синхронизировать».
 
 import { NextResponse } from 'next/server'
-import { advanceDealToPrimaryContact, markDealAsOrder, upsertDealFromInbound } from '@/lib/deals/auto-create'
+import { advanceDealToPrimaryContact, markDealAsOrder, resetDealOrder, upsertDealFromInbound } from '@/lib/deals/auto-create'
 import type { DealSource } from '@/types'
 import type { DealCurrency, DealOrderType } from '@/types'
 
@@ -91,6 +91,14 @@ export async function PATCH(request: Request) {
   }
   if (!payload.externalKey?.trim()) {
     return NextResponse.json({ error: 'externalKey is required' }, { status: 400 })
+  }
+  if (payload.action === 'reset_order') {
+    const result = await resetDealOrder(payload.externalKey)
+    if (result.error) {
+      const status = result.error === 'Сделка не найдена' ? 404 : 500
+      return NextResponse.json({ error: result.error }, { status })
+    }
+    return NextResponse.json({ ok: true, id: result.id })
   }
   if (payload.action === 'order') {
     if (!payload.productName?.trim()) {

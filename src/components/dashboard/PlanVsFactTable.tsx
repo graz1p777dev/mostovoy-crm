@@ -14,11 +14,11 @@ function PlanFactCell({ plan, fact }: { plan: number; fact: number }) {
   return (
     <td
       className="px-3 py-2.5 text-right tabular-nums whitespace-nowrap"
-      style={{ fontSize: 12, color: '#3a3032' }}
+      style={{ fontSize: 12, color: 'var(--ink-deep)' }}
     >
-      <span style={{ color: '#1b1517', fontWeight: 500 }}>{formatNumber(fact)}</span>
-      <span style={{ color: '#7d7174', margin: '0 3px' }}>/</span>
-      <span style={{ color: '#7d7174' }}>{formatNumber(plan)}</span>
+      <span style={{ color: 'var(--ink)', fontWeight: 500 }}>{formatNumber(fact)}</span>
+      <span style={{ color: 'var(--ink-3)', margin: '0 3px' }}>/</span>
+      <span style={{ color: 'var(--ink-3)' }}>{formatNumber(plan)}</span>
     </td>
   )
 }
@@ -31,7 +31,7 @@ function KpiBadge({ pct }: { pct: number }) {
       style={{
         fontSize: 11,
         color,
-        backgroundColor: color + '18',
+        backgroundColor: `color-mix(in srgb, ${color} 9.412%, transparent)`,
         padding: '2px 7px',
         minWidth: 44,
       }}
@@ -57,14 +57,14 @@ export default function PlanVsFactTable({ rows }: PlanVsFactTableProps) {
     <div className="overflow-x-auto rounded-xl glass">
       <table className="w-full min-w-[480px]">
         <thead>
-          <tr style={{ borderBottom: '1px solid #faf8f7' }}>
+          <tr style={{ borderBottom: '1px solid var(--paper)' }}>
             {['Сотрудник', 'ФВ факт/план', 'Продажи факт/план', 'Выручка', 'KPI%'].map(col => (
               <th
                 key={col}
                 className={`px-3 py-2 text-left whitespace-nowrap ${col !== 'Сотрудник' ? 'text-right' : ''}`}
                 style={{
                   fontSize: 11,
-                  color: '#7d7174',
+                  color: 'var(--ink-3)',
                   fontWeight: 500,
                   letterSpacing: '0.02em',
                   textTransform: 'uppercase',
@@ -80,7 +80,7 @@ export default function PlanVsFactTable({ rows }: PlanVsFactTableProps) {
             <tr
               key={row.employee_id}
               style={{
-                borderBottom: i < rows.length - 1 ? '1px solid #fdfbfb' : 'none',
+                borderBottom: i < rows.length - 1 ? '1px solid var(--paper-2)' : 'none',
               }}
               className="transition-colors"
               onMouseEnter={e => {
@@ -90,14 +90,14 @@ export default function PlanVsFactTable({ rows }: PlanVsFactTableProps) {
                 (e.currentTarget as HTMLTableRowElement).style.backgroundColor = ''
               }}
             >
-              <td className="px-3 py-2.5" style={{ fontSize: 13, color: '#1b1517', fontWeight: 500 }}>
+              <td className="px-3 py-2.5" style={{ fontSize: 13, color: 'var(--ink)', fontWeight: 500 }}>
                 {row.employee_name}
               </td>
               <PlanFactCell plan={row.plan_fv} fact={row.fact_fv} />
               <PlanFactCell plan={row.plan_sales} fact={row.fact_sales} />
               <td
                 className="px-3 py-2.5 text-right tabular-nums whitespace-nowrap font-medium"
-                style={{ fontSize: 12, color: '#1b1517' }}
+                style={{ fontSize: 12, color: 'var(--ink)' }}
               >
                 {row.revenue > 0 ? formatMoney(row.revenue) : '—'}
               </td>

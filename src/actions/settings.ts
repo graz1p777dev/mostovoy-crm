@@ -3,6 +3,8 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getActor, can, type Action } from '@/lib/authz'
+import { getAuthUser } from '@/lib/identity'
 import { recordAudit } from '@/actions/audit'
 
 export type ActionResult = { success: true } | { success: false; error: string }
@@ -32,18 +34,28 @@ export interface WorkScheduleRow {
 }
 
 // ─── Auth guard ────────────────────────────────────────────────────────────────
+// Чтение справочников идёт пользовательским клиентом под RLS — достаточно
+// проверить, что вошли. Берём getAuthUser() (это getUser(): проверка токена у
+// Auth-сервера), а не getSession(), который лишь читает cookie и ничего не
+// валидирует. Цена — один RTT к Auth (~292 мс, замер в identity.ts) на каждое
+// чтение: панели настроек клиентские, каждая зовёт свой Server Action, то есть
+// свой запрос и свой scope, и мемоизация once() между ними не переиспользуется.
 
-async function requireSession() {
-  const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  return session
+// Мутации справочников идут через admin-клиент, который обходит RLS, — значит
+// право нужно проверить ДО него, иначе единственной защитой остаётся факт входа
+// и любой сотрудник может править отделы, роли и графики.
+async function denySettings(action: Action): Promise<ActionResult | null> {
+  const actor = await getActor()
+  if (!actor) return { success: false, error: 'Не авторизован' }
+  if (!await can(actor, 'settings', action)) return { success: false, error: 'Недостаточно прав' }
+  return null
 }
 
 // ─── Departments ───────────────────────────────────────────────────────────────
 
 export async function getDepartments(): Promise<DeptRow[]> {
-  const session = await requireSession()
-  if (!session) return []
+  const user = await getAuthUser()
+  if (!user) return []
   const supabase = await createClient()
   const { data } = await supabase
     .from('departments')
@@ -55,8 +67,8 @@ export async function getDepartments(): Promise<DeptRow[]> {
 
 export async function createDepartment(name: string, description: string): Promise<ActionResult> {
   if (!name.trim()) return { success: false, error: 'Название обязательно' }
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('create')
+  if (denied) return denied
   const admin = createAdminClient()
   const { data: created, error } = await admin.from('departments').insert({
     name: name.trim(),
@@ -72,8 +84,8 @@ export async function createDepartment(name: string, description: string): Promi
 
 export async function updateDepartment(id: string, name: string, description: string): Promise<ActionResult> {
   if (!name.trim()) return { success: false, error: 'Название обязательно' }
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('edit')
+  if (denied) return denied
   const admin = createAdminClient()
   const { error } = await admin.from('departments').update({
     name: name.trim(),
@@ -88,8 +100,8 @@ export async function updateDepartment(id: string, name: string, description: st
 }
 
 export async function deleteDepartment(id: string): Promise<ActionResult> {
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('delete')
+  if (denied) return denied
   const admin = createAdminClient()
   const { count } = await admin.from('employees')
     .select('id', { count: 'exact', head: true })
@@ -110,8 +122,8 @@ export async function deleteDepartment(id: string): Promise<ActionResult> {
 // ─── Roles ─────────────────────────────────────────────────────────────────────
 
 export async function getRoles(): Promise<RoleRow[]> {
-  const session = await requireSession()
-  if (!session) return []
+  const user = await getAuthUser()
+  if (!user) return []
   const supabase = await createClient()
   const { data } = await supabase
     .from('roles')
@@ -130,8 +142,8 @@ export async function createRole(
   if (!label.trim()) return { success: false, error: 'Название роли обязательно' }
   const slug = (name || label).trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
   if (!slug) return { success: false, error: 'Системное имя должно содержать латинские буквы' }
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('create')
+  if (denied) return denied
   const admin = createAdminClient()
   const { error } = await admin.from('roles').insert({
     name: slug,
@@ -154,8 +166,8 @@ export async function updateRole(
   permissionLevel?: 'employee' | 'department_head',
 ): Promise<ActionResult> {
   if (!label.trim()) return { success: false, error: 'Название роли обязательно' }
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('edit')
+  if (denied) return denied
   const admin = createAdminClient()
   const { data: role } = await admin.from('roles').select('is_system').eq('id', id).single()
   const updates: Record<string, unknown> = {
@@ -174,8 +186,8 @@ export async function updateRole(
 }
 
 export async function deleteRole(id: string): Promise<ActionResult> {
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('delete')
+  if (denied) return denied
   const admin = createAdminClient()
   const { data: role } = await admin.from('roles').select('is_system, name').eq('id', id).single()
   if (role?.is_system) return { success: false, error: 'Системные роли нельзя удалять' }
@@ -197,8 +209,8 @@ export async function deleteRole(id: string): Promise<ActionResult> {
 // ─── Work Schedules ────────────────────────────────────────────────────────────
 
 export async function getWorkSchedules(): Promise<WorkScheduleRow[]> {
-  const session = await requireSession()
-  if (!session) return []
+  const user = await getAuthUser()
+  if (!user) return []
   const supabase = await createClient()
   const { data } = await supabase
     .from('work_schedules')
@@ -210,8 +222,8 @@ export async function getWorkSchedules(): Promise<WorkScheduleRow[]> {
 
 export async function createWorkSchedule(name: string, description: string): Promise<ActionResult> {
   if (!name.trim()) return { success: false, error: 'Название обязательно' }
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('create')
+  if (denied) return denied
   const admin = createAdminClient()
   const { error } = await admin.from('work_schedules').insert({
     name: name.trim(),
@@ -228,8 +240,8 @@ export async function createWorkSchedule(name: string, description: string): Pro
 
 export async function updateWorkSchedule(id: string, name: string, description: string): Promise<ActionResult> {
   if (!name.trim()) return { success: false, error: 'Название обязательно' }
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('edit')
+  if (denied) return denied
   const admin = createAdminClient()
   const { error } = await admin.from('work_schedules').update({
     name: name.trim(),
@@ -244,8 +256,8 @@ export async function updateWorkSchedule(id: string, name: string, description: 
 }
 
 export async function deleteWorkSchedule(id: string): Promise<ActionResult> {
-  const session = await requireSession()
-  if (!session) return { success: false, error: 'Нет доступа' }
+  const denied = await denySettings('delete')
+  if (denied) return denied
   const admin = createAdminClient()
   const { data: ws } = await admin.from('work_schedules').select('is_system, name').eq('id', id).single()
   if (ws?.is_system) return { success: false, error: 'Системные графики нельзя удалять' }

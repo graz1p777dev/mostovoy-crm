@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 import { KpiSettingsPanel } from '@/components/dashboard/KpiSettingsPanel'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Save, Pencil, Trash2, Settings, Building2, ShieldCheck, CalendarDays, Clock3, Palette, Check } from 'lucide-react'
+import Link from 'next/link'
+import { Plus, Save, Pencil, Trash2, Settings, Building2, ShieldCheck, CalendarDays, Clock3, Palette, Check, BookOpen, SlidersHorizontal, DollarSign, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { getAuditLog } from '@/actions/audit'
 import { auditSectionLabel, type AuditRow } from '@/lib/audit-format'
@@ -57,7 +58,7 @@ function AppearancePanel() {
   }, [])
 
   return (
-    <SectionCard icon={<Palette size={15} color="#ffffff" />} title="Внешний вид">
+    <SectionCard icon={<Palette size={15} color="var(--on-brand)" />} title="Внешний вид">
       <p className="text-xs text-muted-foreground mb-4">
         Акцентный цвет применяется сразу и сохраняется только на этом устройстве.
       </p>
@@ -77,7 +78,7 @@ function AppearancePanel() {
                 boxShadow: active === p.id ? `0 0 0 3px var(--background), 0 0 0 5px ${p.from}` : '0 4px 12px -4px rgba(0,0,0,0.2)',
               }}
             >
-              {active === p.id && <Check size={16} color="#ffffff" strokeWidth={3} />}
+              {active === p.id && <Check size={16} color="var(--on-brand)" strokeWidth={3} />}
             </span>
             <span className="text-[11px] text-muted-foreground">{p.label}</span>
           </button>
@@ -99,7 +100,7 @@ function formatActivityTime(value: string): string {
   }).format(date)
 }
 
-const AUDIT_DOT: Record<string, string> = { create: '#16a34a', update: '#e11d1d', delete: '#c01818' }
+const AUDIT_DOT: Record<string, string> = { create: 'var(--ok-base)', update: 'var(--brand)', delete: 'var(--brand-ink)' }
 
 function RecentActionsPanel() {
   const [items, setItems] = useState<AuditRow[]>([])
@@ -123,11 +124,11 @@ function RecentActionsPanel() {
   }, [])
 
   return (
-    <SectionCard icon={<Clock3 size={15} color="#ffffff" />} title="Последние действия">
+    <SectionCard icon={<Clock3 size={15} color="var(--on-brand)" />} title="Последние действия">
       {items.length === 0 ? (
-        <div className="rounded-xl px-4 py-5 text-center" style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
-          <p className="text-sm font-medium" style={{ color: '#1b1517' }}>Пока нет действий</p>
-          <p className="mt-1 text-xs" style={{ color: '#7d7174' }}>
+        <div className="rounded-xl px-4 py-5 text-center" style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
+          <p className="text-sm font-medium" style={{ color: 'var(--ink)' }}>Пока нет действий</p>
+          <p className="mt-1 text-xs" style={{ color: 'var(--ink-3)' }}>
             Здесь появятся изменения в настройках и сотрудниках.
           </p>
         </div>
@@ -135,19 +136,19 @@ function RecentActionsPanel() {
         <div className="space-y-2">
           {items.map(item => (
             <div key={item.id} className="flex items-start gap-3 rounded-xl px-3 py-2.5"
-              style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
-              <div className="mt-1 h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: AUDIT_DOT[item.action] ?? '#e11d1d' }} />
+              style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
+              <div className="mt-1 h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: AUDIT_DOT[item.action] ?? 'var(--brand)' }} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="text-sm font-medium truncate" style={{ color: '#1b1517' }}>{item.summary}</p>
-                  <span className="text-[11px] shrink-0" style={{ color: '#7d7174' }}>
+                  <p className="text-sm font-medium truncate" style={{ color: 'var(--ink)' }}>{item.summary}</p>
+                  <span className="text-[11px] shrink-0" style={{ color: 'var(--ink-3)' }}>
                     {formatActivityTime(item.createdAt)}
                   </span>
                 </div>
-                <p className="mt-0.5 text-xs truncate" style={{ color: '#6b7280' }}>
+                <p className="mt-0.5 text-xs truncate" style={{ color: 'var(--ink-muted)' }}>
                   {item.employeeName ?? 'Система'}
                 </p>
-                <p className="mt-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: '#7d7174' }}>
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--ink-3)' }}>
                   {auditSectionLabel(item.resourceType)}
                 </p>
               </div>
@@ -219,9 +220,9 @@ function DepartmentsPanel() {
   }
 
   return (
-    <SectionCard icon={<Building2 size={15} color="#ffffff" />} title="Отделы">
+    <SectionCard icon={<Building2 size={15} color="var(--on-brand)" />} title="Отделы">
       {addingNew ? (
-        <div className="mb-4 p-3 rounded-xl space-y-2" style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
+        <div className="mb-4 p-3 rounded-xl space-y-2" style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
           <div className="space-y-1">
             <Label className="text-xs font-semibold text-gray-500">Название *</Label>
             <Input value={newName} onChange={e => setNewName(e.target.value)}
@@ -233,7 +234,7 @@ function DepartmentsPanel() {
               placeholder="Необязательно" className="h-8 rounded-lg text-sm border-gray-200" />
           </div>
           <div className="flex gap-2 pt-1">
-            <Button size="sm" className="h-7 rounded-lg text-xs text-white" style={{ backgroundColor: '#e11d1d' }}
+            <Button size="sm" className="h-7 rounded-lg text-xs text-white" style={{ backgroundColor: 'var(--brand)' }}
               onClick={handleAdd} disabled={isPending}>
               <Save size={12} className="mr-1" /> Сохранить
             </Button>
@@ -245,7 +246,7 @@ function DepartmentsPanel() {
         </div>
       ) : (
         <Button variant="outline" size="sm" className="mb-4 h-8 rounded-xl gap-1.5 text-xs"
-          style={{ borderColor: '#e11d1d', color: '#e11d1d' }} onClick={() => setAddingNew(true)}>
+          style={{ borderColor: 'var(--brand)', color: 'var(--brand)' }} onClick={() => setAddingNew(true)}>
           <Plus size={13} /> Добавить отдел
         </Button>
       )}
@@ -253,16 +254,16 @@ function DepartmentsPanel() {
       {loading ? (
         <div className="space-y-2">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-10 rounded-xl animate-pulse" style={{ backgroundColor: '#fdfbfb' }} />
+            <div key={i} className="h-10 rounded-xl animate-pulse" style={{ backgroundColor: 'var(--paper-2)' }} />
           ))}
         </div>
       ) : depts.length === 0 ? (
-        <p className="text-sm text-center py-4" style={{ color: '#7d7174' }}>Нет отделов</p>
+        <p className="text-sm text-center py-4" style={{ color: 'var(--ink-3)' }}>Нет отделов</p>
       ) : (
         <div className="space-y-2">
           {depts.map(d => (
             <div key={d.id} className="rounded-xl px-3 py-2.5"
-              style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
+              style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
               {editingId === d.id ? (
                 <div className="space-y-2">
                   <div className="space-y-1">
@@ -277,7 +278,7 @@ function DepartmentsPanel() {
                   </div>
                   <div className="flex gap-1.5">
                     <Button size="sm" className="h-6 rounded-lg text-xs text-white px-2"
-                      style={{ backgroundColor: '#e11d1d' }} onClick={handleSaveEdit} disabled={isPending}>
+                      style={{ backgroundColor: 'var(--brand)' }} onClick={handleSaveEdit} disabled={isPending}>
                       <Save size={11} className="mr-1" /> Сохранить
                     </Button>
                     <Button variant="ghost" size="sm" className="h-6 rounded-lg text-xs px-2"
@@ -287,19 +288,19 @@ function DepartmentsPanel() {
               ) : (
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <div className="font-medium text-sm truncate" style={{ color: '#1b1517' }}>{d.name}</div>
+                    <div className="font-medium text-sm truncate" style={{ color: 'var(--ink)' }}>{d.name}</div>
                     {d.description && (
-                      <div className="text-[11px] truncate mt-0.5" style={{ color: '#7d7174' }}>{d.description}</div>
+                      <div className="text-[11px] truncate mt-0.5" style={{ color: 'var(--ink-3)' }}>{d.description}</div>
                     )}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button onClick={() => handleEdit(d)} className="p-1 rounded-lg hover:bg-gray-200 transition-colors"
                       title="Редактировать" disabled={isPending}>
-                      <Pencil size={13} style={{ color: '#7d7174' }} />
+                      <Pencil size={13} style={{ color: 'var(--ink-3)' }} />
                     </button>
                     <button onClick={() => handleDelete(d)} className="p-1 rounded-lg hover:bg-red-100 transition-colors"
                       title="Удалить" disabled={isPending}>
-                      <Trash2 size={13} style={{ color: '#fca5a5' }} />
+                      <Trash2 size={13} style={{ color: 'var(--bad-border)' }} />
                     </button>
                   </div>
                 </div>
@@ -315,11 +316,11 @@ function DepartmentsPanel() {
 // ─── Панель ролей ──────────────────────────────────────────────────────────────
 
 const ROLE_BADGE: Record<string, { bg: string; color: string }> = {
-  owner:     { bg: '#faf8f7', color: '#c01818' },
-  rop:       { bg: '#dcfce7', color: '#15803d' },
-  mp:        { bg: '#fdecec', color: '#c01818' },
-  lmai:      { bg: '#fef9c3', color: '#854d0e' },
-  accountant:{ bg: '#fce7f3', color: '#c01818' },
+  owner:     { bg: 'var(--paper)', color: 'var(--brand-ink)' },
+  rop:       { bg: 'var(--ok-soft)', color: 'var(--ok)' },
+  mp:        { bg: 'var(--brand-soft)', color: 'var(--brand-ink)' },
+  lmai:      { bg: 'var(--warn-soft-2)', color: 'var(--warn-strong-2)' },
+  accountant:{ bg: 'var(--pink-soft)', color: 'var(--brand-ink)' },
 }
 
 const PERM_LEVEL_LABELS: Record<string, string> = {
@@ -395,10 +396,10 @@ function RolesPanel() {
   }
 
   return (
-    <SectionCard icon={<ShieldCheck size={15} color="#ffffff" />} title="Роли">
+    <SectionCard icon={<ShieldCheck size={15} color="var(--on-brand)" />} title="Роли">
       {addingNew ? (
-        <div className="mb-4 p-3 rounded-xl space-y-2" style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#7d7174' }}>Новая роль</p>
+        <div className="mb-4 p-3 rounded-xl space-y-2" style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
+          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--ink-3)' }}>Новая роль</p>
           <div className="space-y-1">
             <Label className="text-xs font-semibold text-gray-500">Название роли *</Label>
             <Input value={newForm.label} onChange={e => setNewForm(f => ({ ...f, label: e.target.value }))}
@@ -419,7 +420,7 @@ function RolesPanel() {
             </select>
           </div>
           <div className="flex gap-2 pt-1">
-            <Button size="sm" className="h-7 rounded-lg text-xs text-white" style={{ backgroundColor: '#e11d1d' }}
+            <Button size="sm" className="h-7 rounded-lg text-xs text-white" style={{ backgroundColor: 'var(--brand)' }}
               onClick={handleCreate} disabled={isPending}>
               <Save size={12} className="mr-1" /> Создать роль
             </Button>
@@ -429,7 +430,7 @@ function RolesPanel() {
         </div>
       ) : (
         <Button variant="outline" size="sm" className="mb-4 h-8 rounded-xl gap-1.5 text-xs"
-          style={{ borderColor: '#e11d1d', color: '#e11d1d' }} onClick={() => setAddingNew(true)}>
+          style={{ borderColor: 'var(--brand)', color: 'var(--brand)' }} onClick={() => setAddingNew(true)}>
           <Plus size={13} /> Добавить роль
         </Button>
       )}
@@ -437,23 +438,23 @@ function RolesPanel() {
       {loading ? (
         <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 rounded-xl animate-pulse" style={{ backgroundColor: '#fdfbfb' }} />
+            <div key={i} className="h-12 rounded-xl animate-pulse" style={{ backgroundColor: 'var(--paper-2)' }} />
           ))}
         </div>
       ) : (
         <div className="space-y-2">
           {roles.map(role => {
-            const badge = ROLE_BADGE[role.name] ?? { bg: '#faf8f7', color: '#c01818' }
+            const badge = ROLE_BADGE[role.name] ?? { bg: 'var(--paper)', color: 'var(--brand-ink)' }
             return (
               <div key={role.id} className="rounded-xl px-3 py-2.5"
-                style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
+                style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
                 {editingId === role.id ? (
                   <div className="space-y-2">
                     {/* Системные роли: название заблокировано — оно является идентификатором в employees.role */}
                     {role.is_system ? (
-                      <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg" style={{ backgroundColor: '#fdfbfb' }}>
-                        <span className="text-xs font-semibold" style={{ color: '#1b1517' }}>{role.label}</span>
-                        <span className="text-[10px]" style={{ color: '#7d7174' }}>· системная, название нельзя изменить</span>
+                      <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg" style={{ backgroundColor: 'var(--paper-2)' }}>
+                        <span className="text-xs font-semibold" style={{ color: 'var(--ink)' }}>{role.label}</span>
+                        <span className="text-[10px]" style={{ color: 'var(--ink-3)' }}>· системная, название нельзя изменить</span>
                       </div>
                     ) : (
                       <div className="space-y-1">
@@ -481,7 +482,7 @@ function RolesPanel() {
                     )}
                     <div className="flex gap-1.5 pt-0.5">
                       <Button size="sm" className="h-6 rounded-lg text-xs text-white px-2"
-                        style={{ backgroundColor: '#e11d1d' }} onClick={() => handleSaveEdit(role)} disabled={isPending}>
+                        style={{ backgroundColor: 'var(--brand)' }} onClick={() => handleSaveEdit(role)} disabled={isPending}>
                         <Save size={11} className="mr-1" /> Сохранить
                       </Button>
                       <Button variant="ghost" size="sm" className="h-6 rounded-lg text-xs px-2"
@@ -496,27 +497,27 @@ function RolesPanel() {
                           style={{ backgroundColor: badge.bg, color: badge.color }}>
                           {role.label}
                         </span>
-                        <span className="text-[10px]" style={{ color: '#7d7174' }}>
+                        <span className="text-[10px]" style={{ color: 'var(--ink-3)' }}>
                           {role.is_system ? 'системная' : (PERM_LEVEL_LABELS[role.permission_level] ?? role.permission_level)}
                         </span>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
                         <button onClick={() => handleStartEdit(role)}
                           className="p-1 rounded-lg hover:bg-gray-200 transition-colors" disabled={isPending}>
-                          <Pencil size={13} style={{ color: '#7d7174' }} />
+                          <Pencil size={13} style={{ color: 'var(--ink-3)' }} />
                         </button>
                         {!role.is_system && (
                           <button onClick={() => handleDelete(role)}
                             className="p-1 rounded-lg hover:bg-red-100 transition-colors" title="Удалить" disabled={isPending}>
-                            <Trash2 size={13} style={{ color: '#fca5a5' }} />
+                            <Trash2 size={13} style={{ color: 'var(--bad-border)' }} />
                           </button>
                         )}
                       </div>
                     </div>
                     {role.description ? (
-                      <p className="mt-1 text-[11px]" style={{ color: '#7d7174' }}>{role.description}</p>
+                      <p className="mt-1 text-[11px]" style={{ color: 'var(--ink-3)' }}>{role.description}</p>
                     ) : (
-                      <p className="mt-1 text-[11px] italic" style={{ color: '#ddd3d3' }}>Описание не задано</p>
+                      <p className="mt-1 text-[11px] italic" style={{ color: 'var(--line-strong)' }}>Описание не задано</p>
                     )}
                   </>
                 )}
@@ -590,10 +591,10 @@ function WorkSchedulesPanel() {
   }
 
   return (
-    <SectionCard icon={<CalendarDays size={15} color="#ffffff" />} title="Графики работы">
+    <SectionCard icon={<CalendarDays size={15} color="var(--on-brand)" />} title="Графики работы">
       {addingNew ? (
-        <div className="mb-4 p-3 rounded-xl space-y-2" style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#7d7174' }}>Новый график</p>
+        <div className="mb-4 p-3 rounded-xl space-y-2" style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
+          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--ink-3)' }}>Новый график</p>
           <div className="space-y-1">
             <Label className="text-xs font-semibold text-gray-500">Название *</Label>
             <Input value={newForm.name} onChange={e => setNewForm(f => ({ ...f, name: e.target.value }))}
@@ -605,7 +606,7 @@ function WorkSchedulesPanel() {
               placeholder="Как работает этот график..." className="h-8 rounded-lg text-sm border-gray-200" />
           </div>
           <div className="flex gap-2 pt-1">
-            <Button size="sm" className="h-7 rounded-lg text-xs text-white" style={{ backgroundColor: '#e11d1d' }}
+            <Button size="sm" className="h-7 rounded-lg text-xs text-white" style={{ backgroundColor: 'var(--brand)' }}
               onClick={handleCreate} disabled={isPending}>
               <Save size={12} className="mr-1" /> Сохранить
             </Button>
@@ -615,7 +616,7 @@ function WorkSchedulesPanel() {
         </div>
       ) : (
         <Button variant="outline" size="sm" className="mb-4 h-8 rounded-xl gap-1.5 text-xs"
-          style={{ borderColor: '#e11d1d', color: '#e11d1d' }} onClick={() => setAddingNew(true)}>
+          style={{ borderColor: 'var(--brand)', color: 'var(--brand)' }} onClick={() => setAddingNew(true)}>
           <Plus size={13} /> Добавить график
         </Button>
       )}
@@ -623,14 +624,14 @@ function WorkSchedulesPanel() {
       {loading ? (
         <div className="space-y-2">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-12 rounded-xl animate-pulse" style={{ backgroundColor: '#fdfbfb' }} />
+            <div key={i} className="h-12 rounded-xl animate-pulse" style={{ backgroundColor: 'var(--paper-2)' }} />
           ))}
         </div>
       ) : (
         <div className="space-y-2">
           {schedules.map(s => (
             <div key={s.id} className="rounded-xl px-3 py-2.5"
-              style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}>
+              style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}>
               {editingId === s.id ? (
                 <div className="space-y-2">
                   {!s.is_system && (
@@ -648,7 +649,7 @@ function WorkSchedulesPanel() {
                   </div>
                   <div className="flex gap-1.5 pt-0.5">
                     <Button size="sm" className="h-6 rounded-lg text-xs text-white px-2"
-                      style={{ backgroundColor: '#e11d1d' }} onClick={() => handleSaveEdit(s)} disabled={isPending}>
+                      style={{ backgroundColor: 'var(--brand)' }} onClick={() => handleSaveEdit(s)} disabled={isPending}>
                       <Save size={11} className="mr-1" /> Сохранить
                     </Button>
                     <Button variant="ghost" size="sm" className="h-6 rounded-lg text-xs px-2"
@@ -660,28 +661,28 @@ function WorkSchedulesPanel() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0 flex-wrap">
                       <span className="shrink-0 text-[11px] font-bold px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: '#faf8f7', color: '#c01818' }}>{s.name}</span>
+                        style={{ backgroundColor: 'var(--paper)', color: 'var(--brand-ink)' }}>{s.name}</span>
                       {s.is_system && (
-                        <span className="text-[10px]" style={{ color: '#7d7174' }}>системный</span>
+                        <span className="text-[10px]" style={{ color: 'var(--ink-3)' }}>системный</span>
                       )}
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <button onClick={() => handleStartEdit(s)}
                         className="p-1 rounded-lg hover:bg-gray-200 transition-colors" disabled={isPending}>
-                        <Pencil size={13} style={{ color: '#7d7174' }} />
+                        <Pencil size={13} style={{ color: 'var(--ink-3)' }} />
                       </button>
                       {!s.is_system && (
                         <button onClick={() => handleDelete(s)}
                           className="p-1 rounded-lg hover:bg-red-100 transition-colors" title="Удалить" disabled={isPending}>
-                          <Trash2 size={13} style={{ color: '#fca5a5' }} />
+                          <Trash2 size={13} style={{ color: 'var(--bad-border)' }} />
                         </button>
                       )}
                     </div>
                   </div>
                   {s.description ? (
-                    <p className="mt-1 text-[11px]" style={{ color: '#7d7174' }}>{s.description}</p>
+                    <p className="mt-1 text-[11px]" style={{ color: 'var(--ink-3)' }}>{s.description}</p>
                   ) : (
-                    <p className="mt-1 text-[11px] italic" style={{ color: '#ddd3d3' }}>Описание не задано</p>
+                    <p className="mt-1 text-[11px] italic" style={{ color: 'var(--line-strong)' }}>Описание не задано</p>
                   )}
                 </>
               )}
@@ -695,20 +696,63 @@ function WorkSchedulesPanel() {
 
 // ─── Главная страница ─────────────────────────────────────────────────────────
 
+// Отдельные страницы настроек. Часть из них повторяет панели ниже (отделы,
+// графики, KPI) — они вынесены на свои адреса, чтобы на них можно было дать
+// прямую ссылку; часть существует только там: матрица прав, словарь терминов
+// и сведения об окружении.
+const SUBPAGES = [
+  { href: '/dashboard/settings/roles',       icon: ShieldCheck,       title: 'Роли и доступы',   desc: 'Матрица прав: кто что видит, создаёт, меняет и удаляет' },
+  { href: '/dashboard/settings/glossary',    icon: BookOpen,          title: 'Словарь терминов', desc: 'Что значат термины системы — простыми словами' },
+  { href: '/dashboard/settings/general',     icon: SlidersHorizontal, title: 'Общее',            desc: 'Сведения о системе и окружении' },
+  { href: '/dashboard/settings/departments', icon: Building2,         title: 'Отделы',           desc: 'Структура компании отдельной страницей' },
+  { href: '/dashboard/settings/schedules',   icon: CalendarDays,      title: 'Графики работы',   desc: 'Справочник рабочих графиков' },
+  { href: '/dashboard/settings/kpi',         icon: DollarSign,        title: 'KPI и оплата',     desc: 'Оклады, бонусы и KPI-пункты по ролям' },
+] as const
+
+function SubpagesRow() {
+  return (
+    <div className="p-5 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))' }}>
+      {SUBPAGES.map(({ href, icon: Icon, title, desc }) => (
+        <Link
+          key={href}
+          href={href}
+          className="card-hover flex items-start gap-3 rounded-2xl px-4 py-3.5"
+          style={{ border: '1px solid var(--line)', background: 'var(--surface)' }}
+        >
+          <span
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl"
+            style={{ background: 'var(--brand-soft)' }}
+            aria-hidden
+          >
+            <Icon size={16} style={{ color: 'var(--brand-ink)' }} />
+          </span>
+          <span className="min-w-0">
+            <b className="block text-[13px]" style={{ color: 'var(--ink)' }}>{title}</b>
+            <small className="mt-0.5 block text-[11.5px]" style={{ color: 'var(--ink-3)' }}>{desc}</small>
+          </span>
+          <ChevronRight size={15} className="ml-auto shrink-0 self-center" style={{ color: 'var(--ink-4)' }} aria-hidden />
+        </Link>
+      ))}
+    </div>
+  )
+}
+
 export default function SettingsPage() {
   return (
     <div className="min-h-screen">
       <div className="flex items-center gap-3 px-6 py-4 glass-dark text-white">
         <div className="flex items-center justify-center w-9 h-9 rounded-xl brand-gradient">
-          <Settings size={18} color="#ffffff" />
+          <Settings size={18} color="var(--on-brand)" />
         </div>
         <div>
           <div className="font-semibold text-base leading-tight">Настройки</div>
-          <div className="text-xs" style={{ color: '#c9bfc1' }}>Управление системой</div>
+          <div className="text-xs" style={{ color: 'var(--neutral-line-2)' }}>Управление системой</div>
         </div>
       </div>
 
-      <div className="p-5 grid gap-5 lg:grid-cols-2">
+      <SubpagesRow />
+
+      <div className="p-5 pt-0 grid gap-5 lg:grid-cols-2">
         <div className="space-y-5">
           <AppearancePanel />
           <KpiSettingsPanel />

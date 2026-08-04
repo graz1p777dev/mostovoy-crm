@@ -27,13 +27,13 @@ export default function FinancePage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fdfbfb' }}>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--paper-2)' }}>
       <FinanceHeader year={year} month={month} onPrev={prevMonth} onNext={nextMonth} />
 
       {!data ? (
         <div className="p-5 space-y-4">
           {[80, 240, 240, 440].map((h, i) => (
-            <div key={i} className="rounded-2xl animate-pulse" style={{ height: h, backgroundColor: '#faf8f7' }} />
+            <div key={i} className="rounded-2xl animate-pulse" style={{ height: h, backgroundColor: 'var(--paper)' }} />
           ))}
         </div>
       ) : (

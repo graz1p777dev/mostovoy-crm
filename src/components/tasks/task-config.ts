@@ -13,10 +13,10 @@ export interface TaskColumn {
 }
 
 export const TASK_COLUMNS: TaskColumn[] = [
-  { key: 'todo',        label: 'К выполнению', icon: Circle,       accent: '#6b6063', soft: 'rgba(125,113,116,0.16)' },
-  { key: 'in_progress', label: 'В работе',     icon: Timer,        accent: '#c01818', soft: 'rgba(225,29,29,0.13)'   },
-  { key: 'review',      label: 'На проверке',  icon: Eye,          accent: '#92400e', soft: 'rgba(217,119,6,0.14)'   },
-  { key: 'done',        label: 'Готово',       icon: CheckCircle2, accent: '#166534', soft: 'rgba(22,163,74,0.14)'   },
+  { key: 'todo',        label: 'К выполнению', icon: Circle,       accent: 'var(--ink-25)', soft: 'rgba(125,113,116,0.16)' },
+  { key: 'in_progress', label: 'В работе',     icon: Timer,        accent: 'var(--brand-ink)', soft: 'rgba(225,29,29,0.13)'   },
+  { key: 'review',      label: 'На проверке',  icon: Eye,          accent: 'var(--warn-strong)', soft: 'rgba(217,119,6,0.14)'   },
+  { key: 'done',        label: 'Готово',       icon: CheckCircle2, accent: 'var(--ok-strong)', soft: 'rgba(22,163,74,0.14)'   },
 ]
 
 export const TASK_STATUS_LABEL: Record<TaskStatus, string> =
@@ -28,10 +28,10 @@ export const TASK_PRIORITY: Record<
   TaskPriority,
   { label: string; color: string; bg: string }
 > = {
-  low:    { label: 'Низкий',  color: '#6b6063', bg: '#fdfbfb' },
-  medium: { label: 'Средний', color: '#e11d1d', bg: '#fdecec' },
-  high:   { label: 'Высокий', color: '#b45309', bg: '#fef3c7' },
-  urgent: { label: 'Срочный', color: '#c01818', bg: '#fee2e2' },
+  low:    { label: 'Низкий',  color: 'var(--ink-25)', bg: 'var(--paper-2)' },
+  medium: { label: 'Средний', color: 'var(--brand)', bg: 'var(--brand-soft)' },
+  high:   { label: 'Высокий', color: 'var(--warn)', bg: 'var(--warn-soft)' },
+  urgent: { label: 'Срочный', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
 }
 
 export const TASK_PRIORITY_ORDER: TaskPriority[] = ['low', 'medium', 'high', 'urgent']

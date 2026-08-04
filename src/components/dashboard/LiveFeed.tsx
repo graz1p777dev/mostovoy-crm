@@ -14,11 +14,11 @@ interface LiveFeedProps {
 }
 
 function getStatusStyle(status: LiveFeedItem['status']): { label: string; color: string; bg: string } {
-  if (!status) return { label: '—', color: '#7d7174', bg: '#fdfbfb' }
+  if (!status) return { label: '—', color: 'var(--ink-3)', bg: 'var(--paper-2)' }
   if (status in STATUS_AFTER_FV_MAP) return STATUS_AFTER_FV_MAP[status as keyof typeof STATUS_AFTER_FV_MAP]
   if (status in ACTUAL_STATUS_MAP) return ACTUAL_STATUS_MAP[status as keyof typeof ACTUAL_STATUS_MAP]
   if (status in CONSULTATION_STATUS_MAP) return CONSULTATION_STATUS_MAP[status as keyof typeof CONSULTATION_STATUS_MAP]
-  return { label: status, color: '#7d7174', bg: '#fdfbfb' }
+  return { label: status, color: 'var(--ink-3)', bg: 'var(--paper-2)' }
 }
 
 function FeedRow({ item, isNew }: { item: LiveFeedItem; isNew?: boolean }) {
@@ -27,7 +27,7 @@ function FeedRow({ item, isNew }: { item: LiveFeedItem; isNew?: boolean }) {
     <div
       className="flex items-start gap-3 py-2.5"
       style={{
-        borderBottom: '1px solid #faf8f7',
+        borderBottom: '1px solid var(--paper)',
         animation: isNew ? 'feedIn 0.2s ease-out' : undefined,
       }}
     >
@@ -41,7 +41,7 @@ function FeedRow({ item, isNew }: { item: LiveFeedItem; isNew?: boolean }) {
         <div className="flex items-center gap-2 flex-wrap">
           <span
             className="font-medium truncate"
-            style={{ fontSize: 13, color: '#1b1517', maxWidth: 140 }}
+            style={{ fontSize: 13, color: 'var(--ink)', maxWidth: 140 }}
           >
             {item.client_name}
           </span>
@@ -54,20 +54,20 @@ function FeedRow({ item, isNew }: { item: LiveFeedItem; isNew?: boolean }) {
           {item.is_nv && (
             <span
               className="rounded-md px-1.5 py-0.5 font-medium flex-shrink-0"
-              style={{ fontSize: 10, color: '#c01818', backgroundColor: '#fdfbfb' }}
+              style={{ fontSize: 10, color: 'var(--brand-ink)', backgroundColor: 'var(--paper-2)' }}
             >
               НВ
             </span>
           )}
         </div>
         <div className="flex items-center gap-2 mt-0.5">
-          <span style={{ fontSize: 11, color: '#7d7174' }}>{item.manager_name}</span>
+          <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>{item.manager_name}</span>
           {item.amount > 0 && (
             <>
-              <span style={{ color: '#ece5e5' }}>·</span>
+              <span style={{ color: 'var(--line)' }}>·</span>
               <span
                 className="tabular-nums font-medium"
-                style={{ fontSize: 11, color: '#15803d' }}
+                style={{ fontSize: 11, color: 'var(--ok)' }}
               >
                 {formatMoney(item.amount)}
               </span>
@@ -78,7 +78,7 @@ function FeedRow({ item, isNew }: { item: LiveFeedItem; isNew?: boolean }) {
       {/* Время */}
       <span
         className="flex-shrink-0 tabular-nums"
-        style={{ fontSize: 11, color: '#7d7174' }}
+        style={{ fontSize: 11, color: 'var(--ink-3)' }}
       >
         {formatTime(item.time)}
       </span>

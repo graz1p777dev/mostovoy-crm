@@ -25,8 +25,8 @@ function CustomTooltip({
   if (!active || !payload?.length) return null
   return (
     <div className="rounded-xl px-3 py-2" style={CHART_TOOLTIP_STYLE}>
-      <p style={{ color: '#7d7174', marginBottom: 2 }}>Неделя {label}</p>
-      <p className="font-semibold tabular-nums" style={{ color: '#1b1517' }}>
+      <p style={{ color: 'var(--ink-3)', marginBottom: 2 }}>Неделя {label}</p>
+      <p className="font-semibold tabular-nums" style={{ color: 'var(--ink)' }}>
         {formatMoney(payload[0].value)}
       </p>
     </div>
@@ -36,7 +36,7 @@ function CustomTooltip({
 const commonAxisProps = {
   axisLine: false,
   tickLine: false,
-  tick: { fontSize: 11, fill: '#7d7174' },
+  tick: { fontSize: 11, fill: 'var(--ink-3)' },
 }
 
 export default function RevenueWeeksChart({ data }: RevenueWeeksChartProps) {

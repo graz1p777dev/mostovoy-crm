@@ -49,7 +49,7 @@ export default function GlowOrb({
    Радуги здесь быть не должно: загрузка — не праздник. */
 .glow-orb__halo {
   background: conic-gradient(from 0deg,
-    #e11d1d, #ff5c68, #ffa8b0, #ff5c68, #c01818, #e11d1d);
+    var(--brand), var(--accent-to), var(--series-soft), var(--accent-to), var(--brand-ink), var(--brand));
   filter: blur(10px);
   opacity: 0.5;
   animation: glow-orb-spin 3.7s linear infinite, glow-orb-pulse 2.3s ease-in-out infinite;
@@ -57,7 +57,7 @@ export default function GlowOrb({
 /* Ядро: тот же градиент, чётко, вращается медленнее и в обратную сторону */
 .glow-orb__core {
   background: conic-gradient(from 90deg,
-    #e11d1d, #c01818, #ff5c68, #ffa8b0, #e11d1d);
+    var(--brand), var(--brand-ink), var(--accent-to), var(--series-soft), var(--brand));
   animation: glow-orb-spin 5.3s linear infinite reverse;
   box-shadow: inset 0 0 18px rgba(28, 20, 22, 0.42);
 }
@@ -65,8 +65,8 @@ export default function GlowOrb({
    именно он ломает периодичность и даёт «случайные» сочетания оттенков */
 .glow-orb__drift {
   background: conic-gradient(from 210deg,
-    transparent 0deg, #ff8f86 60deg, transparent 130deg,
-    #ffc9b0 190deg, transparent 260deg, #ff5c68 320deg, transparent 360deg);
+    transparent 0deg, var(--brand-light) 60deg, transparent 130deg,
+    var(--orange-soft) 190deg, transparent 260deg, var(--accent-to) 320deg, transparent 360deg);
   mix-blend-mode: screen;
   opacity: 0.45;
   filter: blur(3px);

@@ -21,12 +21,12 @@ function KpiCard({ m }: { m: Metric }) {
 
   return (
     <div className="rounded-2xl p-4 border flex flex-col gap-2.5"
-      style={{ backgroundColor: '#fff', borderColor: c.border, borderWidth: 1.5 }}
+      style={{ backgroundColor: 'var(--surface)', borderColor: c.border, borderWidth: 1.5 }}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           <FinanceMetricIcon icon={m.icon} />
-          <p className="text-[11px] font-semibold" style={{ color: '#1b1517' }}>{m.label}</p>
+          <p className="text-[11px] font-semibold" style={{ color: 'var(--ink)' }}>{m.label}</p>
         </div>
         <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
           style={{ backgroundColor: c.bg, color: c.text }}
@@ -39,16 +39,16 @@ function KpiCard({ m }: { m: Metric }) {
         {m.fmt(m.fact)}{m.suffix ?? ''}
       </p>
 
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#fdfbfb' }}>
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--paper-2)' }}>
         <div className="h-full rounded-full" style={{ width: `${prog}%`, backgroundColor: c.text }} />
       </div>
 
       <div className="flex items-center justify-between text-[10px]">
-        <span style={{ color: '#7d7174' }}>
-          план <span className="font-semibold" style={{ color: '#1b1517' }}>{m.fmt(m.plan)}{m.suffix ?? ''}</span>
+        <span style={{ color: 'var(--ink-3)' }}>
+          план <span className="font-semibold" style={{ color: 'var(--ink)' }}>{m.fmt(m.plan)}{m.suffix ?? ''}</span>
         </span>
         <span className="font-bold" style={{ color: c.text }}>{pct}%</span>
-        <span className="font-semibold" style={{ color: good ? '#15803d' : '#e11d1d' }}>
+        <span className="font-semibold" style={{ color: good ? 'var(--ok)' : 'var(--brand)' }}>
           {good ? '+' : ''}{m.fmt(Math.abs(delta))}{m.suffix ?? ''}
         </span>
       </div>
@@ -92,7 +92,7 @@ export default function FinanceKpiDashboard({ kpi }: Props) {
     <div className="space-y-4">
       {rows.map(grp => (
         <div key={grp.title}>
-          <p className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: '#7d7174' }}>{grp.title}</p>
+          <p className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--ink-3)' }}>{grp.title}</p>
           <div className={`grid gap-3 grid-cols-2 md:grid-cols-${Math.min(grp.metrics.length, 5)}`}>
             {grp.metrics.map(m => <KpiCard key={m.label} m={m} />)}
           </div>

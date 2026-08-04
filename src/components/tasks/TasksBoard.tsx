@@ -230,7 +230,7 @@ export default function TasksBoard({ initialTasks, employees, departments, me }:
               className={cn(
                 'flex w-[300px] shrink-0 flex-col rounded-2xl border transition-colors',
                 isTarget && dragId
-                  ? 'border-[#f7b3b3] bg-[#fdecec]/60'
+                  ? 'border-[var(--brand-mid)] bg-[var(--brand-soft)]/60'
                   : 'border-gray-100 bg-gray-50/60'
               )}
             >
@@ -272,7 +272,7 @@ export default function TasksBoard({ initialTasks, employees, departments, me }:
                     }}
                   >
                     {dragId && isTarget && dragOver?.beforeId === task.id && (
-                      <div className="mb-2 h-[3px] rounded-full bg-[#e11d1d]" />
+                      <div className="mb-2 h-[3px] rounded-full bg-[var(--brand)]" />
                     )}
                     <TaskCard
                       task={task}
@@ -287,7 +287,7 @@ export default function TasksBoard({ initialTasks, employees, departments, me }:
 
                 {/* Плейсхолдер в конце / пустая колонка */}
                 {dragId && isTarget && dragOver?.beforeId === null && (
-                  <div className="h-[3px] rounded-full bg-[#e11d1d]" />
+                  <div className="h-[3px] rounded-full bg-[var(--brand)]" />
                 )}
                 {list.length === 0 && !dragId && (
                   <button

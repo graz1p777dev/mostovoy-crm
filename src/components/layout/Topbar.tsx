@@ -56,7 +56,7 @@ function AskAiInput({ pathname }: { pathname: string }) {
   return (
     <div className="relative w-full max-w-md">
       <Sparkles
-        style={{ width: 14, height: 14, color: '#7d7174' }}
+        style={{ width: 14, height: 14, color: 'var(--ink-3)' }}
         className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
       />
       <input
@@ -68,9 +68,9 @@ function AskAiInput({ pathname }: { pathname: string }) {
         style={{
           fontSize: 13,
           padding: '6px 10px 6px 28px',
-          background: '#f6f2f2',
-          border: '1px solid #ece5e5',
-          color: '#1b1517',
+          background: 'var(--surface-2)',
+          border: '1px solid var(--line)',
+          color: 'var(--ink)',
         }}
       />
     </div>
@@ -126,7 +126,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         backgroundColor: 'rgba(255,255,255,0.88)',
         backdropFilter: 'blur(16px) saturate(120%)',
         WebkitBackdropFilter: 'blur(16px) saturate(120%)',
-        borderBottom: '1px solid #ece5e5',
+        borderBottom: '1px solid var(--line)',
         boxShadow: '0 1px 2px rgba(28,20,22,0.04)',
         position: 'sticky',
         top: 0,
@@ -137,7 +137,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
       <button
         onClick={onMenuClick}
         className="md:hidden flex items-center justify-center rounded-md flex-shrink-0"
-        style={{ width: 32, height: 32, color: '#1b1517' }}
+        style={{ width: 32, height: 32, color: 'var(--ink)' }}
         title="Меню"
         aria-label="Открыть меню"
       >
@@ -149,7 +149,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         {pathname.startsWith('/dashboard/copilot') ? (
           <h1
             className="font-semibold truncate"
-            style={{ fontSize: 14, color: '#1b1517' }}
+            style={{ fontSize: 14, color: 'var(--ink)' }}
           >
             {getPageTitle(pathname)}
           </h1>
@@ -164,7 +164,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         {!pathname.startsWith('/dashboard/copilot') && (
           <span
             className="hidden sm:block font-medium truncate"
-            style={{ fontSize: 12, color: '#1b1517', maxWidth: 220 }}
+            style={{ fontSize: 12, color: 'var(--ink)', maxWidth: 220 }}
           >
             {getPageTitle(pathname)}
           </span>
@@ -174,7 +174,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         {today && (
           <span
             className="hidden sm:block"
-            style={{ fontSize: 12, color: '#7d7174' }}
+            style={{ fontSize: 12, color: 'var(--ink-3)' }}
           >
             {today}
           </span>
@@ -184,7 +184,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         <Link
           href="/dashboard/notifications"
           className="relative flex items-center justify-center rounded-md transition-colors"
-          style={{ width: 32, height: 32, color: '#6b7280' }}
+          style={{ width: 32, height: 32, color: 'var(--ink-muted)' }}
           title="Уведомления"
         >
           <Bell style={{ width: 16, height: 16 }} />
@@ -194,7 +194,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
               style={{
                 top: 4, right: 4,
                 minWidth: 14, height: 14,
-                backgroundColor: '#c01818',
+                backgroundColor: 'var(--brand-ink)',
                 borderRadius: 7,
                 fontSize: 9,
                 lineHeight: 1,
@@ -224,7 +224,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
           </div>
           <span
             className="hidden md:block font-medium"
-            style={{ fontSize: 12, color: '#1b1517', maxWidth: 100 }}
+            style={{ fontSize: 12, color: 'var(--ink)', maxWidth: 100 }}
           >
             {user?.name?.split(' ')[0] ?? ''}
           </span>

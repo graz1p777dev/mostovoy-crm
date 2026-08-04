@@ -25,7 +25,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
       className="font-medium"
       style={{
         fontSize: 12,
-        color: '#6b7280',
+        color: 'var(--ink-muted)',
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
         marginBottom: 12,

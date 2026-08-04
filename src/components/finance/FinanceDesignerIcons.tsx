@@ -24,10 +24,10 @@ interface MetricIconProps {
 // метрику, а не спорит с числом.
 type IconTone = { bg: string; fg: string; accent: string }
 
-const TONE_BRAND: IconTone = { bg: '#e11d1d', fg: '#ffffff', accent: 'rgba(255,255,255,0.60)' }
-const TONE_COST: IconTone = { bg: '#b5491f', fg: '#ffffff', accent: 'rgba(255,255,255,0.60)' }
-const TONE_GOOD: IconTone = { bg: '#2f7d64', fg: '#ffffff', accent: 'rgba(255,255,255,0.60)' }
-const TONE_MUTED: IconTone = { bg: '#574d4f', fg: '#ffffff', accent: 'rgba(255,255,255,0.56)' }
+const TONE_BRAND: IconTone = { bg: 'var(--brand)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.60)' }
+const TONE_COST: IconTone = { bg: 'var(--series-negative)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.60)' }
+const TONE_GOOD: IconTone = { bg: 'var(--series-positive)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.60)' }
+const TONE_MUTED: IconTone = { bg: 'var(--ink-2)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.56)' }
 
 const ICON_TONES: Record<MetricIconKey, IconTone> = {
   revenue: TONE_BRAND,
@@ -152,7 +152,7 @@ export function FinanceHeaderIcon() {
     <div
       className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl shadow-sm"
       style={{
-        background: 'linear-gradient(135deg,#e11d1d 0%,#ff5c68 100%)',
+        background: 'linear-gradient(135deg,var(--brand) 0%,var(--accent-to) 100%)',
         boxShadow: '0 5px 14px -4px rgba(28,20,22,0.24)',
       }}
       aria-hidden
@@ -162,8 +162,8 @@ export function FinanceHeaderIcon() {
         style={{ right: -24, top: -20, backgroundColor: 'rgba(255,255,255,0.16)' }}
       />
       <svg viewBox="0 0 24 24" className="relative h-6 w-6" fill="none">
-        <path d="M5 17.5h14" stroke="#ffffff" strokeWidth="1.9" strokeLinecap="round" />
-        <path d="M7 17.5V10l5-3.8 5 3.8v7.5" stroke="#ffffff" strokeWidth="1.9" strokeLinejoin="round" />
+        <path d="M5 17.5h14" stroke="var(--surface)" strokeWidth="1.9" strokeLinecap="round" />
+        <path d="M7 17.5V10l5-3.8 5 3.8v7.5" stroke="var(--surface)" strokeWidth="1.9" strokeLinejoin="round" />
         <path d="M10 17.5v-4h4v4" stroke="rgba(255,255,255,0.62)" strokeWidth="1.9" strokeLinejoin="round" />
         <path d="M8.2 9.6h7.6" stroke="rgba(255,255,255,0.62)" strokeWidth="1.7" strokeLinecap="round" />
       </svg>

@@ -40,10 +40,10 @@ const COLS: ColDef[] = [
 ]
 
 const GROUP_META: Record<string, { label: string; color: string; count: number }> = {
-  revenue:  { label: 'Выручка',    color: '#dcfce7', count: 3 },
-  expenses: { label: 'Расходы',    color: '#fee2e2', count: 6 },
-  profit:   { label: 'Прибыль',    color: '#fef3c7', count: 3 },
-  cash:     { label: 'Cash Flow',  color: '#fdecec', count: 3 },
+  revenue:  { label: 'Выручка',    color: 'var(--ok-soft)', count: 3 },
+  expenses: { label: 'Расходы',    color: 'var(--bad-soft)', count: 6 },
+  profit:   { label: 'Прибыль',    color: 'var(--warn-soft)', count: 3 },
+  cash:     { label: 'Cash Flow',  color: 'var(--brand-soft)', count: 3 },
 }
 
 function getDailyPlan(col: ColDef, workDays: number, isWeekend: boolean): number | null {
@@ -89,7 +89,7 @@ function Cell({ col, fact, plan, viewMode }: { col: ColDef; fact: number; plan: 
     return (
       <td className="px-2 py-1.5 text-right whitespace-nowrap">
         <div className="text-[11px] font-semibold" style={{ color: c.text }}>{col.fmt(fact)}</div>
-        <div style={{ fontSize: 9, color: '#7d7174' }}>/{col.fmt(plan!)} {pct}%</div>
+        <div style={{ fontSize: 9, color: 'var(--ink-3)' }}>/{col.fmt(plan!)} {pct}%</div>
       </td>
     )
   }
@@ -98,18 +98,18 @@ function Cell({ col, fact, plan, viewMode }: { col: ColDef; fact: number; plan: 
     const good  = col.dir === 'lower' ? delta <= 0 : delta >= 0
     return (
       <td className="px-2 py-1.5 text-right whitespace-nowrap">
-        <div className="text-[11px] font-semibold" style={{ color: good ? '#15803d' : '#e11d1d' }}>
+        <div className="text-[11px] font-semibold" style={{ color: good ? 'var(--ok)' : 'var(--brand)' }}>
           {good ? '+' : ''}{col.fmt(Math.abs(delta))}
         </div>
-        <div style={{ fontSize: 9, color: '#7d7174' }}>{col.fmt(fact)}</div>
+        <div style={{ fontSize: 9, color: 'var(--ink-3)' }}>{col.fmt(fact)}</div>
       </td>
     )
   }
   return (
     <td className="px-2 py-1.5 text-right text-[11px] font-semibold whitespace-nowrap"
       style={{ color: hasPlan ? c.text : col.key === 'netProfit' || col.key === 'grossProfit'
-        ? fact >= 0 ? '#15803d' : '#e11d1d'
-        : '#1b1517' }}
+        ? fact >= 0 ? 'var(--ok)' : 'var(--brand)'
+        : 'var(--ink)' }}
     >
       {col.fmt(fact)}
     </td>
@@ -167,40 +167,40 @@ export default function FinanceDailyTable({ rows, kpi }: Props) {
   }
 
   return (
-    <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: '#fff', borderColor: '#ebebee' }}>
+    <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
       {/* Тулбар */}
-      <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b" style={{ borderColor: '#ebebee' }}>
+      <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b" style={{ borderColor: 'var(--line-soft)' }}>
         <div>
-          <p className="text-sm font-semibold" style={{ color: '#1b1517' }}>Ежедневная аналитика</p>
-          <p className="text-[11px]" style={{ color: '#7d7174' }}>Все финансовые показатели по дням</p>
+          <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>Ежедневная аналитика</p>
+          <p className="text-[11px]" style={{ color: 'var(--ink-3)' }}>Все финансовые показатели по дням</p>
         </div>
         <div className="flex items-center gap-1.5 ml-auto flex-wrap">
           <input type="text" value={search} onChange={e => setSearch(e.target.value)}
             placeholder="День..." className="text-[11px] rounded-lg px-2 py-1.5 border outline-none w-20"
-            style={{ borderColor: '#ebebee', color: '#1b1517' }} />
+            style={{ borderColor: 'var(--line-soft)', color: 'var(--ink)' }} />
           {[{ label: 'Без вых.', val: hideWeekends, set: setHideWeekends },
             { label: 'Прошедшие', val: hideFuture, set: setHideFuture }].map(f => (
             <label key={f.label} className="flex items-center gap-1 text-[11px] cursor-pointer select-none px-2 py-1.5 rounded-lg border"
-              style={{ borderColor: '#ebebee', color: '#1b1517' }}>
+              style={{ borderColor: 'var(--line-soft)', color: 'var(--ink)' }}>
               <input type="checkbox" checked={f.val} onChange={e => f.set(e.target.checked)} className="w-3 h-3" />
               {f.label}
             </label>
           ))}
-          <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: '#ebebee' }}>
+          <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: 'var(--line-soft)' }}>
             {(['fact','vs_plan','delta'] as ViewMode[]).map(m => (
               <button key={m} onClick={() => setViewMode(m)}
                 className="text-[10px] font-semibold px-2.5 py-1.5"
-                style={{ backgroundColor: viewMode === m ? '#e11d1d' : '#fff', color: viewMode === m ? '#fff' : '#1b1517' }}>
+                style={{ backgroundColor: viewMode === m ? 'var(--brand)' : 'var(--surface)', color: viewMode === m ? 'var(--surface)' : 'var(--ink)' }}>
                 {m === 'fact' ? 'Факт' : m === 'vs_plan' ? 'vs План' : 'Δ Откл.'}
               </button>
             ))}
           </div>
           <button onClick={() => exportCSV(filtered, fileBase + '.csv')}
             className="text-[11px] font-semibold px-2 py-1.5 rounded-lg border hover:opacity-80"
-            style={{ backgroundColor: '#fdfbfb', color: '#1b1517', borderColor: '#ebebee' }}>↓ CSV</button>
+            style={{ backgroundColor: 'var(--paper-2)', color: 'var(--ink)', borderColor: 'var(--line-soft)' }}>↓ CSV</button>
           <button onClick={() => exportExcel(filtered, fileBase + '.xls')}
             className="text-[11px] font-semibold px-2 py-1.5 rounded-lg border hover:opacity-80"
-            style={{ backgroundColor: '#fdfbfb', color: '#1b1517', borderColor: '#ebebee' }}>↓ Excel</button>
+            style={{ backgroundColor: 'var(--paper-2)', color: 'var(--ink)', borderColor: 'var(--line-soft)' }}>↓ Excel</button>
         </div>
       </div>
 
@@ -209,13 +209,13 @@ export default function FinanceDailyTable({ rows, kpi }: Props) {
           <thead>
             <tr style={{ position: 'sticky', top: 0, zIndex: 20 }}>
               <th rowSpan={2} style={{
-                position: 'sticky', left: 0, zIndex: 30, backgroundColor: '#f6f2f2', color: '#574d4f',
+                position: 'sticky', left: 0, zIndex: 30, backgroundColor: 'var(--surface-2)', color: 'var(--ink-2)',
                 padding: '6px 10px', textAlign: 'left', fontSize: 10,
                 borderRight: '1px solid rgba(255,255,255,0.15)', minWidth: 72,
               }}>ДАТА</th>
               {Object.entries(GROUP_META).map(([grp, meta]) => (
                 <th key={grp} colSpan={meta.count} style={{
-                  backgroundColor: meta.color, color: '#1b1517',
+                  backgroundColor: meta.color, color: 'var(--ink)',
                   padding: '5px 8px', textAlign: 'center',
                   fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
                   borderRight: '1px solid rgba(0,0,0,0.07)',
@@ -225,14 +225,14 @@ export default function FinanceDailyTable({ rows, kpi }: Props) {
             <tr style={{ position: 'sticky', top: 29, zIndex: 19 }}>
               {COLS.map((col, i) => (
                 <th key={col.key} onClick={() => handleSort(col.key)} style={{
-                  backgroundColor: GROUP_META[col.group]?.color ?? '#fdfbfb',
-                  color: '#1b1517', padding: '5px 8px', textAlign: 'right',
+                  backgroundColor: GROUP_META[col.group]?.color ?? 'var(--paper-2)',
+                  color: 'var(--ink)', padding: '5px 8px', textAlign: 'right',
                   fontSize: 10, fontWeight: 600, cursor: 'pointer',
                   whiteSpace: 'nowrap', userSelect: 'none',
                   borderRight: i < COLS.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none',
                 }}>
                   {col.label}{' '}
-                  <span style={{ color: sortCol === col.key ? '#c01818' : '#6b6063' }}>
+                  <span style={{ color: sortCol === col.key ? 'var(--brand-ink)' : 'var(--ink-25)' }}>
                     {sortCol === col.key ? (sortDir === 'asc' ? '↑' : '↓') : '⇅'}
                   </span>
                 </th>
@@ -242,22 +242,22 @@ export default function FinanceDailyTable({ rows, kpi }: Props) {
           <tbody>
             {filtered.map((row, idx) => {
               const dayOfWeek = DAY_ABBR[new Date(row.date).getDay()]
-              const rowBg = row.isToday ? '#fffbeb' : row.isWeekend ? '#faf8f7' : idx % 2 === 0 ? '#fff' : '#fdfbfb'
+              const rowBg = row.isToday ? 'var(--warn-tint)' : row.isWeekend ? 'var(--paper)' : idx % 2 === 0 ? 'var(--surface)' : 'var(--paper-2)'
               return (
                 <tr key={row.day} style={{ backgroundColor: rowBg, opacity: row.isFuture ? 0.35 : 1 }}>
                   <td style={{
                     position: 'sticky', left: 0, zIndex: 10,
-                    backgroundColor: row.isToday ? '#fffbeb' : rowBg,
+                    backgroundColor: row.isToday ? 'var(--warn-tint)' : rowBg,
                     padding: '5px 10px', whiteSpace: 'nowrap',
-                    borderRight: '1px solid #ebebee', minWidth: 72,
-                    color: row.isToday ? '#b45309' : row.isWeekend ? '#6b6063' : '#1b1517',
+                    borderRight: '1px solid var(--line-soft)', minWidth: 72,
+                    color: row.isToday ? 'var(--warn)' : row.isWeekend ? 'var(--ink-25)' : 'var(--ink)',
                     fontWeight: row.isToday ? 700 : 400,
                   }}>
                     <span style={{ fontSize: 12, fontWeight: row.isToday || row.isWeekend ? 700 : 500 }}>
                       {String(row.day).padStart(2,'0')}
                     </span>
-                    <span style={{ fontSize: 9, marginLeft: 4, color: '#6b6063' }}>{dayOfWeek}</span>
-                    {row.isToday && <span style={{ marginLeft: 4, fontSize: 9, color: '#b45309' }}>◉</span>}
+                    <span style={{ fontSize: 9, marginLeft: 4, color: 'var(--ink-25)' }}>{dayOfWeek}</span>
+                    {row.isToday && <span style={{ marginLeft: 4, fontSize: 9, color: 'var(--warn)' }}>◉</span>}
                   </td>
                   {COLS.map(col => (
                     <Cell key={col.key} col={col} fact={row[col.key] as number}
@@ -268,18 +268,18 @@ export default function FinanceDailyTable({ rows, kpi }: Props) {
             })}
           </tbody>
           <tfoot>
-            <tr style={{ backgroundColor: '#faf8f7', position: 'sticky', bottom: 0, zIndex: 20, borderTop: '2px solid #ece5e5' }}>
+            <tr style={{ backgroundColor: 'var(--paper)', position: 'sticky', bottom: 0, zIndex: 20, borderTop: '2px solid var(--line)' }}>
               <td style={{
                 position: 'sticky', left: 0, zIndex: 30,
-                backgroundColor: '#f6f2f2', color: '#574d4f',
+                backgroundColor: 'var(--surface-2)', color: 'var(--ink-2)',
                 padding: '6px 10px', fontWeight: 700, fontSize: 11,
-                borderRight: '1px solid #e8dfe0', minWidth: 72,
+                borderRight: '1px solid var(--line-mid)', minWidth: 72,
               }}>ИТОГО</td>
               {COLS.map((col, i) => {
                 const v = totals[col.key as keyof typeof totals]
                 return (
                   <td key={i} className="px-2 py-2 text-right text-[11px] font-bold whitespace-nowrap"
-                    style={{ color: '#1b1517' }}>
+                    style={{ color: 'var(--ink)' }}>
                     {typeof v === 'number' ? col.fmt(v) : '—'}
                   </td>
                 )

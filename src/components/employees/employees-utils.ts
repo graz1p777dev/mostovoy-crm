@@ -1,29 +1,29 @@
 // ─── employees-utils.ts ───────────────────────────────────────────────────────
 
 export const ROLE_COLORS: Record<string, { bg: string; text: string }> = {
-  'Владелец':  { bg: '#e11d1d', text: '#ffffff' },
-  'РОП':       { bg: '#e11d1d', text: '#ffffff' },
-  'МП':        { bg: '#7d7174', text: '#1b1517' },
-  'ЛМАИ':      { bg: '#ebebee', text: '#1b1517' },
-  'Бухгалтер': { bg: '#ebebee', text: '#1b1517' },
+  'Владелец':  { bg: 'var(--brand)', text: 'var(--surface)' },
+  'РОП':       { bg: 'var(--brand)', text: 'var(--surface)' },
+  'МП':        { bg: 'var(--ink-3)', text: 'var(--ink)' },
+  'ЛМАИ':      { bg: 'var(--line-soft)', text: 'var(--ink)' },
+  'Бухгалтер': { bg: 'var(--line-soft)', text: 'var(--ink)' },
 }
 
 export const STATUS_COLORS: Record<string, { bg: string; text: string; label: string }> = {
-  active:    { bg: '#dcfce7', text: '#166534', label: 'Активен' },
-  probation: { bg: '#fef9c3', text: '#854d0e', label: 'Испытательный' },
-  archived:  { bg: '#fdfbfb', text: '#6b7280', label: 'Архив' },
+  active:    { bg: 'var(--ok-soft)', text: 'var(--ok-strong)', label: 'Активен' },
+  probation: { bg: 'var(--warn-soft-2)', text: 'var(--warn-strong-2)', label: 'Испытательный' },
+  archived:  { bg: 'var(--paper-2)', text: 'var(--ink-muted)', label: 'Архив' },
 }
 
 export function kpiColor(pct: number): string {
-  if (pct >= 100) return '#166534'
-  if (pct >= 80)  return '#854d0e'
-  return '#c01818'
+  if (pct >= 100) return 'var(--ok-strong)'
+  if (pct >= 80)  return 'var(--warn-strong-2)'
+  return 'var(--brand-ink)'
 }
 
 export function kpiBg(pct: number): string {
-  if (pct >= 100) return '#dcfce7'
-  if (pct >= 80)  return '#fef9c3'
-  return '#fee2e2'
+  if (pct >= 100) return 'var(--ok-soft)'
+  if (pct >= 80)  return 'var(--warn-soft-2)'
+  return 'var(--bad-soft)'
 }
 
 export function fmtMoney(v: number): string {

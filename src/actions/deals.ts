@@ -1,6 +1,6 @@
 'use server'
 
-// Воронка продаж. Сделки живут в Supabase (036_deals.sql), переписка — во
+// Воронка продаж. Сделки живут в Supabase (094_deals.sql), переписка — во
 // внешних системах: диалоги витрины «МОСТОВОЙ» (Express + SQLite) и
 // whatsapp_messages от Wazzup. Здесь только чтение переписки, вести её
 // продолжают там же, где начали.
@@ -285,6 +285,66 @@ export async function reconcileDealsFromShop(): Promise<
 
   revalidatePath('/dashboard/deals')
   return { success: true, data: { created, checked: conversations.length } }
+}
+
+// ─── Обратная связка: диалог витрины → сделка ────────────────────────────────
+
+/** Сделка, заведённая из диалога витрины, — для карточки клиента в «Диалогах». */
+export interface DealLink {
+  id: string
+  title: string
+  stageName: string
+  amount: number | null
+  currency: string
+}
+
+/**
+ * Сделки по external_key диалогов витрины, пачкой на весь список.
+ * Ключей единицы-десятки, поэтому один `in` дешевле похода за каждой сделкой.
+ */
+export async function getDealLinksByExternalKeys(
+  externalKeys: string[]
+): Promise<Record<string, DealLink>> {
+  const keys = [...new Set(externalKeys.filter(Boolean))]
+  if (keys.length === 0) return {}
+
+  const me = await getViewer()
+  if (!me) return {}
+
+  const supabase = await createClient()
+  const [dealsResult, stagesResult] = await Promise.all([
+    supabase
+      .from('deals')
+      .select('id, title, amount, currency, stage_id, external_key')
+      .in('external_key', keys)
+      .is('deleted_at', null),
+    supabase.from('deal_stages').select('id, name'),
+  ])
+
+  const stageNames = new Map(
+    ((stagesResult.data ?? []) as { id: string; name: string }[]).map((s) => [s.id, s.name])
+  )
+  const rows = (dealsResult.data ?? []) as {
+    id: string
+    title: string
+    amount: number | null
+    currency: string
+    stage_id: string
+    external_key: string | null
+  }[]
+
+  const map: Record<string, DealLink> = {}
+  for (const row of rows) {
+    if (!row.external_key) continue
+    map[row.external_key] = {
+      id: row.id,
+      title: row.title,
+      stageName: stageNames.get(row.stage_id) ?? '—',
+      amount: row.amount === null ? null : Number(row.amount),
+      currency: row.currency,
+    }
+  }
+  return map
 }
 
 // ─── Переписка по сделке ─────────────────────────────────────────────────────

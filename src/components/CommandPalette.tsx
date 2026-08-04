@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, LayoutDashboard, BarChart3, DollarSign, TrendingUp, Users, Settings, ShoppingBag, Newspaper, Eye, Handshake } from 'lucide-react'
+import { Search, LayoutDashboard, BarChart3, DollarSign, TrendingUp, Users, Settings, ShoppingBag, Newspaper, Eye, Handshake, BotMessageSquare, CalendarCheck, Clock, ShieldCheck, BookOpen, Plug } from 'lucide-react'
 
 const commands = [
   { label: 'Дашборд', href: '/dashboard', icon: LayoutDashboard, category: 'Навигация' },
@@ -9,11 +9,23 @@ const commands = [
   { label: 'Товары витрины', href: '/dashboard/products', icon: ShoppingBag, category: 'Интернет магазин' },
   { label: 'Посты витрины', href: '/dashboard/posts', icon: Newspaper, category: 'Интернет магазин' },
   { label: 'Аналитика магазина', href: '/dashboard/shop-analytics', icon: Eye, category: 'Интернет магазин' },
+  { label: 'Обновления цен', href: '/dashboard/shop-updates', icon: TrendingUp, category: 'Интернет магазин' },
+  { label: 'Ответы бота', href: '/dashboard/bot-approvals', icon: BotMessageSquare, category: 'AI Бот' },
   { label: 'Декомпозиция / KPI', href: '/dashboard/decomposition', icon: BarChart3, category: 'Навигация' },
   { label: 'Зарплата', href: '/dashboard/salary', icon: DollarSign, category: 'Навигация' },
   { label: 'Финансы', href: '/dashboard/finance', icon: TrendingUp, category: 'Навигация' },
   { label: 'Сотрудники', href: '/dashboard/employees', icon: Users, category: 'Управление' },
+  { label: 'Партнёры', href: '/dashboard/partners', icon: Handshake, category: 'Управление' },
+  { label: 'Посещаемость', href: '/dashboard/attendance', icon: CalendarCheck, category: 'Управление' },
+  { label: 'Моё время', href: '/dashboard/my-time', icon: Clock, category: 'Управление' },
   { label: 'Настройки KPI', href: '/dashboard/settings', icon: Settings, category: 'Управление' },
+  { label: 'Интеграции', href: '/dashboard/integrations', icon: Plug, category: 'Настройки' },
+  { label: 'Роли и доступы', href: '/dashboard/settings/roles', icon: ShieldCheck, category: 'Настройки' },
+  { label: 'Отделы', href: '/dashboard/settings/departments', icon: Users, category: 'Настройки' },
+  { label: 'Графики работы', href: '/dashboard/settings/schedules', icon: Clock, category: 'Настройки' },
+  { label: 'KPI и оплата', href: '/dashboard/settings/kpi', icon: DollarSign, category: 'Настройки' },
+  { label: 'Словарь терминов', href: '/dashboard/settings/glossary', icon: BookOpen, category: 'Настройки' },
+  { label: 'Общее (об окружении)', href: '/dashboard/settings/general', icon: Settings, category: 'Настройки' },
 ]
 
 export default function CommandPalette() {
@@ -86,15 +98,15 @@ export default function CommandPalette() {
               return (
                 <button
                   key={cmd.href}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${isSelected ? 'bg-[#e11d1d]/20' : 'hover:bg-white/5'}`}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${isSelected ? 'bg-[var(--brand)]/20' : 'hover:bg-white/5'}`}
                   onClick={() => execute(cmd.href)}
                   onMouseEnter={() => setSelected(i)}
                 >
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-[#e11d1d]' : 'bg-white/8'}`}>
+                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-[var(--brand)]' : 'bg-white/8'}`}>
                     <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-gray-400'}`} />
                   </div>
                   <div>
-                    <p className={`text-sm font-medium ${isSelected ? 'text-[#ff8f86]' : 'text-gray-300'}`}>{cmd.label}</p>
+                    <p className={`text-sm font-medium ${isSelected ? 'text-[var(--brand-light)]' : 'text-gray-300'}`}>{cmd.label}</p>
                     <p className="text-[11px] text-gray-600">{cmd.category}</p>
                   </div>
                   {isSelected && (

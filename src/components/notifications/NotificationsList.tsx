@@ -63,11 +63,11 @@ export default function NotificationsList({
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold flex items-center gap-2" style={{ fontSize: 18, color: '#1b1517' }}>
+        <h1 className="font-semibold flex items-center gap-2" style={{ fontSize: 18, color: 'var(--ink)' }}>
           <Bell style={{ width: 18, height: 18 }} />
           Уведомления
           {unreadCount > 0 && (
-            <span style={{ fontSize: 12, color: '#7d7174', fontWeight: 400 }}>
+            <span style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 400 }}>
               · {unreadCount} непрочитанных
             </span>
           )}
@@ -76,7 +76,7 @@ export default function NotificationsList({
           onClick={handleMarkAllRead}
           disabled={isPending || unreadCount === 0}
           className="flex items-center gap-1.5 rounded-md transition-colors disabled:opacity-40"
-          style={{ fontSize: 12, color: '#e11d1d', padding: '6px 10px' }}
+          style={{ fontSize: 12, color: 'var(--brand)', padding: '6px 10px' }}
         >
           <CheckCheck style={{ width: 14, height: 14 }} />
           Прочитать всё
@@ -89,8 +89,8 @@ export default function NotificationsList({
           className="rounded-md transition-colors"
           style={{
             fontSize: 12, padding: '6px 12px',
-            backgroundColor: initialFilter === 'all' ? '#e11d1d' : '#fdfbfb',
-            color: initialFilter === 'all' ? '#fff' : '#6b7280',
+            backgroundColor: initialFilter === 'all' ? 'var(--brand)' : 'var(--paper-2)',
+            color: initialFilter === 'all' ? 'var(--surface)' : 'var(--ink-muted)',
           }}
         >
           Все
@@ -100,8 +100,8 @@ export default function NotificationsList({
           className="rounded-md transition-colors"
           style={{
             fontSize: 12, padding: '6px 12px',
-            backgroundColor: initialFilter === 'important' ? '#e11d1d' : '#fdfbfb',
-            color: initialFilter === 'important' ? '#fff' : '#6b7280',
+            backgroundColor: initialFilter === 'important' ? 'var(--brand)' : 'var(--paper-2)',
+            color: initialFilter === 'important' ? 'var(--surface)' : 'var(--ink-muted)',
           }}
         >
           Важные
@@ -109,7 +109,7 @@ export default function NotificationsList({
       </div>
 
       {items.length === 0 ? (
-        <div className="text-center py-12" style={{ color: '#7d7174', fontSize: 13 }}>
+        <div className="text-center py-12" style={{ color: 'var(--ink-3)', fontSize: 13 }}>
           Уведомлений нет
         </div>
       ) : (
@@ -121,8 +121,8 @@ export default function NotificationsList({
                 className="flex items-start gap-3 rounded-lg transition-colors"
                 style={{
                   padding: '12px 14px',
-                  backgroundColor: n.is_read ? '#ffffff' : '#fdfbfb',
-                  border: '1px solid #ebebee',
+                  backgroundColor: n.is_read ? 'var(--surface)' : 'var(--paper-2)',
+                  border: '1px solid var(--line-soft)',
                 }}
               >
                 <span
@@ -133,24 +133,24 @@ export default function NotificationsList({
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium" style={{ fontSize: 13, color: '#1b1517' }}>
+                    <span className="font-medium" style={{ fontSize: 13, color: 'var(--ink)' }}>
                       {n.title}
                     </span>
                     {!n.is_read && (
-                      <span className="rounded-full flex-shrink-0" style={{ width: 6, height: 6, backgroundColor: '#c01818' }} />
+                      <span className="rounded-full flex-shrink-0" style={{ width: 6, height: 6, backgroundColor: 'var(--brand-ink)' }} />
                     )}
                   </div>
                   {n.body && (
-                    <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{n.body}</p>
+                    <p style={{ fontSize: 12, color: 'var(--ink-muted)', marginTop: 2 }}>{n.body}</p>
                   )}
-                  <span style={{ fontSize: 11, color: '#7d7174' }}>{formatDateTime(n.created_at)}</span>
+                  <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>{formatDateTime(n.created_at)}</span>
                 </div>
                 {!n.is_read && (
                   <button
                     onClick={(e) => { e.preventDefault(); handleMarkRead(n.id) }}
                     title="Отметить прочитанным"
                     className="flex items-center justify-center rounded-md flex-shrink-0"
-                    style={{ width: 24, height: 24, color: '#7d7174' }}
+                    style={{ width: 24, height: 24, color: 'var(--ink-3)' }}
                   >
                     <Check style={{ width: 14, height: 14 }} />
                   </button>

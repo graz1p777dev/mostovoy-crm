@@ -17,67 +17,67 @@ export const CONSULTATION_STATUS_MAP: Record<
   ConsultationStatus,
   { label: string; color: string; bg: string }
 > = {
-  'Придёт':      { label: 'Придёт',      color: '#166534', bg: '#dcfce7' },
-  'Не придёт':   { label: 'Не придёт',   color: '#c01818', bg: '#fee2e2' },
-  'Перезапись':  { label: 'Перезапись',  color: '#92400e', bg: '#fef3c7' },
-  'Отменил':     { label: 'Отменил',     color: '#6b7280', bg: '#fdfbfb' },
-  'Не отвечает': { label: 'Не отвечает', color: '#c01818', bg: '#fdfbfb' },
+  'Придёт':      { label: 'Придёт',      color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  'Не придёт':   { label: 'Не придёт',   color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  'Перезапись':  { label: 'Перезапись',  color: 'var(--warn-strong)', bg: 'var(--warn-soft)' },
+  'Отменил':     { label: 'Отменил',     color: 'var(--ink-muted)', bg: 'var(--paper-2)' },
+  'Не отвечает': { label: 'Не отвечает', color: 'var(--brand-ink)', bg: 'var(--paper-2)' },
 }
 
 export const ACTUAL_STATUS_MAP: Record<
   ActualStatus,
   { label: string; color: string; bg: string }
 > = {
-  'Пришла':    { label: 'Пришла',    color: '#166534', bg: '#dcfce7' },
-  'Не пришла': { label: 'Не пришла', color: '#c01818', bg: '#fee2e2' },
+  'Пришла':    { label: 'Пришла',    color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  'Не пришла': { label: 'Не пришла', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
 }
 
 export const STATUS_AFTER_FV_MAP: Record<
   StatusAfterFv,
   { label: string; color: string; bg: string }
 > = {
-  'Купила':    { label: 'Купила',    color: '#166534', bg: '#dcfce7' },
-  'Не купила': { label: 'Не купила', color: '#c01818', bg: '#fee2e2' },
-  'Предоплата':{ label: 'Предоплата',color: '#c01818', bg: '#fdecec' },
-  'Дожать':    { label: 'Дожать',    color: '#92400e', bg: '#fef3c7' },
-  'Отказ':     { label: 'Отказ',     color: '#6b7280', bg: '#fdfbfb' },
+  'Купила':    { label: 'Купила',    color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  'Не купила': { label: 'Не купила', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  'Предоплата':{ label: 'Предоплата',color: 'var(--brand-ink)', bg: 'var(--brand-soft)' },
+  'Дожать':    { label: 'Дожать',    color: 'var(--warn-strong)', bg: 'var(--warn-soft)' },
+  'Отказ':     { label: 'Отказ',     color: 'var(--ink-muted)', bg: 'var(--paper-2)' },
 }
 
 export const NOTIFICATION_TYPE_MAP: Record<
   string,
   { label: string; icon: string; color: string; bg: string }
 > = {
-  server_load:            { label: 'Нагрузка сервера',     icon: '⚠️', color: '#c01818', bg: '#fee2e2' },
-  sale_lead:               { label: 'Хочет купить',         icon: '🛒', color: '#166534', bg: '#bbf7d0' },
-  consultation_booked:     { label: 'Запись на консультацию', icon: '📅', color: '#c01818', bg: '#fdecec' },
-  consultation_reminder:   { label: 'Скоро консультация',   icon: '⏰', color: '#92400e', bg: '#fef3c7' },
-  deploy:                   { label: 'Деплой',               icon: '🚀', color: '#c01818', bg: '#fdecec' },
-  security:                 { label: 'Безопасность',         icon: '🔒', color: '#c01818', bg: '#fee2e2' },
-  audit:                    { label: 'Изменение записи',     icon: '✏️', color: '#6b7280', bg: '#fdfbfb' },
-  kpi_alert:                { label: 'KPI',                  icon: '📉', color: '#c01818', bg: '#fee2e2' },
-  kpi_success:              { label: 'KPI',                  icon: '📈', color: '#166534', bg: '#dcfce7' },
-  plan_100:                 { label: 'План выполнен',        icon: '🎯', color: '#166534', bg: '#dcfce7' },
-  absence:                  { label: 'Отсутствие',           icon: '🚫', color: '#92400e', bg: '#fef3c7' },
-  salary_ready:             { label: 'Зарплата',             icon: '💰', color: '#166534', bg: '#dcfce7' },
-  finance_alert:            { label: 'Финансы',              icon: '💸', color: '#c01818', bg: '#fee2e2' },
-  sale:                      { label: 'Продажа',              icon: '✅', color: '#166534', bg: '#dcfce7' },
-  system:                   { label: 'Система',              icon: 'ℹ️', color: '#6b7280', bg: '#fdfbfb' },
+  server_load:            { label: 'Нагрузка сервера',     icon: '⚠️', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  sale_lead:               { label: 'Хочет купить',         icon: '🛒', color: 'var(--ok-strong)', bg: 'var(--ok-border-2)' },
+  consultation_booked:     { label: 'Запись на консультацию', icon: '📅', color: 'var(--brand-ink)', bg: 'var(--brand-soft)' },
+  consultation_reminder:   { label: 'Скоро консультация',   icon: '⏰', color: 'var(--warn-strong)', bg: 'var(--warn-soft)' },
+  deploy:                   { label: 'Деплой',               icon: '🚀', color: 'var(--brand-ink)', bg: 'var(--brand-soft)' },
+  security:                 { label: 'Безопасность',         icon: '🔒', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  audit:                    { label: 'Изменение записи',     icon: '✏️', color: 'var(--ink-muted)', bg: 'var(--paper-2)' },
+  kpi_alert:                { label: 'KPI',                  icon: '📉', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  kpi_success:              { label: 'KPI',                  icon: '📈', color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  plan_100:                 { label: 'План выполнен',        icon: '🎯', color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  absence:                  { label: 'Отсутствие',           icon: '🚫', color: 'var(--warn-strong)', bg: 'var(--warn-soft)' },
+  salary_ready:             { label: 'Зарплата',             icon: '💰', color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  finance_alert:            { label: 'Финансы',              icon: '💸', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  sale:                      { label: 'Продажа',              icon: '✅', color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  system:                   { label: 'Система',              icon: 'ℹ️', color: 'var(--ink-muted)', bg: 'var(--paper-2)' },
 }
 
 export const ALB_STATUS_MAP: Record<
   AlbStatus,
   { label: string; color: string; bg: string }
 > = {
-  'Не записан': { label: 'Не записан', color: '#6b7280', bg: '#fdfbfb' },
-  'Записан':    { label: 'Записан',    color: '#c01818', bg: '#fdecec' },
-  'Пришёл':     { label: 'Пришёл',    color: '#166534', bg: '#dcfce7' },
-  'Не пришёл':  { label: 'Не пришёл', color: '#c01818', bg: '#fee2e2' },
-  'Купил':      { label: 'Купил',     color: '#166534', bg: '#bbf7d0' },
+  'Не записан': { label: 'Не записан', color: 'var(--ink-muted)', bg: 'var(--paper-2)' },
+  'Записан':    { label: 'Записан',    color: 'var(--brand-ink)', bg: 'var(--brand-soft)' },
+  'Пришёл':     { label: 'Пришёл',    color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
+  'Не пришёл':  { label: 'Не пришёл', color: 'var(--brand-ink)', bg: 'var(--bad-soft)' },
+  'Купил':      { label: 'Купил',     color: 'var(--ok-strong)', bg: 'var(--ok-border-2)' },
 }
 
 export const FORMAT_BADGE_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  'Онлайн': { label: 'Онлайн', color: '#c01818', bg: '#fdecec' },
-  'Офлайн': { label: 'Офлайн', color: '#c2410c', bg: '#ffedd5' },
+  'Онлайн': { label: 'Онлайн', color: 'var(--brand-ink)', bg: 'var(--brand-soft)' },
+  'Офлайн': { label: 'Офлайн', color: 'var(--orange-strong)', bg: 'var(--orange-tint)' },
 }
 
 // ============================================================
@@ -90,13 +90,13 @@ export const ATTENDANCE_STATUS_MAP: Record<
 > = {
   // Точка несёт цвет и может быть яркой (это графика, порог 3:1),
   // а подпись рядом берёт затемнённый вариант того же тона — ей нужен AA.
-  present:  { label: 'На месте',  color: '#15803d', dot: 'bg-[#16a34a]' },
-  remote:   { label: 'Удалённо',  color: '#e11d1d', dot: 'bg-[#e11d1d]' },
-  absent:   { label: 'Отсутствует',color: '#c01818',dot: 'bg-[#c01818]' },
-  sick:     { label: 'Больничный',color: '#b45309', dot: 'bg-[#f59e0b]' },
-  vacation: { label: 'Отпуск',    color: '#c01818', dot: 'bg-[#e2554d]' },
-  day_off:  { label: 'Выходной',  color: '#6b7280', dot: 'bg-[#a19698]' },
-  weekend:  { label: 'Выходной',  color: '#6b7280', dot: 'bg-[#a19698]' },
+  present:  { label: 'На месте',  color: 'var(--ok)', dot: 'bg-[var(--ok-base)]' },
+  remote:   { label: 'Удалённо',  color: 'var(--brand)', dot: 'bg-[var(--brand)]' },
+  absent:   { label: 'Отсутствует',color: 'var(--brand-ink)',dot: 'bg-[var(--brand-ink)]' },
+  sick:     { label: 'Больничный',color: 'var(--warn)', dot: 'bg-[var(--warn-base)]' },
+  vacation: { label: 'Отпуск',    color: 'var(--brand-ink)', dot: 'bg-[var(--brand-coral)]' },
+  day_off:  { label: 'Выходной',  color: 'var(--ink-muted)', dot: 'bg-[var(--ink-4)]' },
+  weekend:  { label: 'Выходной',  color: 'var(--ink-muted)', dot: 'bg-[var(--ink-4)]' },
 }
 
 // ============================================================
@@ -115,10 +115,10 @@ export const EMPLOYEE_STATUS_MAP: Record<
   EmployeeStatus,
   { label: string; color: string }
 > = {
-  active:   { label: 'Активен',    color: '#15803d' },
-  vacation: { label: 'В отпуске',  color: '#b45309' },
-  sick:     { label: 'На больничном', color: '#c01818' },
-  archived: { label: 'Архив',      color: '#6b7280' },
+  active:   { label: 'Активен',    color: 'var(--ok)' },
+  vacation: { label: 'В отпуске',  color: 'var(--warn)' },
+  sick:     { label: 'На больничном', color: 'var(--brand-ink)' },
+  archived: { label: 'Архив',      color: 'var(--ink-muted)' },
 }
 
 // ============================================================
@@ -129,9 +129,9 @@ export const SALARY_STATUS_MAP: Record<
   SalaryStatus,
   { label: string; color: string; bg: string }
 > = {
-  draft:    { label: 'Черновик',  color: '#6b7280', bg: '#fdfbfb' },
-  approved: { label: 'Утверждён', color: '#92400e', bg: '#fef3c7' },
-  paid:     { label: 'Выплачен',  color: '#166534', bg: '#dcfce7' },
+  draft:    { label: 'Черновик',  color: 'var(--ink-muted)', bg: 'var(--paper-2)' },
+  approved: { label: 'Утверждён', color: 'var(--warn-strong)', bg: 'var(--warn-soft)' },
+  paid:     { label: 'Выплачен',  color: 'var(--ok-strong)', bg: 'var(--ok-soft)' },
 }
 
 // ============================================================
@@ -146,10 +146,10 @@ export const KPI_THRESHOLDS = {
 } as const
 
 export function getKpiColor(pct: number): string {
-  if (pct < KPI_THRESHOLDS.danger)  return '#c01818' // deep crimson (danger)
-  if (pct < KPI_THRESHOLDS.warning) return '#b45309' // amber
-  if (pct < KPI_THRESHOLDS.success) return '#e11d1d' // brand red
-  return '#15803d'                                    // green
+  if (pct < KPI_THRESHOLDS.danger)  return 'var(--brand-ink)' // deep crimson (danger)
+  if (pct < KPI_THRESHOLDS.warning) return 'var(--warn)' // amber
+  if (pct < KPI_THRESHOLDS.success) return 'var(--brand)' // brand red
+  return 'var(--ok)'                                    // green
 }
 
 // ============================================================
@@ -157,8 +157,8 @@ export function getKpiColor(pct: number): string {
 // ============================================================
 
 export const TRANSACTION_TYPE_LABELS = {
-  income:  { label: 'Доход',  color: '#15803d' },
-  expense: { label: 'Расход', color: '#c01818' },
+  income:  { label: 'Доход',  color: 'var(--ok)' },
+  expense: { label: 'Расход', color: 'var(--brand-ink)' },
 } as const
 
 // ============================================================
@@ -166,9 +166,9 @@ export const TRANSACTION_TYPE_LABELS = {
 // ============================================================
 
 export const BRAND = {
-  ink:      '#1b1517',
-  accent:   '#e11d1d',
-  steel:    '#7d7174',
-  fog:      '#ebebee',
-  sidebar:  '#1b1517',
+  ink:      'var(--ink)',
+  accent:   'var(--brand)',
+  steel:    'var(--ink-3)',
+  fog:      'var(--line-soft)',
+  sidebar:  'var(--ink)',
 } as const

@@ -117,7 +117,7 @@ export function ShopBotSettingsClient({ settings }: { settings: ShopBotSettings 
       </div>
 
       {/* ── Поведение ── */}
-      <SectionCard icon={<Bot size={15} color="#fff" />} title="Поведение">
+      <SectionCard icon={<Bot size={15} color="var(--on-brand)" />} title="Поведение">
         <div className="flex flex-col gap-3">
           <ToggleRow
             icon={<BadgeCheck size={15} style={{ color: 'var(--brand-ink)' }} />}
@@ -148,7 +148,7 @@ export function ShopBotSettingsClient({ settings }: { settings: ShopBotSettings 
       </SectionCard>
 
       {/* ── Модель ── */}
-      <SectionCard icon={<Cpu size={15} color="#fff" />} title="Модель">
+      <SectionCard icon={<Cpu size={15} color="var(--on-brand)" />} title="Модель">
         <p className="mb-3 text-xs" style={{ color: 'var(--ink-3)' }}>
           Одна модель на все задачи бота: ответы клиенту, пересказ гипервизора и калибровку промпта.
           Список задаёт витрина — своих значений добавить нельзя.
@@ -190,7 +190,7 @@ export function ShopBotSettingsClient({ settings }: { settings: ShopBotSettings 
             <span key={item.id} className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--ink-3)' }}>
               <span
                 className="h-2 w-2 shrink-0 rounded-full"
-                style={{ background: item.enabled ? '#04815a' : 'var(--ink-4)' }}
+                style={{ background: item.enabled ? 'var(--ok-deep-2)' : 'var(--ink-4)' }}
               />
               {item.label} — {item.enabled ? 'ключ есть' : 'ключа нет'}
             </span>
@@ -219,7 +219,7 @@ export function ShopBotSettingsClient({ settings }: { settings: ShopBotSettings 
       <div
         className="sticky bottom-4 flex flex-wrap items-center gap-3 px-4 py-3"
         style={{
-          background: '#ffffff',
+          background: 'var(--surface)',
           border: '1px solid var(--line)',
           borderRadius: 'var(--radius-2xl)',
           boxShadow: '0 12px 32px -14px rgba(28,20,22,0.22)',
@@ -253,7 +253,7 @@ function SectionCard({
       <div className="flex items-center gap-2.5 px-5 py-4" style={{ borderBottom: '1px solid var(--line)' }}>
         <div
           className="flex h-8 w-8 items-center justify-center rounded-xl"
-          style={{ backgroundColor: '#e11d1d' }}
+          style={{ backgroundColor: 'var(--brand)' }}
         >
           {icon}
         </div>
@@ -289,7 +289,7 @@ function ToggleRow({
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className="relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50"
-        style={{ backgroundColor: checked ? '#e11d1d' : 'var(--surface-3)' }}
+        style={{ backgroundColor: checked ? 'var(--brand)' : 'var(--surface-3)' }}
       >
         <span
           className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all"

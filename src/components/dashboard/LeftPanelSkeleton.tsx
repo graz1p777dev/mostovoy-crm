@@ -13,14 +13,14 @@ export default function LeftPanelSkeleton() {
 
       {/* График */}
       <div className="flex flex-col gap-2">
-        <div className="animate-pulse rounded" style={{ height: 14, width: '40%', backgroundColor: '#faf8f7' }} />
-        <div className="animate-pulse rounded-xl" style={{ height: 160, backgroundColor: '#faf8f7' }} />
+        <div className="animate-pulse rounded" style={{ height: 14, width: '40%', backgroundColor: 'var(--paper)' }} />
+        <div className="animate-pulse rounded-xl" style={{ height: 160, backgroundColor: 'var(--paper)' }} />
       </div>
 
       {/* Таблица */}
       <div className="flex flex-col gap-2">
-        <div className="animate-pulse rounded" style={{ height: 14, width: '50%', backgroundColor: '#faf8f7' }} />
-        <div className="animate-pulse rounded-xl" style={{ height: 140, backgroundColor: '#faf8f7' }} />
+        <div className="animate-pulse rounded" style={{ height: 14, width: '50%', backgroundColor: 'var(--paper)' }} />
+        <div className="animate-pulse rounded-xl" style={{ height: 140, backgroundColor: 'var(--paper)' }} />
       </div>
     </div>
   )

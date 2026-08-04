@@ -116,9 +116,9 @@ export default function KpiPlansModal({
   if (!hasKpi(role) || !config) {
     return (
       <ModalShell employeeName={employeeName} onClose={onClose}>
-        <div className="p-8 text-center" style={{ color: '#7d7174' }}>
+        <div className="p-8 text-center" style={{ color: 'var(--ink-3)' }}>
           <Target size={40} className="mx-auto mb-3 opacity-30" />
-          <div className="font-medium mb-1" style={{ color: '#1b1517' }}>KPI не настроен</div>
+          <div className="font-medium mb-1" style={{ color: 'var(--ink)' }}>KPI не настроен</div>
           <div className="text-sm">Для роли «{role}» KPI-планы не предусмотрены.</div>
         </div>
       </ModalShell>
@@ -141,12 +141,12 @@ export default function KpiPlansModal({
         {loading ? (
           <div className="space-y-3">
             {[...Array(config.fields.length)].map((_, i) => (
-              <div key={i} className="animate-pulse rounded-lg" style={{ height: 58, backgroundColor: '#fdfbfb' }} />
+              <div key={i} className="animate-pulse rounded-lg" style={{ height: 58, backgroundColor: 'var(--paper-2)' }} />
             ))}
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#7d7174' }}>
+            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--ink-3)' }}>
               Планы на {MONTHS[month]} {year}
             </p>
 
@@ -164,7 +164,7 @@ export default function KpiPlansModal({
 
             <div
               className="flex items-start gap-2 p-3 rounded-xl text-xs"
-              style={{ backgroundColor: '#fdfbfb', color: '#7d7174' }}
+              style={{ backgroundColor: 'var(--paper-2)', color: 'var(--ink-3)' }}
             >
               <Info size={13} className="shrink-0 mt-0.5" />
               <span>
@@ -177,7 +177,7 @@ export default function KpiPlansModal({
 
       <div
         className="shrink-0 flex items-center justify-end gap-2 px-5 py-4"
-        style={{ borderTop: '1px solid #ebebee' }}
+        style={{ borderTop: '1px solid var(--line-soft)' }}
       >
         <Button variant="ghost" onClick={onClose} className="rounded-xl" disabled={isPending}>
           Отмена
@@ -186,7 +186,7 @@ export default function KpiPlansModal({
           onClick={handleSave}
           disabled={isPending || loading}
           className="rounded-xl text-white font-medium"
-          style={{ backgroundColor: '#e11d1d' }}
+          style={{ backgroundColor: 'var(--brand)' }}
         >
           {isPending ? 'Сохранение...' : 'Сохранить планы'}
         </Button>
@@ -210,7 +210,7 @@ function KpiField({
       <Label className="text-xs font-semibold text-gray-500">
         {field.label}
         {field.weight != null && (
-          <span className="ml-1 text-[10px] font-normal" style={{ color: '#7d7174' }}>
+          <span className="ml-1 text-[10px] font-normal" style={{ color: 'var(--ink-3)' }}>
             (вес {field.weight}%)
           </span>
         )}
@@ -225,7 +225,7 @@ function KpiField({
         className={inputClass}
       />
       {field.description && (
-        <p className="text-[10px]" style={{ color: '#7d7174' }}>{field.description}</p>
+        <p className="text-[10px]" style={{ color: 'var(--ink-3)' }}>{field.description}</p>
       )}
     </div>
   )
@@ -260,18 +260,18 @@ function ModalShell({
     >
       <div
         className="relative w-full max-w-lg mx-4 rounded-2xl overflow-hidden flex flex-col"
-        style={{ backgroundColor: '#ffffff', maxHeight: '90vh' }}
+        style={{ backgroundColor: 'var(--surface)', maxHeight: '90vh' }}
       >
         {/* Шапка */}
         <div
           className="flex items-center gap-3 px-5 py-4 shrink-0"
-          style={{ background: 'linear-gradient(135deg, #ff5c68 0%, #e11d1d 100%)' }}
+          style={{ background: 'linear-gradient(135deg, var(--accent-to) 0%, var(--brand) 100%)' }}
         >
           <div
             className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
             style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
           >
-            <Target size={18} color="#ffffff" />
+            <Target size={18} color="var(--on-brand)" />
           </div>
           <div className="flex-1 min-w-0">
             <h2 className="font-bold text-white text-sm leading-tight">KPI-планы</h2>
@@ -289,24 +289,24 @@ function ModalShell({
         {year != null && month != null && onPrev && onNext && (
           <div
             className="flex items-center justify-between px-5 py-2.5 shrink-0"
-            style={{ borderBottom: '1px solid #ebebee', backgroundColor: '#fdfbfb' }}
+            style={{ borderBottom: '1px solid var(--line-soft)', backgroundColor: 'var(--paper-2)' }}
           >
             <button
               onClick={onPrev}
               className="flex items-center justify-center w-7 h-7 rounded-lg"
-              style={{ backgroundColor: '#e11d1d' }}
+              style={{ backgroundColor: 'var(--brand)' }}
             >
-              <ChevronLeft size={14} color="#ffffff" />
+              <ChevronLeft size={14} color="var(--on-brand)" />
             </button>
-            <div className="font-semibold text-sm" style={{ color: '#1b1517' }}>
+            <div className="font-semibold text-sm" style={{ color: 'var(--ink)' }}>
               {MONTHS[month]} {year}
             </div>
             <button
               onClick={onNext}
               className="flex items-center justify-center w-7 h-7 rounded-lg"
-              style={{ backgroundColor: '#e11d1d' }}
+              style={{ backgroundColor: 'var(--brand)' }}
             >
-              <ChevronRight size={14} color="#ffffff" />
+              <ChevronRight size={14} color="var(--on-brand)" />
             </button>
           </div>
         )}

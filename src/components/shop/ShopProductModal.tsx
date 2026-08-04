@@ -293,7 +293,7 @@ function SwatchesEditor({
             />
             <input
               type="color"
-              value={/^#([0-9a-f]{6})$/i.test(hex) ? hex : '#cccccc'}
+              value={/^#([0-9a-f]{6})$/i.test(hex) ? hex : 'var(--neutral-line)'}
               onChange={(e) => {
                 const next = [...value]
                 next[index] = [name, e.target.value]
@@ -318,7 +318,7 @@ function SwatchesEditor({
           type="button"
           variant="ghost"
           className="h-8 self-start px-2 text-xs"
-          onClick={() => onChange([...value, ['', '#cccccc']])}
+          onClick={() => onChange([...value, ['', 'var(--neutral-line)']])}
         >
           <Plus size={13} className="mr-1" /> Добавить цвет
         </Button>

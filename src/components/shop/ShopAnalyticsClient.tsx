@@ -250,7 +250,7 @@ export function ShopAnalyticsClient({ analytics, days }: Props) {
       {/* Конверсия просмотр → клик */}
       {conversion.length > 0 && (
         <div className="rounded-2xl bg-white p-5">
-          <h2 className="mb-1 text-sm font-semibold" style={{ color: '#1b1517' }}>
+          <h2 className="mb-1 text-sm font-semibold" style={{ color: 'var(--ink)' }}>
             Конверсия: посмотрели → нажали «Купить»
           </h2>
           <p className="mb-4 text-[11px] text-muted-foreground">
@@ -259,7 +259,7 @@ export function ShopAnalyticsClient({ analytics, days }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-xs uppercase" style={{ color: '#6b6063' }}>
+                <tr className="text-xs uppercase" style={{ color: 'var(--ink-25)' }}>
                   <th className="py-2 pr-3 text-left font-medium">Товар</th>
                   <th className="px-3 py-2 text-right font-medium">Просмотры</th>
                   <th className="px-3 py-2 text-right font-medium">Клики «Купить»</th>
@@ -268,11 +268,11 @@ export function ShopAnalyticsClient({ analytics, days }: Props) {
               </thead>
               <tbody>
                 {conversion.map((row) => (
-                  <tr key={row.slug} style={{ borderTop: '1px solid #fdfbfb' }}>
-                    <td className="py-2 pr-3" style={{ color: '#1b1517' }}>{row.name}</td>
+                  <tr key={row.slug} style={{ borderTop: '1px solid var(--paper-2)' }}>
+                    <td className="py-2 pr-3" style={{ color: 'var(--ink)' }}>{row.name}</td>
                     <td className="px-3 py-2 text-right" style={{ color: CHART_TEXT.secondary }}>{row.views}</td>
                     <td className="px-3 py-2 text-right" style={{ color: CHART_TEXT.positive }}>{row.clicks}</td>
-                    <td className="py-2 pl-3 text-right font-medium" style={{ color: '#1b1517' }}>
+                    <td className="py-2 pl-3 text-right font-medium" style={{ color: 'var(--ink)' }}>
                       {row.rate.toFixed(row.rate >= 10 ? 0 : 1)}%
                     </td>
                   </tr>
@@ -306,7 +306,7 @@ function SummaryTile({
         {icon}
         {value.toLocaleString('ru-RU')}
       </div>
-      <div className="mt-0.5 text-xs" style={{ color: '#6b6063' }}>{label}</div>
+      <div className="mt-0.5 text-xs" style={{ color: 'var(--ink-25)' }}>{label}</div>
     </div>
   )
 }

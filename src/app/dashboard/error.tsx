@@ -19,15 +19,15 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
     >
       <div
         className="flex items-center justify-center rounded-full"
-        style={{ width: 48, height: 48, backgroundColor: '#fef2f2' }}
+        style={{ width: 48, height: 48, backgroundColor: 'var(--bad-tint)' }}
       >
-        <AlertTriangle style={{ width: 22, height: 22, color: '#c01818' }} />
+        <AlertTriangle style={{ width: 22, height: 22, color: 'var(--brand-ink)' }} />
       </div>
       <div className="text-center">
-        <p className="font-semibold" style={{ fontSize: 15, color: '#1b1517' }}>
+        <p className="font-semibold" style={{ fontSize: 15, color: 'var(--ink)' }}>
           Ошибка загрузки дашборда
         </p>
-        <p style={{ fontSize: 13, color: '#7d7174', marginTop: 4, maxWidth: 320 }}>
+        <p style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 4, maxWidth: 320 }}>
           {error.message || 'Что-то пошло не так. Попробуйте обновить страницу.'}
         </p>
       </div>
@@ -35,8 +35,8 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
         onClick={reset}
         className="flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition-opacity hover:opacity-80"
         style={{
-          backgroundColor: '#e11d1d',
-          color: '#ffffff',
+          backgroundColor: 'var(--brand)',
+          color: 'var(--on-brand)',
           fontSize: 13,
           cursor: 'pointer',
           border: 'none',

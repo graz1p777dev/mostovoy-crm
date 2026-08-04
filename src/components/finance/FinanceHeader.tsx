@@ -12,22 +12,22 @@ interface Props {
 
 export default function FinanceHeader({ year, month, onPrev, onNext }: Props) {
   return (
-    <div className="flex items-center justify-between px-5 py-4 border-b" style={{ backgroundColor: '#fff', borderColor: '#ebebee' }}>
+    <div className="flex items-center justify-between px-5 py-4 border-b" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
       <div className="flex items-center gap-3">
         <FinanceHeaderIcon />
         <div>
-          <p className="text-sm font-bold" style={{ color: '#1b1517' }}>Финансы</p>
-          <p className="text-[11px]" style={{ color: '#7d7174' }}>{RU_MONTHS[month]} {year}</p>
+          <p className="text-sm font-bold" style={{ color: 'var(--ink)' }}>Финансы</p>
+          <p className="text-[11px]" style={{ color: 'var(--ink-3)' }}>{RU_MONTHS[month]} {year}</p>
         </div>
       </div>
       <div className="flex items-center gap-1">
-        <button onClick={onPrev} className="p-1.5 rounded-lg hover:opacity-70" style={{ color: '#e11d1d' }}>
+        <button onClick={onPrev} className="p-1.5 rounded-lg hover:opacity-70" style={{ color: 'var(--brand)' }}>
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <span className="text-sm font-semibold px-3" style={{ color: '#1b1517' }}>
+        <span className="text-sm font-semibold px-3" style={{ color: 'var(--ink)' }}>
           {RU_MONTHS[month]} {year}
         </span>
-        <button onClick={onNext} className="p-1.5 rounded-lg hover:opacity-70" style={{ color: '#e11d1d' }}>
+        <button onClick={onNext} className="p-1.5 rounded-lg hover:opacity-70" style={{ color: 'var(--brand)' }}>
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>

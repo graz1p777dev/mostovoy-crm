@@ -61,13 +61,13 @@ function KpiCard({ metric, fact, plan }: KpiCardProps) {
   return (
     <div
       className="rounded-2xl p-3.5 border flex flex-col gap-2"
-      style={{ backgroundColor: '#fff', borderColor: colors.border, borderWidth: 1.5 }}
+      style={{ backgroundColor: 'var(--surface)', borderColor: colors.border, borderWidth: 1.5 }}
     >
       {/* Шапка */}
       <div className="flex items-start justify-between gap-1">
         <div className="flex items-center gap-2">
           <MetricIconBadge name={`${metric.key} ${metric.label} ${metric.icon}`} />
-          <p className="text-[11px] font-semibold leading-tight" style={{ color: '#1b1517' }}>
+          <p className="text-[11px] font-semibold leading-tight" style={{ color: 'var(--ink)' }}>
             {metric.label}
           </p>
         </div>
@@ -85,7 +85,7 @@ function KpiCard({ metric, fact, plan }: KpiCardProps) {
       </p>
 
       {/* Прогресс-бар */}
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#fdfbfb' }}>
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--paper-2)' }}>
         <div
           className="h-full rounded-full transition-all"
           style={{ width: `${progressPct}%`, backgroundColor: colors.text }}
@@ -94,11 +94,11 @@ function KpiCard({ metric, fact, plan }: KpiCardProps) {
 
       {/* Строка план / % / дельта */}
       <div className="flex items-center justify-between text-[10px]">
-        <span style={{ color: '#7d7174' }}>
-          план <span className="font-semibold" style={{ color: '#1b1517' }}>{fmtValue(plan, metric.format)}</span>
+        <span style={{ color: 'var(--ink-3)' }}>
+          план <span className="font-semibold" style={{ color: 'var(--ink)' }}>{fmtValue(plan, metric.format)}</span>
         </span>
         <span className="font-bold" style={{ color: colors.text }}>{pct}%</span>
-        <span className="font-semibold" style={{ color: deltaGood ? '#15803d' : '#e11d1d' }}>
+        <span className="font-semibold" style={{ color: deltaGood ? 'var(--ok)' : 'var(--brand)' }}>
           {deltaGood ? '+' : ''}{fmtValue(Math.abs(delta), metric.format)}
         </span>
       </div>
@@ -119,7 +119,7 @@ export default function MarketingKpiDashboard({ kpi }: Props) {
         const metrics = METRICS.filter(m => m.group === grp)
         return (
           <div key={grp}>
-            <p className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: '#7d7174' }}>
+            <p className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--ink-3)' }}>
               {GROUP_LABELS[grp]}
             </p>
             <div className={`grid gap-3 ${grp === 'conv' ? 'grid-cols-3' : grp === 'fin' ? 'grid-cols-4' : 'grid-cols-4 md:grid-cols-7'}`}>

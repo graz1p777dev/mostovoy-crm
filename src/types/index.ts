@@ -35,6 +35,33 @@ export type ConsultationFormat = 'Онлайн' | 'Офлайн'
 export type AlbStatus = 'Не записан' | 'Записан' | 'Пришёл' | 'Не пришёл' | 'Купил'
 
 // ============================================================
+// Партнёры — supabase/migrations/061_consultation_source_and_partners.sql,
+// справочник типов — 065_partner_types_dictionary.sql
+// ============================================================
+// Тип партнёра — свободная строка: список ведётся в partner_types и правится
+// из интерфейса, поэтому объединением литералов его зафиксировать нельзя.
+export type PartnerType = string
+export type PartnerStatus = 'active' | 'inactive'
+
+export interface PartnerTypeItem {
+  id: string
+  name: string
+  is_system: boolean
+  sort_order: number
+}
+
+export interface Partner {
+  id: string
+  name: string
+  type: PartnerType
+  terms: string | null
+  contact: string | null
+  status: PartnerStatus
+  created_at: string
+  deleted_at: string | null
+}
+
+// ============================================================
 // Attendance / Schedule
 // ============================================================
 export type AttendanceStatus =
@@ -519,7 +546,7 @@ export interface TaskViewer {
 }
 
 // ============================================
-// СДЕЛКИ (воронка продаж) — supabase/migrations/036_deals.sql
+// СДЕЛКИ (воронка продаж) — supabase/migrations/094_deals.sql
 // ============================================
 
 export type DealStageKind = 'normal' | 'won' | 'lost'

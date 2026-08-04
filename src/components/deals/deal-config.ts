@@ -14,12 +14,17 @@ export interface DealSourceMeta {
   bg: string
 }
 
+// Цвета каналов — фирменные цвета самих мессенджеров, а не нашего бренда:
+// Telegram синий, WhatsApp зелёный, Instagram розовый. Они опознают источник
+// заявки и при перекраске CRM под другого клиента меняться НЕ должны, поэтому
+// намеренно оставлены литералами и не вынесены в бренд-конфиг.
+// Исключение — «Вручную»: это не внешний канал, он живёт на нейтральных токенах.
 export const DEAL_SOURCE: Record<DealSource, DealSourceMeta> = {
   telegram:  { label: 'Telegram',  icon: Send,          color: '#0369a1', bg: '#e0f2fe' },
   whatsapp:  { label: 'WhatsApp',  icon: MessageCircle, color: '#15803d', bg: '#dcfce7' },
   instagram: { label: 'Instagram', icon: Camera,        color: '#be185d', bg: '#fce7f3' },
   site:      { label: 'Сайт',      icon: Globe,         color: '#0e7490', bg: '#cffafe' },
-  manual:    { label: 'Вручную',   icon: PenLine,       color: '#574d4f', bg: '#f0eaea' },
+  manual:    { label: 'Вручную',   icon: PenLine,       color: 'var(--ink-2)', bg: 'var(--surface-3)' },
 }
 
 export const DEAL_CURRENCIES: DealCurrency[] = ['KGS', 'USD', 'RUB']

@@ -20,8 +20,8 @@ import {
 } from '@/actions/documents'
 import type { Document, DocumentFolder, UserRole } from '@/types'
 
-const navy = '#1b1517'
-const steel = '#6b6063'
+const navy = 'var(--ink)'
+const steel = 'var(--ink-25)'
 
 function formatBytes(bytes: number | null): string {
   if (!bytes) return '—'
@@ -176,7 +176,7 @@ export default function DocumentsPage() {
       {/* Сетка */}
       <div
         className="rounded-2xl bg-white p-5 min-h-[300px]"
-        style={{ border: dragOver ? '2px dashed #e11d1d' : '1px solid var(--border)' }}
+        style={{ border: dragOver ? '2px dashed var(--brand)' : '1px solid var(--border)' }}
         onDragOver={e => { if (canWrite) { e.preventDefault(); setDragOver(true) } }}
         onDragLeave={() => setDragOver(false)}
         onDrop={e => {
@@ -200,7 +200,7 @@ export default function DocumentsPage() {
                 style={{ border: '1px solid var(--border)' }}
                 onClick={() => goToFolder(folder.id)}
               >
-                <Folder size={28} color="#e11d1d" />
+                <Folder size={28} color="var(--brand)" />
                 <span className="text-sm font-medium truncate" style={{ color: navy }} title={folder.name}>
                   {folder.name}
                 </span>

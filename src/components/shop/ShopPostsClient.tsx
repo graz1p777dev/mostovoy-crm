@@ -106,11 +106,11 @@ export function ShopPostsClient({ posts, imageBase }: Props) {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold" style={{ color: '#1b1517' }}>{post.title}</p>
+                    <p className="truncate text-sm font-semibold" style={{ color: 'var(--ink)' }}>{post.title}</p>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
                       {formatDate(post.publishedAt)}
                       {' · '}
-                      <span style={{ color: post.status === 'published' ? '#15803d' : '#854d0e' }}>
+                      <span style={{ color: post.status === 'published' ? 'var(--ok)' : 'var(--warn-strong-2)' }}>
                         {post.status === 'published' ? 'опубликован' : 'черновик'}
                       </span>
                     </p>

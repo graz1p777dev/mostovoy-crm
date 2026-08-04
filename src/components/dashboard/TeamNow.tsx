@@ -61,12 +61,12 @@ export default function TeamNow({ members }: TeamNowProps) {
               <AttendanceDot status={member.attendance_status} />
               <span
                 className="font-medium truncate"
-                style={{ fontSize: 13, color: '#1b1517' }}
+                style={{ fontSize: 13, color: 'var(--ink)' }}
               >
                 {member.name}
               </span>
             </div>
-            <p style={{ fontSize: 11, color: '#7d7174' }}>
+            <p style={{ fontSize: 11, color: 'var(--ink-3)' }}>
               {ROLE_LABELS[member.role as import('@/types').UserRole] ?? member.role}
             </p>
           </div>
@@ -75,11 +75,11 @@ export default function TeamNow({ members }: TeamNowProps) {
           <div className="flex-shrink-0 text-right">
             <p
               className="tabular-nums font-semibold"
-              style={{ fontSize: 12, color: '#1b1517' }}
+              style={{ fontSize: 12, color: 'var(--ink)' }}
             >
               {formatNumber(member.fv_today)} ФВ
             </p>
-            <p style={{ fontSize: 11, color: '#15803d' }}>
+            <p style={{ fontSize: 11, color: 'var(--ok)' }}>
               {formatNumber(member.sales_today)} продаж
             </p>
           </div>

@@ -20,12 +20,6 @@ export async function botGet<T>(path: string): Promise<T> {
   return res.json();
 }
 
-/** DELETE-ручки бота отвечают 204 без тела — botJson на нём споткнулся бы о res.json(). */
-export async function botDelete(path: string): Promise<void> {
-  const res = await fetch(`${BOT_API_BASE}${path}`, { method: 'DELETE' })
-  if (!res.ok) throw await botApiError(res)
-}
-
 export async function botJson<T>(path: string, method: string, body?: unknown): Promise<T> {
   const res = await fetch(`${BOT_API_BASE}${path}`, {
     method,

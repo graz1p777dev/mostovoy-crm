@@ -123,7 +123,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
               <Input id="profile-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
             </div>
           </div>
-          <Button type="submit" disabled={savingProfile} className="w-full bg-[#e11d1d] text-white hover:bg-[#2b2325] disabled:bg-[#ddd3d3]">
+          <Button type="submit" disabled={savingProfile} className="w-full bg-[var(--brand)] text-white hover:bg-[var(--ink-hover)] disabled:bg-[var(--line-strong)]">
             {savingProfile ? 'Сохраняем...' : 'Сохранить данные'}
           </Button>
         </form>
@@ -175,7 +175,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
             variant="outline"
             disabled={savingPassword || !newPassword || !confirmPassword}
             className="w-full"
-            style={{ borderColor: '#e11d1d', color: '#e11d1d' }}
+            style={{ borderColor: 'var(--brand)', color: 'var(--brand)' }}
           >
             {savingPassword ? 'Сохраняем...' : 'Сменить пароль'}
           </Button>

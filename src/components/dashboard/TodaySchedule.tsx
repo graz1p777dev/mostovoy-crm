@@ -62,12 +62,12 @@ export default function TodaySchedule({ items, currentTime }: TodayScheduleProps
             >
               <div
                 className="rounded-full"
-                style={{ width: 6, height: 6, backgroundColor: '#16a34a' }}
+                style={{ width: 6, height: 6, backgroundColor: 'var(--ok-base)' }}
               />
-              <span style={{ fontSize: 10, color: '#15803d', fontWeight: 600, letterSpacing: '0.04em' }}>
+              <span style={{ fontSize: 10, color: 'var(--ok)', fontWeight: 600, letterSpacing: '0.04em' }}>
                 СЕЙЧАС
               </span>
-              <div className="flex-1" style={{ height: 1, backgroundColor: '#bbf7d0' }} />
+              <div className="flex-1" style={{ height: 1, backgroundColor: 'var(--ok-border-2)' }} />
             </div>
           )}
 
@@ -81,7 +81,7 @@ export default function TodaySchedule({ items, currentTime }: TodayScheduleProps
             {/* Время */}
             <span
               className="flex-shrink-0 tabular-nums font-medium"
-              style={{ fontSize: 13, color: '#1b1517', width: 38 }}
+              style={{ fontSize: 13, color: 'var(--ink)', width: 38 }}
             >
               {formatTime(item.time)}
             </span>
@@ -95,7 +95,7 @@ export default function TodaySchedule({ items, currentTime }: TodayScheduleProps
                 className="flex-1 rounded-full"
                 style={{
                   width: 2,
-                  backgroundColor: item.isPast ? '#ece5e5' : 'var(--accent-from)',
+                  backgroundColor: item.isPast ? 'var(--line)' : 'var(--accent-from)',
                   minHeight: 20,
                 }}
               />
@@ -106,14 +106,14 @@ export default function TodaySchedule({ items, currentTime }: TodayScheduleProps
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span
                   className="font-medium truncate"
-                  style={{ fontSize: 13, color: '#1b1517' }}
+                  style={{ fontSize: 13, color: 'var(--ink)' }}
                 >
                   {item.client_name}
                 </span>
                 {item.is_nv && (
                   <span
                     className="rounded px-1 font-medium"
-                    style={{ fontSize: 9, color: '#c01818', backgroundColor: '#fdfbfb' }}
+                    style={{ fontSize: 9, color: 'var(--brand-ink)', backgroundColor: 'var(--paper-2)' }}
                   >
                     НВ
                   </span>

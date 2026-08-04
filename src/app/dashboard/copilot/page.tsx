@@ -39,10 +39,10 @@ const ACTION_FIELD_LABELS: Record<string, string> = {
 // Реальные токены приложения: var(--surface-2)/var(--text-strong)/var(--border-soft)
 // нигде не определены в globals.css этого репо (в отличие от старого фронтенда,
 // откуда была скопирована эта страница) — раньше это давало невидимый фон и рамку.
-const ink = '#1b1517'
-const steel = '#6b6063'
-const muted = '#7d7174'
-const areaStyle = { backgroundColor: '#fdfbfb', color: ink, border: '1px solid var(--border)' } as const
+const ink = 'var(--ink)'
+const steel = 'var(--ink-25)'
+const muted = 'var(--ink-3)'
+const areaStyle = { backgroundColor: 'var(--paper-2)', color: ink, border: '1px solid var(--border)' } as const
 
 function ActionCard({ action, onDone }: { action: PendingAction; onDone: (msg: ChatMessage) => void }) {
   const [editing, setEditing] = useState(false)
@@ -71,7 +71,7 @@ function ActionCard({ action, onDone }: { action: PendingAction; onDone: (msg: C
   }
 
   return (
-    <div className="rounded-2xl px-4 py-3.5 max-w-xs self-start" style={{ backgroundColor: '#fff', border: '1px solid #e11d1d' }}>
+    <div className="rounded-2xl px-4 py-3.5 max-w-xs self-start" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--brand)' }}>
       <div className="text-xs font-bold mb-2" style={{ color: ink }}>
         {ACTION_TITLES[action.tool_name] || 'Подтвердите действие'}
       </div>
@@ -94,7 +94,7 @@ function ActionCard({ action, onDone }: { action: PendingAction; onDone: (msg: C
       ))}
       <div className="flex gap-1.5 mt-2.5">
         <button onClick={confirm} disabled={busy} className="flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-medium text-white disabled:opacity-50"
-          style={{ backgroundColor: '#e11d1d' }}>
+          style={{ backgroundColor: 'var(--brand)' }}>
           <Check size={12} /> {editing ? 'Сохранить и подтвердить' : 'Подтвердить'}
         </button>
         {!editing && (
@@ -102,7 +102,7 @@ function ActionCard({ action, onDone }: { action: PendingAction; onDone: (msg: C
             <Pencil size={12} />
           </button>
         )}
-        <button onClick={cancel} disabled={busy} className="rounded-lg px-2 py-1.5" style={{ backgroundColor: '#fee2e2', color: '#c01818' }}>
+        <button onClick={cancel} disabled={busy} className="rounded-lg px-2 py-1.5" style={{ backgroundColor: 'var(--bad-soft)', color: 'var(--brand-ink)' }}>
           <X size={12} />
         </button>
       </div>
@@ -204,13 +204,13 @@ function HelpPageInner() {
     <div className="p-4 md:p-8 flex flex-col gap-4 max-w-3xl mx-auto" style={{ height: 'calc(100vh - 52px)' }}>
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
-          <Sparkles size={36} color="#e11d1d" />
+          <Sparkles size={36} color="var(--brand)" />
           <h2 className="text-xl font-bold" style={{ color: ink }}>Чем я могу помочь?</h2>
           <div className="flex flex-col gap-2 w-full max-w-md">
             {EXAMPLES.map(ex => (
               <button key={ex} onClick={() => send(ex)}
                 className="rounded-xl px-3.5 py-2.5 text-sm text-left transition-colors"
-                style={{ backgroundColor: '#fff', border: '1px solid var(--border)', color: steel }}>
+                style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: steel }}>
                 {ex}
               </button>
             ))}
@@ -225,15 +225,15 @@ function HelpPageInner() {
               </span>
               <div className="px-3.5 py-2 text-sm rounded-2xl [&_p]:m-0 [&_p+p]:mt-2 [&_ul]:my-1 [&_ul]:pl-4 [&_ol]:my-1 [&_ol]:pl-4 [&_strong]:font-semibold"
                 style={m.role === 'user'
-                  ? { backgroundColor: '#fdfbfb', border: '1px solid var(--border)', color: ink, borderBottomRightRadius: 4 }
-                  : { backgroundColor: '#e11d1d', color: '#fff', borderBottomLeftRadius: 4 }}>
+                  ? { backgroundColor: 'var(--paper-2)', border: '1px solid var(--border)', color: ink, borderBottomRightRadius: 4 }
+                  : { backgroundColor: 'var(--brand)', color: 'var(--on-brand)', borderBottomLeftRadius: 4 }}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
               </div>
               {m.buttons.length > 0 && (
                 <div className="flex gap-1.5 flex-wrap justify-start">
                   {m.buttons.map(b => (
                     <a key={b.href} href={b.href} className="text-xs rounded-lg px-2.5 py-1 no-underline"
-                      style={{ backgroundColor: '#fdfbfb', color: ink }}>
+                      style={{ backgroundColor: 'var(--paper-2)', color: ink }}>
                       {b.label}
                     </a>
                   ))}
@@ -242,10 +242,10 @@ function HelpPageInner() {
             </div>
           ))}
           {sending && (
-            <div className="self-start px-3.5 py-2.5 rounded-2xl" style={{ backgroundColor: '#e11d1d' }}>
+            <div className="self-start px-3.5 py-2.5 rounded-2xl" style={{ backgroundColor: 'var(--brand)' }}>
               <div className="flex gap-1">
                 {[0, 1, 2].map(i => (
-                  <span key={i} className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: '#fff', animationDelay: `${i * 0.15}s` }} />
+                  <span key={i} className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--surface)', animationDelay: `${i * 0.15}s` }} />
                 ))}
               </div>
             </div>
@@ -268,7 +268,7 @@ function HelpPageInner() {
           style={{ ...areaStyle, maxHeight: 160 }}
         />
         <button onClick={() => send(input)} disabled={sending || !input.trim()}
-          className="rounded-xl p-2.5 text-white disabled:opacity-50" style={{ backgroundColor: '#e11d1d' }}>
+          className="rounded-xl p-2.5 text-white disabled:opacity-50" style={{ backgroundColor: 'var(--brand)' }}>
           <Send size={16} />
         </button>
       </div>

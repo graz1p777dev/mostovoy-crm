@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { ROLE_LABELS } from '@/lib/constants'
 import { getInitials } from '@/lib/formatters'
 import { NAV_GROUPS } from '@/config/nav'
+import { BRAND } from '@/config/brand'
 import { LogOut } from 'lucide-react'
 import type { UserRole } from '@/types'
 
@@ -92,8 +93,8 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
           mobileOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full',
         )}
         style={{
-          background: 'linear-gradient(180deg, #e11d1d 0%, #cc1414 100%)',
-          borderRight: '1px solid rgba(255,255,255,0.14)',
+          background: 'linear-gradient(180deg, var(--sidebar-from) 0%, var(--sidebar-to) 100%)',
+          borderRight: '1px solid var(--sidebar-line)',
           boxShadow: '8px 0 28px -18px rgba(225,29,29,0.45)',
         }}
       >
@@ -113,11 +114,11 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
             expanded ? 'opacity-100' : 'opacity-0',
           )}
         >
-          <p className="text-white font-semibold truncate whitespace-nowrap" style={{ fontSize: 13 }}>
-            МОСТОВОЙ
+          <p className="font-semibold truncate whitespace-nowrap" style={{ fontSize: 13, color: 'var(--sidebar-fg)' }}>
+            {BRAND.identity.name}
           </p>
-          <p style={{ fontSize: 11, color: '#ffffff' }} className="truncate whitespace-nowrap">
-            CRM система
+          <p style={{ fontSize: 11, color: 'var(--sidebar-fg)' }} className="truncate whitespace-nowrap">
+            {BRAND.identity.tagline}
           </p>
         </div>
       </div>
@@ -134,7 +135,7 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
               right: 0,
               top: indicator.top,
               height: indicator.height,
-              background: '#ffffff',
+              background: 'var(--sidebar-active-bg)',
               borderRadius: 8,
               boxShadow: '0 4px 14px -4px rgba(40,26,28,0.34), inset 0 0 0 1px rgba(255,255,255,0.9)',
               opacity: indicator.visible ? 1 : 0,
@@ -159,7 +160,7 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
                     'transition-opacity duration-200',
                     expanded ? 'opacity-100' : 'opacity-0',
                   )}
-                  style={{ fontSize: 10, color: '#ffffff' }}
+                  style={{ fontSize: 10, color: 'var(--sidebar-fg)' }}
                 >
                   {group.label}
                 </p>
@@ -178,8 +179,8 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
                           className={cn(
                             'relative flex items-center gap-2.5 px-2.5 py-2 rounded-md transition-colors duration-150 outline-none',
                             active
-                              ? 'text-[#c81414] font-medium'
-                              : 'text-white hover:bg-white/[0.14] hover:text-white focus-visible:bg-white/[0.14] focus-visible:text-white'
+                              ? 'text-[var(--sidebar-active-ink)] font-medium'
+                              : 'text-[var(--sidebar-fg)] hover:bg-white/[0.14] hover:text-[var(--sidebar-fg)] focus-visible:bg-white/[0.14] focus-visible:text-[var(--sidebar-fg)]'
                           )}
                           style={{ zIndex: 1 }}
                         >
@@ -208,7 +209,7 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
                                 position: 'relative',
                                 width: 14,
                                 height: 14,
-                                color: active ? '#c81414' : '#ffffff',
+                                color: active ? 'var(--sidebar-active-ink)' : 'var(--sidebar-fg)',
                                 flexShrink: 0,
                               }}
                             />
@@ -241,10 +242,11 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
         <div className="flex items-center gap-2.5">
           {/* Аватар */}
           <div
-            className="flex items-center justify-center rounded-full flex-shrink-0 text-white font-semibold brand-gradient"
+            className="flex items-center justify-center rounded-full flex-shrink-0 font-semibold brand-gradient"
             style={{
               width: 30, height: 30,
               fontSize: 11,
+              color: 'var(--on-brand)',
             }}
           >
             {user?.name ? getInitials(user.name) : '??'}
@@ -257,10 +259,10 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
               expanded ? 'opacity-100' : 'opacity-0',
             )}
           >
-            <p className="text-white font-medium truncate whitespace-nowrap" style={{ fontSize: 12 }}>
+            <p className="font-medium truncate whitespace-nowrap" style={{ fontSize: 12, color: 'var(--sidebar-fg)' }}>
               {user?.name ?? 'Загрузка...'}
             </p>
-            <p style={{ fontSize: 11, color: '#ffffff' }} className="truncate whitespace-nowrap">
+            <p style={{ fontSize: 11, color: 'var(--sidebar-fg)' }} className="truncate whitespace-nowrap">
               {role ? ROLE_LABELS[role] : ''}
             </p>
           </div>
@@ -275,7 +277,7 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
             style={{ color: 'rgba(255,255,255,0.9)' }}
             title="Выйти"
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = '#ffffff'
+              (e.currentTarget as HTMLButtonElement).style.color = 'var(--sidebar-fg)'
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.9)'

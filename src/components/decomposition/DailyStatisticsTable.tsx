@@ -38,11 +38,11 @@ const COLS: ColDef[] = [
 ]
 
 const GROUP: Record<string, { label: string; bg: string; text: string; border: string }> = {
-  lmai: { label: 'LMAI / Обращения', bg: '#fdfbfb', text: '#c01818', border: '#fbd9d9' },
-  fv:   { label: 'Факт встречи',     bg: '#f0fdf4', text: '#166534', border: '#86efac' },
-  nv:   { label: 'Без НВ',          bg: '#fffbeb', text: '#92400e', border: '#fcd34d' },
-  avg:  { label: 'Средний чек',      bg: '#fdfbfb', text: '#c01818', border: '#ffb3ba' },
-  del:  { label: 'Доставка',         bg: '#fff1f2', text: '#c01818', border: '#fda4af' },
+  lmai: { label: 'LMAI / Обращения', bg: 'var(--paper-2)', text: 'var(--brand-ink)', border: 'var(--brand-soft-2)' },
+  fv:   { label: 'Факт встречи',     bg: 'var(--ok-tint)', text: 'var(--ok-strong)', border: 'var(--ok-border)' },
+  nv:   { label: 'Без НВ',          bg: 'var(--warn-tint)', text: 'var(--warn-strong)', border: 'var(--warn-border)' },
+  avg:  { label: 'Средний чек',      bg: 'var(--paper-2)', text: 'var(--brand-ink)', border: 'var(--brand-mid-2)' },
+  del:  { label: 'Доставка',         bg: 'var(--bad-tint-2)', text: 'var(--brand-ink)', border: 'var(--bad-base-soft)' },
 }
 
 interface Props {
@@ -51,10 +51,10 @@ interface Props {
 
 export default function DailyStatisticsTable({ rows }: Props) {
   return (
-    <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: '#fff', borderColor: '#ebebee' }}>
-      <div className="px-5 py-4 border-b" style={{ borderColor: '#ebebee' }}>
-        <p className="text-sm font-semibold" style={{ color: '#1b1517' }}>Ежедневная статистика</p>
-        <p className="text-[11px] mt-0.5" style={{ color: '#7d7174' }}>Данные за каждый день месяца</p>
+    <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
+      <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--line-soft)' }}>
+        <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>Ежедневная статистика</p>
+        <p className="text-[11px] mt-0.5" style={{ color: 'var(--ink-3)' }}>Данные за каждый день месяца</p>
       </div>
 
       <div className="overflow-auto" style={{ maxHeight: 480 }}>
@@ -64,7 +64,7 @@ export default function DailyStatisticsTable({ rows }: Props) {
               <th
                 rowSpan={2}
                 className="sticky left-0 z-20 px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider"
-                style={{ backgroundColor: '#fdfbfb', color: '#7d7174', borderRight: '2px solid #ebebee', borderBottom: '1px solid #ebebee', minWidth: 80 }}
+                style={{ backgroundColor: 'var(--paper-2)', color: 'var(--ink-3)', borderRight: '2px solid var(--line-soft)', borderBottom: '1px solid var(--line-soft)', minWidth: 80 }}
               >
                 Дата
               </th>
@@ -85,7 +85,7 @@ export default function DailyStatisticsTable({ rows }: Props) {
                 const isFirst = ci === 0 || COLS[ci - 1]?.group !== col.group
                 return (
                   <th key={col.key} className="text-center text-[10px] font-semibold py-2 px-2 whitespace-nowrap"
-                    style={{ backgroundColor: '#fdfbfb', color: '#6b6063', borderTop: `2px solid ${g.border}`, borderLeft: isFirst ? `2px solid ${g.border}` : '1px solid #ebebee', minWidth: col.isMoney ? 70 : 52 }}>
+                    style={{ backgroundColor: 'var(--paper-2)', color: 'var(--ink-25)', borderTop: `2px solid ${g.border}`, borderLeft: isFirst ? `2px solid ${g.border}` : '1px solid var(--line-soft)', minWidth: col.isMoney ? 70 : 52 }}>
                     {col.short}
                   </th>
                 )
@@ -95,13 +95,13 @@ export default function DailyStatisticsTable({ rows }: Props) {
 
           <tbody>
             {rows.map((row, ri) => {
-              const rowBg = row.isToday ? '#fdfbfb' : row.isWeekend ? '#fafafa' : '#fff'
+              const rowBg = row.isToday ? 'var(--paper-2)' : row.isWeekend ? 'var(--neutral-fill-2)' : 'var(--surface)'
               return (
-                <tr key={ri} style={{ backgroundColor: rowBg, opacity: row.isFuture ? 0.4 : 1, borderBottom: '1px solid #f0f0f0' }}>
-                  <td className="sticky left-0 z-10 px-4 py-2 whitespace-nowrap" style={{ backgroundColor: rowBg, borderRight: '2px solid #ebebee', minWidth: 80 }}>
-                    <span className="text-xs font-bold" style={{ color: '#1b1517' }}>{String(row.day).padStart(2,'0')}</span>
-                    <span className="ml-1.5 text-[10px]" style={{ color: row.isWeekend ? '#e11d1d' : '#7d7174' }}>{RU_DAYS[row.date.getDay()]}</span>
-                    {row.isToday && <span className="ml-1 text-[9px] font-bold px-1 rounded" style={{ backgroundColor: '#e11d1d', color: '#fff' }}>сег</span>}
+                <tr key={ri} style={{ backgroundColor: rowBg, opacity: row.isFuture ? 0.4 : 1, borderBottom: '1px solid var(--neutral-fill)' }}>
+                  <td className="sticky left-0 z-10 px-4 py-2 whitespace-nowrap" style={{ backgroundColor: rowBg, borderRight: '2px solid var(--line-soft)', minWidth: 80 }}>
+                    <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{String(row.day).padStart(2,'0')}</span>
+                    <span className="ml-1.5 text-[10px]" style={{ color: row.isWeekend ? 'var(--brand)' : 'var(--ink-3)' }}>{RU_DAYS[row.date.getDay()]}</span>
+                    {row.isToday && <span className="ml-1 text-[9px] font-bold px-1 rounded" style={{ backgroundColor: 'var(--brand)', color: 'var(--on-brand)' }}>сег</span>}
                   </td>
                   {COLS.map((col, ci) => {
                     const g = GROUP[col.group]
@@ -110,7 +110,7 @@ export default function DailyStatisticsTable({ rows }: Props) {
                     const display = fmt(val, col.isMoney)
                     return (
                       <td key={col.key} className="text-center py-2 px-2 text-xs"
-                        style={{ borderLeft: isFirst ? `2px solid ${g.border}` : '1px solid #f0f0f0', color: display ? '#1b1517' : '#ece5e5', fontWeight: display ? 500 : 400 }}>
+                        style={{ borderLeft: isFirst ? `2px solid ${g.border}` : '1px solid var(--neutral-fill)', color: display ? 'var(--ink)' : 'var(--line)', fontWeight: display ? 500 : 400 }}>
                         {display || '—'}
                       </td>
                     )
@@ -121,8 +121,8 @@ export default function DailyStatisticsTable({ rows }: Props) {
           </tbody>
 
           <tfoot>
-            <tr style={{ backgroundColor: '#fdfbfb', borderTop: '2px solid #ebebee' }}>
-              <td className="sticky left-0 z-10 px-4 py-3 text-xs font-bold" style={{ backgroundColor: '#fdfbfb', color: '#1b1517', borderRight: '2px solid #ebebee' }}>
+            <tr style={{ backgroundColor: 'var(--paper-2)', borderTop: '2px solid var(--line-soft)' }}>
+              <td className="sticky left-0 z-10 px-4 py-3 text-xs font-bold" style={{ backgroundColor: 'var(--paper-2)', color: 'var(--ink)', borderRight: '2px solid var(--line-soft)' }}>
                 Итого
               </td>
               {COLS.map((col, ci) => {
@@ -132,7 +132,7 @@ export default function DailyStatisticsTable({ rows }: Props) {
                 const total   = isAvg ? 0 : rows.reduce((s, r) => s + (r[col.key] as number), 0)
                 return (
                   <td key={col.key} className="text-center py-3 px-2 text-xs font-bold"
-                    style={{ color: '#1b1517', borderLeft: isFirst ? `2px solid ${g.border}` : '1px solid #ebebee' }}>
+                    style={{ color: 'var(--ink)', borderLeft: isFirst ? `2px solid ${g.border}` : '1px solid var(--line-soft)' }}>
                     {isAvg ? '—' : fmt(total, col.isMoney) || '—'}
                   </td>
                 )

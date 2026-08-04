@@ -163,16 +163,16 @@ export function describe(log: BotActionLog): string {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  success: '#34d399',
-  error: '#f87171',
-  skipped: '#a19698',
-  received: '#f2564f',
+  success: 'var(--term-status-success)',
+  error: 'var(--term-status-error)',
+  skipped: 'var(--term-status-skipped)',
+  received: 'var(--term-status-received)',
   // Тестовый лид: бот показал, что сделал бы, но наружу не пошёл.
-  dry_run: '#fbbf24',
+  dry_run: 'var(--term-status-dry-run)',
 }
 
 export function statusColor(status: string): string {
-  return STATUS_COLOR[status] ?? '#7d7174'
+  return STATUS_COLOR[status] ?? 'var(--term-status-default)'
 }
 
 export function timeOf(iso: string | null): string {

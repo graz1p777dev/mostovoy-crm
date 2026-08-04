@@ -31,11 +31,11 @@ export default function KpiCard({
     >
       {/* Заголовок */}
       <div className="flex items-center justify-between gap-2">
-        <span style={{ fontSize: 12, color: '#6b7280', fontWeight: 500 }}>
+        <span style={{ fontSize: 12, color: 'var(--ink-muted)', fontWeight: 500 }}>
           {label}
         </span>
         {icon && (
-          <span style={{ color: '#7d7174' }}>{icon}</span>
+          <span style={{ color: 'var(--ink-3)' }}>{icon}</span>
         )}
       </div>
 
@@ -43,7 +43,7 @@ export default function KpiCard({
       <div className="flex items-end justify-between gap-2">
         <span
           className="font-bold tabular-nums"
-          style={{ fontSize: 22, color: '#1b1517', lineHeight: 1 }}
+          style={{ fontSize: 22, color: 'var(--ink)', lineHeight: 1 }}
         >
           {value}
         </span>
@@ -52,7 +52,7 @@ export default function KpiCard({
             style={{
               fontSize: 11,
               fontWeight: 500,
-              color: deltaPositive ? '#15803d' : '#c01818',
+              color: deltaPositive ? 'var(--ok)' : 'var(--brand-ink)',
             }}
           >
             {deltaPositive ? '↑' : '↓'} {delta}
@@ -81,7 +81,7 @@ export default function KpiCard({
           />
         </div>
         <div className="flex items-center justify-between mt-1.5">
-          <span style={{ fontSize: 11, color: '#7d7174' }}>
+          <span style={{ fontSize: 11, color: 'var(--ink-3)' }}>
             План: {plan}
           </span>
           <span

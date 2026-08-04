@@ -189,16 +189,16 @@ export default function EmployeeModal({ employee, isNew, departments, roles, sch
     >
       <div
         className="relative w-full max-w-xl mx-4 rounded-2xl overflow-hidden flex flex-col"
-        style={{ backgroundColor: '#ffffff', maxHeight: '90vh' }}
+        style={{ backgroundColor: 'var(--surface)', maxHeight: '90vh' }}
       >
         {/* Шапка */}
         <div
           className="flex items-center gap-3 px-6 py-4 shrink-0"
-          style={{ background: 'linear-gradient(135deg, #ff5c68 0%, #e11d1d 100%)' }}
+          style={{ background: 'linear-gradient(135deg, var(--accent-to) 0%, var(--brand) 100%)' }}
         >
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0"
-            style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff' }}
+            style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'var(--on-brand)' }}
           >
             {initials}
           </div>
@@ -393,7 +393,7 @@ export default function EmployeeModal({ employee, isNew, departments, roles, sch
           {isNew && (
             <div
               className="rounded-xl p-4 space-y-3"
-              style={{ backgroundColor: '#fdfbfb', border: '1px solid #ebebee' }}
+              style={{ backgroundColor: 'var(--paper-2)', border: '1px solid var(--line-soft)' }}
             >
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                 Доступ в систему
@@ -428,9 +428,9 @@ export default function EmployeeModal({ employee, isNew, departments, roles, sch
                 {form.initial_password.length > 0 && (() => {
                   const strength = passwordStrength(form.initial_password)
                   const map = {
-                    weak:   { label: 'Слабый',   color: '#e11d1d', width: '33%' },
-                    medium: { label: 'Средний',   color: '#b45309', width: '66%' },
-                    strong: { label: 'Сильный',   color: '#15803d', width: '100%' },
+                    weak:   { label: 'Слабый',   color: 'var(--brand)', width: '33%' },
+                    medium: { label: 'Средний',   color: 'var(--warn)', width: '66%' },
+                    strong: { label: 'Сильный',   color: 'var(--ok)', width: '100%' },
                   }
                   const s = map[strength]
                   return (
@@ -465,7 +465,7 @@ export default function EmployeeModal({ employee, isNew, departments, roles, sch
         {/* Футер */}
         <div
           className="shrink-0 flex items-center justify-end gap-2 px-6 py-4"
-          style={{ borderTop: '1px solid #fdfbfb' }}
+          style={{ borderTop: '1px solid var(--paper-2)' }}
         >
           <Button variant="ghost" onClick={onClose} className="rounded-xl" disabled={isPending}>
             Отмена
@@ -474,7 +474,7 @@ export default function EmployeeModal({ employee, isNew, departments, roles, sch
             onClick={handleSave}
             disabled={isPending}
             className="rounded-xl text-white font-medium"
-            style={{ backgroundColor: '#e11d1d' }}
+            style={{ backgroundColor: 'var(--brand)' }}
           >
             {isPending ? 'Сохранение...' : 'Сохранить'}
           </Button>

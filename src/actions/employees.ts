@@ -214,7 +214,9 @@ export async function updateEmployee(id: string, data: EmployeeFormData): Promis
 
 // ─── archiveEmployee (soft delete) ───────────────────────────────────────────
 
-export async function archiveEmployee(id: string): Promise<ActionResult> {
+// reason — необязательная формулировка причины увольнения. Пишется в
+// employees.dismissal_reason (миграция 045) и видна потом в досье уволенного.
+export async function archiveEmployee(id: string, reason?: string): Promise<ActionResult> {
   if (!await requireOwner()) return { success: false, error: 'Недостаточно прав' }
 
   const admin = createAdminClient()
@@ -223,7 +225,11 @@ export async function archiveEmployee(id: string): Promise<ActionResult> {
   if (emp.deleted_at || emp.status === 'archived') return { success: false, error: 'Сотрудник уже уволен' }
   const { error } = await admin
     .from('employees')
-    .update({ deleted_at: new Date().toISOString(), status: 'archived' })
+    .update({
+      deleted_at: new Date().toISOString(),
+      status: 'archived',
+      dismissal_reason: reason?.trim() || null,
+    })
     .eq('id', id)
     .is('deleted_at', null)
 

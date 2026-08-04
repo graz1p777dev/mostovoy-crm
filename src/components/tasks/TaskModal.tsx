@@ -318,7 +318,7 @@ export default function TaskModal({
                       onClick={() => toggleMember(e.id)}
                       className={cn(
                         'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors',
-                        checked ? 'bg-[#fdecec]' : 'hover:bg-gray-50'
+                        checked ? 'bg-[var(--brand-soft)]' : 'hover:bg-gray-50'
                       )}
                     >
                       <div
@@ -331,7 +331,7 @@ export default function TaskModal({
                       <span
                         className={cn(
                           'flex h-4 w-4 items-center justify-center rounded border',
-                          checked ? 'border-transparent bg-[#e11d1d] text-white' : 'border-gray-300'
+                          checked ? 'border-transparent bg-[var(--brand)] text-white' : 'border-gray-300'
                         )}
                       >
                         {checked && <Check size={12} />}

@@ -7,7 +7,7 @@ export function ShopApiError({ error }: { error: string }) {
       <div className="flex max-w-xl items-start gap-3 rounded-2xl bg-white p-5">
         <AlertTriangle size={18} className="mt-0.5 flex-shrink-0 text-destructive" />
         <div>
-          <p className="text-sm font-semibold" style={{ color: '#1b1517' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>
             Нет связи с витриной «МОСТОВОЙ»
           </p>
           <p className="mt-1 text-sm text-muted-foreground">{error}</p>

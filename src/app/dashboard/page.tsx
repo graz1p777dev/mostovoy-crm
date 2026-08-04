@@ -8,8 +8,9 @@ import RightPanel from '@/components/dashboard/RightPanel'
 import RightPanelSkeleton from '@/components/dashboard/RightPanelSkeleton'
 import OpsSection from '@/components/dashboard/OpsSection'
 import PageLoader from '@/components/common/PageLoader'
+import { BRAND } from '@/config/brand'
 
-export const metadata = { title: 'Дашборд — МОСТОВОЙ' }
+export const metadata = { title: `Дашборд — ${BRAND.identity.name}` }
 
 export default async function DashboardPage() {
   const supabase = await createClient()

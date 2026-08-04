@@ -440,7 +440,7 @@ export default function DealModal({
             <button
               onClick={handleDelete}
               disabled={isPending}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] text-gray-400 transition-colors hover:bg-[#fdecec] hover:text-[#c01818] disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] text-gray-400 transition-colors hover:bg-[var(--brand-soft)] hover:text-[var(--brand-ink)] disabled:opacity-50"
             >
               <Trash2 size={15} />
               Удалить

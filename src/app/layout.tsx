@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Inter, IBM_Plex_Sans_Condensed } from 'next/font/google'
 import { cookies } from 'next/headers'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
@@ -8,25 +7,18 @@ import { createClient } from '@/lib/supabase/server'
 import { Toaster } from 'sonner'
 import { Employee } from '@/types'
 import { DEFAULT_ACCENT, ACCENT_COOKIE_NAME, isAccentId } from '@/lib/accent-theme'
+import { BRAND } from '@/config/brand'
+import { buildBrandCss } from '@/config/brand-css'
+import { getBrandFonts } from '@/config/brand-fonts'
 
-const inter = Inter({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-sans',
-})
+const fonts = getBrandFonts(BRAND.fonts.sans, BRAND.fonts.display)
 
-// Заголовки — узкий технический гротеск: «приборная» интонация и экономия
-// ширины в плотных таблицах. Кириллица у Plex Condensed есть.
-const plexCondensed = IBM_Plex_Sans_Condensed({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-display',
-})
-
-const fontVars = `${inter.variable} ${plexCondensed.variable}`
+// Определения всех токенов собираются из бренд-конфига один раз на модуль.
+const brandCss = buildBrandCss()
 
 export const metadata: Metadata = {
-  title: 'МОСТОВОЙ CRM',
-  description: 'Система управления бизнесом',
+  title: BRAND.identity.title,
+  description: BRAND.identity.description,
 }
 
 // Root layout — читает сессию и employee один раз на SSR.
@@ -79,8 +71,11 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="ru" className={`h-full ${fontVars}`} data-accent={accent}>
-      <body className={`${inter.className} min-h-full bg-background`}>
+    <html lang="ru" className={`h-full ${fonts.variables}`} data-accent={accent}>
+      <body className={`${fonts.bodyClassName} min-h-full bg-background`}>
+        {/* Токены бренда. Рендерятся на сервере, поэтому первый кадр уже
+            приходит в фирменных цветах — мигания нет. */}
+        <style id="brand-tokens" dangerouslySetInnerHTML={{ __html: brandCss }} />
         <AuthProvider
           initialEmployee={initialEmployee}
           initialRealUser={initialRealUser}
@@ -92,9 +87,9 @@ export default async function RootLayout({
           position="bottom-right"
           toastOptions={{
             style: {
-              background: '#ffffff',
-              border: '1px solid #ece5e5',
-              color: '#1b1517',
+              background: 'var(--surface)',
+              border: '1px solid var(--line)',
+              color: 'var(--ink)',
               borderRadius: '12px',
               boxShadow: '0 12px 32px -14px rgba(28,20,22,0.24)',
             },

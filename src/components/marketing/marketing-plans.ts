@@ -119,10 +119,10 @@ export function fmtValue(value: number, format: MetricMeta['format']): string {
 }
 
 export const STATUS_COLORS = {
-  green:   { text: '#15803d', bg: '#f0fdf4', border: '#86efac' },
-  yellow:  { text: '#b45309', bg: '#fffbeb', border: '#fcd34d' },
-  red:     { text: '#c01818', bg: '#fef2f2', border: '#fca5a5' },
-  neutral: { text: '#6b6063', bg: '#fdfbfb', border: '#ebebee' },
+  green:   { text: 'var(--ok)', bg: 'var(--ok-tint)', border: 'var(--ok-border)' },
+  yellow:  { text: 'var(--warn)', bg: 'var(--warn-tint)', border: 'var(--warn-border)' },
+  red:     { text: 'var(--brand-ink)', bg: 'var(--bad-tint)', border: 'var(--bad-border)' },
+  neutral: { text: 'var(--ink-25)', bg: 'var(--paper-2)', border: 'var(--line-soft)' },
 }
 
 export function dailyPlanValue(planTotal: number, workDays: number): number {

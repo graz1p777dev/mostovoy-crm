@@ -41,29 +41,29 @@ export default function ResetPasswordPage() {
 
   const strength = password.length > 0 ? passwordStrength(password) : null
   const strengthMap = {
-    weak:   { label: 'Слабый',  color: '#e11d1d', width: '33%' },
-    medium: { label: 'Средний', color: '#b45309', width: '66%' },
-    strong: { label: 'Сильный', color: '#15803d', width: '100%' },
+    weak:   { label: 'Слабый',  color: 'var(--brand)', width: '33%' },
+    medium: { label: 'Средний', color: 'var(--warn)', width: '66%' },
+    strong: { label: 'Сильный', color: 'var(--ok)', width: '100%' },
   }
 
   if (success) {
     return (
       <div
         className="min-h-screen flex items-center justify-center p-6"
-        style={{ backgroundColor: '#faf8f7' }}
+        style={{ backgroundColor: 'var(--paper)' }}
       >
         <div
           className="w-full max-w-sm rounded-2xl p-8 text-center space-y-3"
-          style={{ backgroundColor: '#ffffff', border: '1px solid #ece5e5', boxShadow: '0 1px 2px rgba(28,20,22,0.04), 0 24px 60px -34px rgba(28,20,22,0.22)' }}
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 1px 2px rgba(28,20,22,0.04), 0 24px 60px -34px rgba(28,20,22,0.22)' }}
         >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
-            style={{ backgroundColor: '#dcfce7' }}
+            style={{ backgroundColor: 'var(--ok-soft)' }}
           >
-            <CheckCircle2 style={{ width: 24, height: 24, color: '#22c55e' }} />
+            <CheckCircle2 style={{ width: 24, height: 24, color: 'var(--ok-base-2)' }} />
           </div>
-          <h1 className="text-xl font-bold" style={{ color: '#1b1517' }}>Пароль обновлён</h1>
-          <p className="text-sm" style={{ color: '#7d7174' }}>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--ink)' }}>Пароль обновлён</h1>
+          <p className="text-sm" style={{ color: 'var(--ink-3)' }}>
             Перенаправляем в личный кабинет...
           </p>
         </div>
@@ -74,26 +74,26 @@ export default function ResetPasswordPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-6"
-      style={{ backgroundColor: '#faf8f7' }}
+      style={{ backgroundColor: 'var(--paper)' }}
     >
       <div
         className="w-full max-w-sm rounded-2xl p-8"
-        style={{ backgroundColor: '#ffffff', border: '1px solid #ece5e5', boxShadow: '0 1px 2px rgba(28,20,22,0.04), 0 24px 60px -34px rgba(28,20,22,0.22)' }}
+        style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--line)', boxShadow: '0 1px 2px rgba(28,20,22,0.04), 0 24px 60px -34px rgba(28,20,22,0.22)' }}
       >
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
           style={{ backgroundColor: 'rgba(225,29,29,0.4)' }}
         >
-          <Lock style={{ width: 18, height: 18, color: '#7d7174' }} />
+          <Lock style={{ width: 18, height: 18, color: 'var(--ink-3)' }} />
         </div>
-        <h1 className="text-2xl font-bold mb-1" style={{ color: '#1b1517' }}>Новый пароль</h1>
-        <p className="text-sm mb-6" style={{ color: '#7d7174' }}>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--ink)' }}>Новый пароль</h1>
+        <p className="text-sm mb-6" style={{ color: 'var(--ink-3)' }}>
           Придумайте надёжный пароль для вашего аккаунта.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-medium uppercase tracking-wide" style={{ color: '#7d7174' }}>
+            <label className="text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--ink-3)' }}>
               Новый пароль
             </label>
             <div className="relative">
@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full pl-4 pr-10 h-11 rounded-xl text-sm text-[#1b1517] placeholder:text-[#a19698] focus:outline-none transition-all"
+                className="w-full pl-4 pr-10 h-11 rounded-xl text-sm text-[var(--ink)] placeholder:text-[var(--ink-4)] focus:outline-none transition-all"
                 style={{
                   backgroundColor: 'rgba(255,255,255,0.08)',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -113,7 +113,7 @@ export default function ResetPasswordPage() {
                 type="button"
                 onClick={() => setShowPass(v => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2"
-                style={{ color: '#7d7174' }}
+                style={{ color: 'var(--ink-3)' }}
                 tabIndex={-1}
               >
                 {showPass
@@ -142,7 +142,7 @@ export default function ResetPasswordPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium uppercase tracking-wide" style={{ color: '#7d7174' }}>
+            <label className="text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--ink-3)' }}>
               Подтверждение
             </label>
             <input
@@ -151,7 +151,7 @@ export default function ResetPasswordPage() {
               value={confirm}
               onChange={e => setConfirm(e.target.value)}
               required
-              className="w-full px-4 h-11 rounded-xl text-sm text-[#1b1517] placeholder:text-[#a19698] focus:outline-none transition-all"
+              className="w-full px-4 h-11 rounded-xl text-sm text-[var(--ink)] placeholder:text-[var(--ink-4)] focus:outline-none transition-all"
               style={{
                 backgroundColor: 'rgba(255,255,255,0.08)',
                 border: '1px solid rgba(255,255,255,0.1)',
@@ -159,14 +159,14 @@ export default function ResetPasswordPage() {
             />
           </div>
 
-          <p className="text-[11px]" style={{ color: '#7d7174' }}>
+          <p className="text-[11px]" style={{ color: 'var(--ink-3)' }}>
             Мин. {PASSWORD_MIN_LENGTH} символов, одна заглавная буква, одна цифра.
           </p>
 
           {error && (
             <div
               className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl"
-              style={{ backgroundColor: '#fdecec', border: '1px solid #f7c0c0', color: '#c01818' }}
+              style={{ backgroundColor: 'var(--brand-soft)', border: '1px solid var(--brand-soft-border)', color: 'var(--brand-ink)' }}
             >
               ⚠ {error}
             </div>
@@ -176,7 +176,7 @@ export default function ResetPasswordPage() {
             type="submit"
             disabled={loading}
             className="w-full h-11 rounded-xl font-semibold text-sm text-white transition-all"
-            style={{ backgroundColor: '#e11d1d', opacity: loading ? 0.6 : 1 }}
+            style={{ backgroundColor: 'var(--brand)', opacity: loading ? 0.6 : 1 }}
           >
             {loading ? 'Сохраняем...' : 'Сохранить пароль'}
           </button>

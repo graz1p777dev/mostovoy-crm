@@ -19,7 +19,7 @@ export default async function NotificationsPage({
 
   return (
     <div className="max-w-3xl mx-auto py-6 px-4">
-      <Suspense fallback={<div style={{ color: '#7d7174', fontSize: 13 }}>Загрузка…</div>}>
+      <Suspense fallback={<div style={{ color: 'var(--ink-3)', fontSize: 13 }}>Загрузка…</div>}>
         <NotificationsData filter={filter} />
       </Suspense>
     </div>

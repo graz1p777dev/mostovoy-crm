@@ -30,10 +30,10 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 const STATUS_BADGE: Record<string, { bg: string; color: string }> = {
-  active: { bg: '#dcfce7', color: '#15803d' },
-  needs_research: { bg: '#fef9c3', color: '#854d0e' },
-  hidden: { bg: '#fdfbfb', color: '#6b7280' },
-  sync_error: { bg: '#fee2e2', color: '#c01818' },
+  active: { bg: 'var(--ok-soft)', color: 'var(--ok)' },
+  needs_research: { bg: 'var(--warn-soft-2)', color: 'var(--warn-strong-2)' },
+  hidden: { bg: 'var(--paper-2)', color: 'var(--ink-muted)' },
+  sync_error: { bg: 'var(--bad-soft)', color: 'var(--brand-ink)' },
 }
 
 function formatMoney(value: number, currency: string) {
@@ -158,7 +158,7 @@ export function ShopProductsClient({ data, imageBase }: Props) {
       <div className="overflow-x-auto rounded-2xl bg-white">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-xs uppercase" style={{ color: '#6b6063' }}>
+            <tr className="text-xs uppercase" style={{ color: 'var(--ink-25)' }}>
               <th className="px-4 py-3 text-left font-medium">Товар</th>
               <SortableHead label="Название" col="name" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
               <th className="px-3 py-3 text-left font-medium">Группа</th>
@@ -182,7 +182,7 @@ export function ShopProductsClient({ data, imageBase }: Props) {
               const badge = STATUS_BADGE[product.status] ?? STATUS_BADGE.hidden
               const preview = product.image ? absoluteShopImage(product.image, imageBase) : ''
               return (
-                <tr key={product.id} style={{ borderTop: '1px solid #fdfbfb' }}>
+                <tr key={product.id} style={{ borderTop: '1px solid var(--paper-2)' }}>
                   <td className="px-4 py-2.5">
                     <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-muted/40">
                       {preview ? (
@@ -194,17 +194,17 @@ export function ShopProductsClient({ data, imageBase }: Props) {
                     </div>
                   </td>
                   <td className="px-3 py-2.5">
-                    <p className="font-medium" style={{ color: '#1b1517' }}>{product.name}</p>
+                    <p className="font-medium" style={{ color: 'var(--ink)' }}>{product.name}</p>
                     <p className="text-[11px] text-muted-foreground">
                       {[product.brand, product.category].filter(Boolean).join(' · ') || product.slug}
                       {!product.available && ' · нет в наличии'}
                     </p>
                   </td>
                   <td className="px-3 py-2.5 text-muted-foreground">{product.group ?? '—'}</td>
-                  <td className="px-3 py-2.5 text-right" style={{ color: '#1b1517' }}>
+                  <td className="px-3 py-2.5 text-right" style={{ color: 'var(--ink)' }}>
                     {formatMoney(product.price, product.currency)}
                     {product.salePrice != null && (
-                      <span className="block text-[11px]" style={{ color: '#15803d' }}>
+                      <span className="block text-[11px]" style={{ color: 'var(--ok)' }}>
                         со скидкой {formatMoney(product.salePrice, product.currency)}
                       </span>
                     )}
@@ -286,8 +286,8 @@ export function ShopProductsClient({ data, imageBase }: Props) {
 function SummaryTile({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-2xl bg-white px-4 py-3.5">
-      <div className="text-xl font-bold" style={{ color: '#1b1517' }}>{value.toLocaleString('ru-RU')}</div>
-      <div className="mt-0.5 text-xs" style={{ color: '#6b6063' }}>{label}</div>
+      <div className="text-xl font-bold" style={{ color: 'var(--ink)' }}>{value.toLocaleString('ru-RU')}</div>
+      <div className="mt-0.5 text-xs" style={{ color: 'var(--ink-25)' }}>{label}</div>
     </div>
   )
 }
@@ -312,7 +312,7 @@ function SortableHead({
         className={`inline-flex items-center gap-1 uppercase ${align === 'right' ? 'flex-row-reverse' : ''}`}
       >
         {label}
-        <Icon size={12} style={{ color: active ? 'var(--accent-from)' : '#7d7174' }} />
+        <Icon size={12} style={{ color: active ? 'var(--accent-from)' : 'var(--ink-3)' }} />
       </button>
     </th>
   )

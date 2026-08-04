@@ -107,7 +107,7 @@ export default function DealCard({
         )}
 
         {deal.amount !== null && (
-          <span className="inline-flex items-center rounded-md bg-[#fdecec] px-1.5 py-0.5 text-[10px] font-semibold text-[#c01818]">
+          <span className="inline-flex items-center rounded-md bg-[var(--brand-soft)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--brand-ink)]">
             {formatMoney(deal.amount, deal.currency)}
           </span>
         )}

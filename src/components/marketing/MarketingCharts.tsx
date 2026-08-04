@@ -186,8 +186,8 @@ export default function MarketingCharts({ daily }: Props) {
                   <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0}    />
                 </linearGradient>
                 <linearGradient id="gradPlan" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#a19698" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#a19698" stopOpacity={0}    />
+                  <stop offset="5%"  stopColor="var(--ink-4)" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="var(--ink-4)" stopOpacity={0}    />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID_STROKE} />
@@ -198,7 +198,7 @@ export default function MarketingCharts({ daily }: Props) {
                 formatter={(v, n) => [fmtK(Number(v)) + ' KGS', String(n)]}
               />
               <Legend iconSize={8} wrapperStyle={{ fontSize: 11 }} />
-              <Area dataKey="План" stroke="#a19698" fill="url(#gradPlan)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
+              <Area dataKey="План" stroke="var(--ink-4)" fill="url(#gradPlan)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
               <Area dataKey="Факт" stroke={CHART_COLORS.primary} fill="url(#gradFact)" strokeWidth={2} dot={false} />
             </AreaChart>
           </ResponsiveContainer>

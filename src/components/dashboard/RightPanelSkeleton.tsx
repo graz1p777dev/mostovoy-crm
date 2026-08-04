@@ -13,17 +13,17 @@ export default function RightPanelSkeleton() {
       </div>
       {/* Live Feed */}
       <div className="flex flex-col gap-2">
-        <div className="animate-pulse rounded" style={{ height: 12, width: '40%', backgroundColor: '#ece5e5' }} />
+        <div className="animate-pulse rounded" style={{ height: 12, width: '40%', backgroundColor: 'var(--line)' }} />
         <div className="animate-pulse rounded-xl" style={{ height: 220, backgroundColor: 'rgba(255,255,255,0.7)' }} />
       </div>
       {/* Team Now */}
       <div className="flex flex-col gap-2">
-        <div className="animate-pulse rounded" style={{ height: 12, width: '35%', backgroundColor: '#ece5e5' }} />
+        <div className="animate-pulse rounded" style={{ height: 12, width: '35%', backgroundColor: 'var(--line)' }} />
         <div className="animate-pulse rounded-xl" style={{ height: 130, backgroundColor: 'rgba(255,255,255,0.7)' }} />
       </div>
       {/* Schedule */}
       <div className="flex flex-col gap-2">
-        <div className="animate-pulse rounded" style={{ height: 12, width: '45%', backgroundColor: '#ece5e5' }} />
+        <div className="animate-pulse rounded" style={{ height: 12, width: '45%', backgroundColor: 'var(--line)' }} />
         <div className="animate-pulse rounded-xl" style={{ height: 150, backgroundColor: 'rgba(255,255,255,0.7)' }} />
       </div>
     </div>

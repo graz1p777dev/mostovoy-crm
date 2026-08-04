@@ -237,7 +237,7 @@ export default function DealsBoard({ initialStages, initialDeals, employees, me 
               className={cn(
                 'flex w-[290px] shrink-0 flex-col rounded-2xl border transition-colors',
                 isTarget && dragId
-                  ? 'border-[#f7b3b3] bg-[#fdecec]/60'
+                  ? 'border-[var(--brand-mid)] bg-[var(--brand-soft)]/60'
                   : 'border-gray-100 bg-gray-50/60'
               )}
             >
@@ -288,7 +288,7 @@ export default function DealsBoard({ initialStages, initialDeals, employees, me 
                   />
                 ))}
 
-                {dragId && isTarget && <div className="h-[3px] rounded-full bg-[#e11d1d]" />}
+                {dragId && isTarget && <div className="h-[3px] rounded-full bg-[var(--brand)]" />}
 
                 {list.length === 0 && !dragId && (
                   <button

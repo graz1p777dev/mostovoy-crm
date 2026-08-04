@@ -37,6 +37,10 @@ import {
   Eye,
   Handshake,
   MessageSquareCheck,
+  TrendingUp,
+  CalendarCheck,
+  Clock,
+  Plug,
 } from 'lucide-react'
 
 export const NAV_GROUPS: NavGroup[] = [
@@ -126,6 +130,13 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Eye,
         roles: ['owner', 'rop'],
       },
+      {
+        // Журнал цен витрины: что и откуда подорожало или подешевело.
+        href: '/dashboard/shop-updates',
+        label: 'Обновления',
+        icon: TrendingUp,
+        roles: ['owner', 'rop'],
+      },
     ],
   },
   {
@@ -173,6 +184,29 @@ export const NAV_GROUPS: NavGroup[] = [
         roles: ['owner', 'rop'],
       },
       {
+        // Реестр партнёров-источников клиентов: кто сколько привёл и с какой
+        // конверсией. Ведут его владелец и руководитель отдела.
+        href: '/dashboard/partners',
+        label: 'Партнёры',
+        icon: Handshake,
+        roles: ['owner', 'rop'],
+      },
+      {
+        // Табель: приходы, опоздания, объяснительные, отпуска и больничные.
+        href: '/dashboard/attendance',
+        label: 'Посещаемость',
+        icon: CalendarCheck,
+        roles: ['owner', 'rop', 'accountant'],
+      },
+      {
+        // Личный экран сотрудника: отметиться на смене и посмотреть свой месяц.
+        // Владельцу и бухгалтеру не нужен — они смотрят общий табель.
+        href: '/dashboard/my-time',
+        label: 'Моё время',
+        icon: Clock,
+        roles: ['rop', 'mp', 'lmai'],
+      },
+      {
         href: '/dashboard/calendar',
         label: 'Календарь',
         icon: Calendar,
@@ -200,6 +234,12 @@ export const NAV_GROUPS: NavGroup[] = [
         label: 'Настройки',
         icon: Settings,
         roles: ['owner'],
+      },
+      {
+        href: '/dashboard/integrations',
+        label: 'Интеграции',
+        icon: Plug,
+        roles: ['owner', 'rop'],
       },
       {
         href: '/dashboard/help',

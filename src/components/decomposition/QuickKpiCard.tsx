@@ -20,17 +20,17 @@ export default function QuickKpiCard({ items }: Props) {
         <div
           key={kpi.label}
           className="rounded-2xl px-4 py-4 shadow-sm border flex flex-col justify-between"
-          style={{ backgroundColor: '#fff', borderColor: '#ebebee', minHeight: 100 }}
+          style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line-soft)', minHeight: 100 }}
         >
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] leading-tight font-medium" style={{ color: '#7d7174' }}>{kpi.label}</p>
+            <p className="text-[11px] leading-tight font-medium" style={{ color: 'var(--ink-3)' }}>{kpi.label}</p>
             <MetricIconBadge name={`${kpi.label} ${kpi.icon}`} />
           </div>
           <div>
             <p className="text-2xl font-bold leading-none" style={{ color: kpi.color }}>
               {fmtMoney(kpi.value)}
             </p>
-            <p className="text-[11px] mt-1" style={{ color: '#7d7174' }}>KGS · {kpi.sub}</p>
+            <p className="text-[11px] mt-1" style={{ color: 'var(--ink-3)' }}>KGS · {kpi.sub}</p>
           </div>
         </div>
       ))}

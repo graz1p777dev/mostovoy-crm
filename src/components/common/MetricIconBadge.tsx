@@ -25,10 +25,10 @@ type BadgeVariant =
 // метрику, а не соревнуется с числом рядом.
 type Tone = { bg: string; fg: string; accent: string }
 
-const TONE_BRAND: Tone = { bg: '#e11d1d', fg: '#ffffff', accent: 'rgba(255,255,255,0.60)' }
-const TONE_COST: Tone = { bg: '#b5491f', fg: '#ffffff', accent: 'rgba(255,255,255,0.60)' }
-const TONE_GOOD: Tone = { bg: '#2f7d64', fg: '#ffffff', accent: 'rgba(255,255,255,0.60)' }
-const TONE_MUTED: Tone = { bg: '#574d4f', fg: '#ffffff', accent: 'rgba(255,255,255,0.56)' }
+const TONE_BRAND: Tone = { bg: 'var(--brand)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.60)' }
+const TONE_COST: Tone = { bg: 'var(--series-negative)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.60)' }
+const TONE_GOOD: Tone = { bg: 'var(--series-positive)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.60)' }
+const TONE_MUTED: Tone = { bg: 'var(--ink-2)', fg: 'var(--surface)', accent: 'rgba(255,255,255,0.56)' }
 
 const VARIANT_TONES: Record<BadgeVariant, Tone> = {
   money: TONE_BRAND,

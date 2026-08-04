@@ -14,8 +14,8 @@ import { askConsultationAI, type ConsultationAIResponse } from '@/actions/consul
 import { applyPhoneMask, toWazzupChatId } from '@/lib/phone'
 import type { Consultation } from '@/types'
 
-const navy = '#1b1517'
-const steel = '#6b6063'
+const navy = 'var(--ink)'
+const steel = 'var(--ink-25)'
 
 const QUICK_QUESTIONS = [
   'Что ей посоветовать?',
@@ -24,8 +24,8 @@ const QUICK_QUESTIONS = [
 ]
 
 const SIGNAL_LABEL: Record<ConsultationAIResponse['signal'], { label: string; bg: string; color: string }> = {
-  hot: { label: '🔥 Готов купить', bg: '#fef2e8', color: '#c2410c' },
-  unhappy: { label: '⚠️ Недоволен', bg: '#fef2f2', color: '#c01818' },
+  hot: { label: '🔥 Готов купить', bg: 'var(--orange-tint-2)', color: 'var(--orange-strong)' },
+  unhappy: { label: '⚠️ Недоволен', bg: 'var(--bad-tint)', color: 'var(--brand-ink)' },
   neutral: { label: '', bg: '', color: '' },
 }
 
@@ -167,7 +167,7 @@ export default function ConsultationChatPage() {
           </div>
         )}
         {consultation && (
-          <span className="text-xs rounded-lg px-2.5 py-1" style={{ backgroundColor: '#eafaf0', color: '#047857' }}>
+          <span className="text-xs rounded-lg px-2.5 py-1" style={{ backgroundColor: 'var(--ok-tint-2)', color: 'var(--ok-strong-2)' }}>
             Привязано: {consultation.client_name} ({consultation.date})
           </span>
         )}
@@ -194,7 +194,7 @@ export default function ConsultationChatPage() {
             {/* ИИ-ассистент */}
             <div className="rounded-2xl bg-white flex flex-col flex-1 min-h-0" style={{ border: '1px solid var(--border)' }}>
               <div className="px-4 py-3 flex items-center gap-2 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-                <Sparkles size={15} color="#e11d1d" />
+                <Sparkles size={15} color="var(--brand)" />
                 <span className="text-sm font-bold" style={{ color: navy }}>ИИ-ассистент</span>
               </div>
               <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
@@ -205,7 +205,7 @@ export default function ConsultationChatPage() {
                         key={q}
                         onClick={() => void handleAskAI(q)}
                         className="text-xs text-left rounded-lg px-2.5 py-2"
-                        style={{ backgroundColor: '#fdfbfb', color: steel }}
+                        style={{ backgroundColor: 'var(--paper-2)', color: steel }}
                       >
                         {q}
                       </button>
@@ -216,7 +216,7 @@ export default function ConsultationChatPage() {
                   <div
                     key={i}
                     className={`text-xs rounded-lg px-2.5 py-2 max-w-[90%] ${t.role === 'user' ? 'self-end' : 'self-start'}`}
-                    style={t.role === 'user' ? { backgroundColor: '#fdfbfb', color: navy } : { backgroundColor: '#e11d1d', color: '#fff' }}
+                    style={t.role === 'user' ? { backgroundColor: 'var(--paper-2)', color: navy } : { backgroundColor: 'var(--brand)', color: 'var(--on-brand)' }}
                   >
                     {t.text}
                   </div>
@@ -236,7 +236,7 @@ export default function ConsultationChatPage() {
                   onClick={() => void handleAskAI(aiQuestion)}
                   disabled={aiThinking}
                   className="rounded-lg p-1.5 text-white disabled:opacity-50"
-                  style={{ backgroundColor: '#e11d1d' }}
+                  style={{ backgroundColor: 'var(--brand)' }}
                 >
                   <Send size={13} />
                 </button>
@@ -272,8 +272,10 @@ export default function ConsultationChatPage() {
                   key={m.id}
                   className={`max-w-[70%] px-3.5 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${m.direction === 'out' ? 'self-end' : 'self-start'}`}
                   style={m.direction === 'out'
+                    // Зелёный пузыря WhatsApp — цвет самого мессенджера: переписка
+                    // должна выглядеть как в нём. При перекраске CRM не меняется.
                     ? { backgroundColor: '#dcf8c6', color: navy }
-                    : { backgroundColor: '#fdfbfb', color: navy, border: '1px solid var(--border)' }}
+                    : { backgroundColor: 'var(--paper-2)', color: navy, border: '1px solid var(--border)' }}
                 >
                   {m.text}
                 </div>

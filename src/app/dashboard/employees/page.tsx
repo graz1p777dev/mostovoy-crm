@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import EmployeeModal from '@/components/EmployeeModal'
+import { DismissEmployeeModal } from '@/components/employees/DismissEmployeeModal'
 import EmptyState from '@/components/common/EmptyState'
 
 // ─── Константы ────────────────────────────────────────────────────────────────
@@ -31,17 +32,17 @@ import EmptyState from '@/components/common/EmptyState'
 const PAGE_SIZE = 20
 
 const ROLE_BADGE_COLORS: Record<string, { bg: string; color: string }> = {
-  owner:     { bg: '#faf8f7', color: '#c01818' },
-  rop:       { bg: '#dcfce7', color: '#15803d' },
-  mp:        { bg: '#fdecec', color: '#c01818' },
-  lmai:      { bg: '#fef9c3', color: '#854d0e' },
-  accountant:{ bg: '#fce7f3', color: '#c01818' },
+  owner:     { bg: 'var(--paper)', color: 'var(--brand-ink)' },
+  rop:       { bg: 'var(--ok-soft)', color: 'var(--ok)' },
+  mp:        { bg: 'var(--brand-soft)', color: 'var(--brand-ink)' },
+  lmai:      { bg: 'var(--warn-soft-2)', color: 'var(--warn-strong-2)' },
+  accountant:{ bg: 'var(--pink-soft)', color: 'var(--brand-ink)' },
 }
 
 const STATUS_BADGE: Record<string, { bg: string; color: string; label: string }> = {
-  active:    { bg: '#dcfce7', color: '#15803d', label: 'Активный' },
-  probation: { bg: '#fef9c3', color: '#854d0e', label: 'Испыт. срок' },
-  archived:  { bg: '#fdfbfb', color: '#6b7280', label: 'Уволен' },
+  active:    { bg: 'var(--ok-soft)', color: 'var(--ok)', label: 'Активный' },
+  probation: { bg: 'var(--warn-soft-2)', color: 'var(--warn-strong-2)', label: 'Испыт. срок' },
+  archived:  { bg: 'var(--paper-2)', color: 'var(--ink-muted)', label: 'Уволен' },
 }
 
 // ─── Вспомогательные компоненты ──────────────────────────────────────────────
@@ -50,10 +51,10 @@ type SortKey = 'name' | 'role' | 'status' | 'hireDate'
 type SortDir = 'asc' | 'desc'
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
-  if (!active) return <ChevronsUpDown size={12} style={{ color: '#7d7174' }} />
+  if (!active) return <ChevronsUpDown size={12} style={{ color: 'var(--ink-3)' }} />
   return dir === 'asc'
-    ? <ChevronUp size={12} style={{ color: '#e11d1d' }} />
-    : <ChevronDown size={12} style={{ color: '#e11d1d' }} />
+    ? <ChevronUp size={12} style={{ color: 'var(--brand)' }} />
+    : <ChevronDown size={12} style={{ color: 'var(--brand)' }} />
 }
 
 function ThCell({
@@ -65,7 +66,7 @@ function ThCell({
     <th
       onClick={() => onSort(col)}
       className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none whitespace-nowrap"
-      style={{ color: '#7d7174' }}
+      style={{ color: 'var(--ink-3)' }}
     >
       <div className="flex items-center gap-1">
         {label}
@@ -79,17 +80,17 @@ function StatCard({ icon, label, value, sub, accent }: {
   icon: React.ReactNode; label: string; value: string; sub?: string; accent?: string
 }) {
   return (
-    <div className="rounded-2xl p-4 flex items-start gap-3" style={{ backgroundColor: '#ffffff' }}>
+    <div className="rounded-2xl p-4 flex items-start gap-3" style={{ backgroundColor: 'var(--surface)' }}>
       <div
         className="flex items-center justify-center w-10 h-10 rounded-xl flex-shrink-0"
-        style={{ backgroundColor: accent ?? '#e11d1d' }}
+        style={{ backgroundColor: accent ?? 'var(--brand)' }}
       >
         {icon}
       </div>
       <div>
-        <div className="text-xs font-medium mb-1" style={{ color: '#7d7174' }}>{label}</div>
-        <div className="text-xl font-bold leading-tight" style={{ color: '#1b1517' }}>{value}</div>
-        {sub && <div className="text-xs mt-0.5" style={{ color: '#7d7174' }}>{sub}</div>}
+        <div className="text-xs font-medium mb-1" style={{ color: 'var(--ink-3)' }}>{label}</div>
+        <div className="text-xl font-bold leading-tight" style={{ color: 'var(--ink)' }}>{value}</div>
+        {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--ink-3)' }}>{sub}</div>}
       </div>
     </div>
   )
@@ -207,19 +208,29 @@ export default function EmployeesPage() {
     })
   }
 
+  // Увольнение — через модалку с причиной (сохраняется в employees.dismissal_reason
+  // и показывается в досье уволенного), а не через window.confirm.
+  const [dismissTarget, setDismissTarget] = useState<Employee | null>(null)
+
   const handleArchive = (emp: Employee) => {
     if (emp.deleted_at || emp.status === 'archived') {
       toast.error('Этот сотрудник уже уволен')
       return
     }
-    if (!window.confirm(`Уволить «${emp.name}»?`)) return
+    setDismissTarget(emp)
+  }
+
+  const handleConfirmDismiss = (reason: string) => {
+    const emp = dismissTarget
+    if (!emp) return
     startTransition(async () => {
-      const r = await archiveEmployee(emp.id)
+      const r = await archiveEmployee(emp.id, reason)
       if (r.success) {
         toast.success('Сотрудник уволен')
         setEmployees(prev => prev.map(e =>
           e.id === emp.id ? { ...e, deleted_at: new Date().toISOString(), status: 'archived' as const } : e
         ))
+        setDismissTarget(null)
       } else toast.error(r.error)
     })
   }
@@ -241,19 +252,19 @@ export default function EmployeesPage() {
   const thProps = { sortKey, sortDir, onSort: handleSort }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fdfbfb' }}>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--paper-2)' }}>
       {/* Header */}
       <div
         className="flex items-center justify-between px-6 py-4"
-        style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #ece5e5' }}
+        style={{ backgroundColor: 'var(--surface)', borderBottom: '1px solid var(--line)' }}
       >
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-9 h-9" style={{ borderRadius: 14, backgroundColor: 'rgba(225,29,29,0.10)' }}>
-            <Users size={18} color="#e11d1d" />
+            <Users size={18} color="var(--brand)" />
           </div>
           <div>
-            <div className="font-semibold text-base leading-tight" style={{ color: '#1b1517' }}>Сотрудники</div>
-            <div className="text-xs" style={{ color: '#7d7174' }}>Управление командой</div>
+            <div className="font-semibold text-base leading-tight" style={{ color: 'var(--ink)' }}>Сотрудники</div>
+            <div className="text-xs" style={{ color: 'var(--ink-3)' }}>Управление командой</div>
           </div>
         </div>
 
@@ -261,7 +272,7 @@ export default function EmployeesPage() {
           <Button
             onClick={handleNew}
             className="text-white rounded-xl font-medium"
-            style={{ backgroundColor: '#e11d1d' }}
+            style={{ backgroundColor: 'var(--brand)' }}
           >
             <Plus style={{ width: 16, height: 16, marginRight: 6 }} />
             Добавить
@@ -272,18 +283,18 @@ export default function EmployeesPage() {
       <div className="p-5 space-y-4">
         {/* Stat Cards — только количественные метрики, без финансов */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
-          <StatCard icon={<Users size={18} color="#ffffff" />}     label="Всего сотрудников" value={String(stats.total)} sub={`${stats.archived} в архиве`} />
-          <StatCard icon={<UserCheck size={18} color="#ffffff" />} label="Активных"           value={String(stats.active)} />
+          <StatCard icon={<Users size={18} color="var(--on-brand)" />}     label="Всего сотрудников" value={String(stats.total)} sub={`${stats.archived} в архиве`} />
+          <StatCard icon={<UserCheck size={18} color="var(--on-brand)" />} label="Активных"           value={String(stats.active)} />
         </div>
 
         {/* Таблица */}
-        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#ffffff' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--surface)' }}>
           {/* Toolbar */}
-          <div className="flex flex-wrap items-center gap-3 p-4" style={{ borderBottom: '1px solid #ebebee' }}>
+          <div className="flex flex-wrap items-center gap-3 p-4" style={{ borderBottom: '1px solid var(--line-soft)' }}>
             <div className="relative flex-1" style={{ minWidth: 220 }}>
               <Search style={{
                 position: 'absolute', left: 12, top: '50%',
-                transform: 'translateY(-50%)', width: 15, height: 15, color: '#7d7174',
+                transform: 'translateY(-50%)', width: 15, height: 15, color: 'var(--ink-3)',
               }} />
               <Input
                 className="pl-9 bg-white border-gray-200 h-9 rounded-xl"
@@ -327,7 +338,7 @@ export default function EmployeesPage() {
               <Button
                 variant={showArchived ? 'default' : 'outline'}
                 className="h-9 rounded-xl gap-2"
-                style={showArchived ? { backgroundColor: '#e11d1d', color: '#fff' } : {}}
+                style={showArchived ? { backgroundColor: 'var(--brand)', color: 'var(--on-brand)' } : {}}
                 onClick={() => {
                   const next = !showArchived
                   setShowArchived(next)
@@ -340,7 +351,7 @@ export default function EmployeesPage() {
               </Button>
             )}
 
-            <div className="text-xs ml-auto" style={{ color: '#7d7174' }}>
+            <div className="text-xs ml-auto" style={{ color: 'var(--ink-3)' }}>
               {filtered.length} сотрудников
             </div>
           </div>
@@ -348,7 +359,7 @@ export default function EmployeesPage() {
           {/* Таблица */}
           <div style={{ overflowX: 'auto' }}>
             <table className="w-full" style={{ fontSize: 13 }}>
-              <thead style={{ backgroundColor: '#fdfbfb', borderBottom: '1px solid #ebebee' }}>
+              <thead style={{ backgroundColor: 'var(--paper-2)', borderBottom: '1px solid var(--line-soft)' }}>
                 <tr>
                   <ThCell label="Сотрудник"   col="name"     {...thProps} />
                   <ThCell label="Роль"        col="role"     {...thProps} />
@@ -360,10 +371,10 @@ export default function EmployeesPage() {
               <tbody>
                 {loadingCrud ? (
                   [...Array(5)].map((_, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid #fdfbfb' }}>
+                    <tr key={i} style={{ borderBottom: '1px solid var(--paper-2)' }}>
                       {[...Array(5)].map((__, j) => (
                         <td key={j} className="px-4 py-3">
-                          <div className="animate-pulse rounded" style={{ height: 14, backgroundColor: '#fdfbfb' }} />
+                          <div className="animate-pulse rounded" style={{ height: 14, backgroundColor: 'var(--paper-2)' }} />
                         </td>
                       ))}
                     </tr>
@@ -380,16 +391,16 @@ export default function EmployeesPage() {
                   </tr>
                 ) : (
                   paged.map(emp => {
-                    const roleColor  = ROLE_BADGE_COLORS[emp.role] ?? { bg: '#fdfbfb', color: '#3a3032' }
+                    const roleColor  = ROLE_BADGE_COLORS[emp.role] ?? { bg: 'var(--paper-2)', color: 'var(--ink-deep)' }
                     const statusInfo = STATUS_BADGE[emp.status] ?? STATUS_BADGE.active
                     const isArchived = Boolean(emp.deleted_at) || emp.status === 'archived'
 
                     return (
                       <tr
                         key={emp.id}
-                        style={{ borderBottom: '1px solid #fdfbfb', opacity: isArchived ? 0.55 : 1, cursor: 'pointer' }}
+                        style={{ borderBottom: '1px solid var(--paper-2)', opacity: isArchived ? 0.55 : 1, cursor: 'pointer' }}
                         onClick={() => router.push(`/dashboard/employees/${emp.id}`)}
-                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#fdfbfb')}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--paper-2)')}
                         onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
                       >
                         {/* Сотрудник */}
@@ -397,13 +408,13 @@ export default function EmployeesPage() {
                           <div className="flex items-center gap-2.5">
                             <div
                               className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0"
-                              style={{ backgroundColor: isArchived ? '#ece5e5' : '#faf8f7', color: isArchived ? '#a19698' : '#e11d1d', fontSize: 11 }}
+                              style={{ backgroundColor: isArchived ? 'var(--line)' : 'var(--paper)', color: isArchived ? 'var(--ink-4)' : 'var(--brand)', fontSize: 11 }}
                             >
                               {emp.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
                             </div>
                             <div>
-                              <div className="font-medium" style={{ color: '#1b1517' }}>{emp.name}</div>
-                              <div style={{ fontSize: 11, color: '#7d7174' }}>{emp.email}</div>
+                              <div className="font-medium" style={{ color: 'var(--ink)' }}>{emp.name}</div>
+                              <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{emp.email}</div>
                             </div>
                           </div>
                         </td>
@@ -423,7 +434,7 @@ export default function EmployeesPage() {
                         </td>
 
                         {/* Дата приёма */}
-                        <td className="px-4 py-3" style={{ color: '#6b7280' }}>
+                        <td className="px-4 py-3" style={{ color: 'var(--ink-muted)' }}>
                           {emp.hire_date
                             ? new Date(emp.hire_date).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short', year: 'numeric' })
                             : '—'}
@@ -436,7 +447,7 @@ export default function EmployeesPage() {
                               <Button
                                 variant="ghost" size="sm"
                                 className="h-7 rounded-lg gap-1 text-xs"
-                                style={{ color: '#15803d' }}
+                                style={{ color: 'var(--ok)' }}
                                 disabled={isPending}
                                 onClick={() => handleRestore(emp)}
                               >
@@ -447,7 +458,7 @@ export default function EmployeesPage() {
                                 <Button
                                   variant="ghost" size="sm"
                                   className="h-7 rounded-lg gap-1 text-xs"
-                                  style={{ color: '#6b7280' }}
+                                  style={{ color: 'var(--ink-muted)' }}
                                   disabled={isPending}
                                   onClick={e => { e.stopPropagation(); handleImpersonate(emp) }}
                                   title="Войти от имени сотрудника"
@@ -457,7 +468,7 @@ export default function EmployeesPage() {
                                 <Button
                                   variant="ghost" size="sm"
                                   className="h-7 rounded-lg gap-1 text-xs"
-                                  style={{ color: '#e11d1d' }}
+                                  style={{ color: 'var(--brand)' }}
                                   onClick={e => { e.stopPropagation(); handleEdit(emp) }}
                                 >
                                   Изменить
@@ -465,7 +476,7 @@ export default function EmployeesPage() {
                                 <Button
                                   variant="ghost" size="sm"
                                   className="h-7 rounded-lg gap-1 text-xs"
-                                  style={{ color: '#c01818' }}
+                                  style={{ color: 'var(--brand-ink)' }}
                                   disabled={isPending}
                                   onClick={() => handleArchive(emp)}
                                 >
@@ -485,8 +496,8 @@ export default function EmployeesPage() {
 
           {/* Пагинация */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3" style={{ borderTop: '1px solid #ebebee' }}>
-              <span style={{ fontSize: 13, color: '#7d7174' }}>
+            <div className="flex items-center justify-between px-4 py-3" style={{ borderTop: '1px solid var(--line-soft)' }}>
+              <span style={{ fontSize: 13, color: 'var(--ink-3)' }}>
                 {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} из {filtered.length}
               </span>
               <div className="flex gap-2">
@@ -497,6 +508,15 @@ export default function EmployeesPage() {
           )}
         </div>
       </div>
+
+      {dismissTarget && (
+        <DismissEmployeeModal
+          employeeName={dismissTarget.name}
+          isPending={isPending}
+          onConfirm={handleConfirmDismiss}
+          onClose={() => setDismissTarget(null)}
+        />
+      )}
 
       {/* Employee Modal (create/edit) */}
       {modalOpen && (

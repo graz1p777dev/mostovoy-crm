@@ -34,13 +34,13 @@ export default function MarketingPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fdfbfb' }}>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--paper-2)' }}>
       <MarketingHeader year={year} month={month} onPrev={prevMonth} onNext={nextMonth} />
 
       {!data ? (
         <div className="p-5 space-y-4">
           {[80, 220, 220, 400].map((h, i) => (
-            <div key={i} className="rounded-2xl animate-pulse" style={{ height: h, backgroundColor: '#faf8f7' }} />
+            <div key={i} className="rounded-2xl animate-pulse" style={{ height: h, backgroundColor: 'var(--paper)' }} />
           ))}
         </div>
       ) : (

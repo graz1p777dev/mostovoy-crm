@@ -189,6 +189,18 @@ export interface ShopBotStatus {
   enabled: boolean
   approvals: { total: number; pending: number; approved: number; rejected: number }
   errors24h: number
+  /** Витрина отдаёт настройки целиком — по ним видно, копится ли очередь. */
+  settings: ShopBotSettings
+}
+
+/** Строка разбивки расхода: одна задача пайплайна на одной модели. */
+export interface ShopAiUsageTask {
+  /** sales_agent | hypervisor_context | media_analysis | laboratory | aggressive_learning. */
+  task: string
+  model: string
+  calls: number
+  tokens: number
+  costUsd: number
 }
 
 export interface ShopAiUsage {
@@ -211,6 +223,122 @@ export interface ShopAiUsage {
     instagram: number
   }
   periods: Record<'today' | 'averageDay' | 'month' | 'year' | 'all', { tokens: number; costUsd: number }>
+  tasks: ShopAiUsageTask[]
+  /** Цены считаются только для DeepSeek; у остальных моделей копятся токены. */
+  pricing: { inputUsdPerMillion: number; outputUsdPerMillion: number }
+}
+
+// ─── Ответы бота на подтверждение ────────────────────────────────────────────
+// GET /crm/approvals?status=…, POST /crm/approvals/:id/approve|reject.
+// Черновик появляется только когда в настройках включено «Подтверждать ответы
+// перед отправкой» (crm.js: _autoReply → settings.approvalEnabled).
+
+export const SHOP_APPROVAL_FILTERS = ['pending', 'approved', 'rejected', 'all'] as const
+export type ShopApprovalFilter = (typeof SHOP_APPROVAL_FILTERS)[number]
+
+export type ShopApprovalStatus = 'pending' | 'approved' | 'rejected'
+
+export interface ShopApproval {
+  id: number
+  conversationId: number
+  customerName: string
+  /** telegram | whatsapp | instagram | amocrm. */
+  source: string
+  /** Последнее входящее клиента, на которое бот сочинил ответ. */
+  customerMessage: string
+  aiReply: string
+  /** Не null, только если менеджер правил текст перед отправкой. */
+  editedReply: string | null
+  rejectReason: string | null
+  /** Пересказ диалога от гипервизора — контекст для менеджера. */
+  summary: string | null
+  model: string | null
+  status: ShopApprovalStatus
+  createdAt: string
+  decidedAt: string | null
+}
+
+// ─── Журнал бота и лаборатория ───────────────────────────────────────────────
+// GET /crm/developer/events, POST /crm/developer/lab.
+
+export interface ShopBotEvent {
+  id: number
+  conversationId: number | null
+  /** info | warn | error. */
+  level: string
+  /** inbox | generation | hypervisor | approval | delivery | learning | laboratory | settings. */
+  stage: string
+  event: string
+  message: string | null
+  details: Record<string, unknown> | null
+  createdAt: string
+}
+
+/** Ответ песочницы: сообщение никуда не уходит, диалог не создаётся. */
+export interface ShopLabReply {
+  reply: string
+  model: string
+  latencyMs: number
+}
+
+// ─── Единый inbox витрины ────────────────────────────────────────────────────
+// GET /crm/conversations, GET|PATCH /crm/conversations/:id,
+// POST /crm/conversations/:id/messages, GET /crm/status.
+// Имена полей — ровно те, что отдаёт toConversation() в server/services/crm.js.
+
+/** Диалог в списке. lastMessage витрина добирает подзапросом к crm_messages. */
+export interface ShopInboxConversation {
+  id: number
+  /** Ключ идемпотентности; в CRM это deals.external_key. */
+  externalKey: string
+  /** telegram | whatsapp | instagram | amocrm. */
+  source: string
+  externalChatId: string
+  externalLeadId: string | null
+  /** Витрина уже подставила username или «Без имени» — пустым не бывает. */
+  customerName: string
+  customerUsername: string | null
+  customerPhone: string | null
+  aiEnabled: boolean
+  unreadCount: number
+  notes: string
+  /** open | closed. */
+  status: string
+  lastMessageAt: string
+  lastMessage: string
+}
+
+export interface ShopInboxMessage {
+  id: number
+  direction: 'incoming' | 'outgoing'
+  /** customer | assistant | manager. */
+  sender: string
+  text: string
+  status: string
+  createdAt: string
+}
+
+/** Ответ GET /crm/conversations/:id — он же приходит на PATCH и на отправку. */
+export interface ShopInboxDetail {
+  conversation: ShopInboxConversation
+  messages: ShopInboxMessage[]
+}
+
+/** GET /crm/status — состояние каналов для плашек над inbox. */
+export interface ShopCrmStatus {
+  telegram: boolean
+  amocrm: boolean
+  azisCrm: boolean
+  ai: boolean
+  amocrmWebhook: string
+  primaryWebhook: string
+}
+
+/** Что PATCH /crm/conversations/:id реально умеет менять (crm.js: updateConversation). */
+export interface ShopConversationPatch {
+  aiEnabled?: boolean
+  notes?: string
+  status?: 'open' | 'closed'
 }
 
 export interface ShopBotApproval {

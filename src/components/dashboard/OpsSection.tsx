@@ -431,6 +431,13 @@ export default async function OpsSection({
                           </div>
                         )
                       })}
+                      <Link
+                        href="/dashboard/shop-updates"
+                        className="mt-1 text-[11px] underline decoration-dotted underline-offset-2"
+                        style={{ color: 'var(--brand-ink)' }}
+                      >
+                        Все обновления
+                      </Link>
                     </div>
                   ) : (
                     <EmptyState
@@ -575,7 +582,7 @@ function PlanBar({
           className="h-full rounded-full"
           style={{
             width: `${pct}%`,
-            background: done ? '#04815a' : 'linear-gradient(90deg, #e11d1d, #ff5c68)',
+            background: done ? 'var(--ok-deep-2)' : 'linear-gradient(90deg, var(--brand), var(--accent-to))',
           }}
         />
       </div>

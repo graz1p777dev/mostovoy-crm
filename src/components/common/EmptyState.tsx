@@ -33,8 +33,8 @@ export default function EmptyState({
       className={`flex flex-col items-center justify-center text-center rounded-xl ${className}`}
       style={{
         padding: compact ? '18px 20px' : '30px 24px',
-        background: '#fdfbfb',
-        border: '1px dashed #ddd3d3',
+        background: 'var(--paper-2)',
+        border: '1px dashed var(--line-strong)',
       }}
     >
       {Icon && (
@@ -44,13 +44,13 @@ export default function EmptyState({
             width: compact ? 30 : 38,
             height: compact ? 30 : 38,
             borderRadius: 9,
-            background: '#ffffff',
-            border: '1px solid #ece5e5',
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
             marginBottom: compact ? 9 : 12,
           }}
           aria-hidden
         >
-          <Icon style={{ width: compact ? 14 : 17, height: compact ? 14 : 17, color: '#a19698' }} />
+          <Icon style={{ width: compact ? 14 : 17, height: compact ? 14 : 17, color: 'var(--ink-4)' }} />
           {/* Красная планка — тот же приём, что у .span-rule в шапках */}
           <span
             style={{
@@ -60,18 +60,18 @@ export default function EmptyState({
               bottom: 0,
               height: 2,
               borderRadius: '2px 2px 0 0',
-              background: 'linear-gradient(90deg, #e11d1d, #ff5c68)',
+              background: 'linear-gradient(90deg, var(--brand), var(--accent-to))',
             }}
           />
         </span>
       )}
 
-      <p style={{ fontSize: compact ? 12.5 : 13.5, fontWeight: 500, color: '#574d4f' }}>
+      <p style={{ fontSize: compact ? 12.5 : 13.5, fontWeight: 500, color: 'var(--ink-2)' }}>
         {title}
       </p>
 
       {hint && (
-        <p style={{ fontSize: 12, color: '#7d7174', marginTop: 3, maxWidth: 280, lineHeight: 1.45 }}>
+        <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 3, maxWidth: 280, lineHeight: 1.45 }}>
           {hint}
         </p>
       )}

@@ -42,7 +42,7 @@ export default async function LeftPanel({ year, month, employeeId, role, permiss
       <div>
         <p
           className="mb-3 font-medium"
-          style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          style={{ fontSize: 12, color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}
         >
           Ключевые показатели
         </p>
@@ -53,7 +53,7 @@ export default async function LeftPanel({ year, month, employeeId, role, permiss
       <div>
         <p
           className="mb-3 font-medium"
-          style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          style={{ fontSize: 12, color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}
         >
           Выручка по неделям · {monthName}
         </p>
@@ -65,7 +65,7 @@ export default async function LeftPanel({ year, month, employeeId, role, permiss
         <div>
           <p
             className="mb-3 font-medium"
-            style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+            style={{ fontSize: 12, color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}
           >
             План vs Факт · команда
           </p>
@@ -78,7 +78,7 @@ export default async function LeftPanel({ year, month, employeeId, role, permiss
         <div>
           <p
             className="mb-3 font-medium"
-            style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+            style={{ fontSize: 12, color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}
           >
             Личные показатели · {monthName}
           </p>

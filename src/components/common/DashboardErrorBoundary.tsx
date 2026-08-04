@@ -34,17 +34,17 @@ export default class DashboardErrorBoundary extends Component<Props, State> {
         <div
           className="flex flex-col items-center justify-center gap-3 rounded-xl p-6 m-4"
           style={{
-            backgroundColor: '#fff8f8',
-            border: '1px solid #fecaca',
+            backgroundColor: 'var(--brand-tint)',
+            border: '1px solid var(--bad-border-soft)',
             minHeight: 120,
           }}
         >
-          <AlertTriangle style={{ width: 20, height: 20, color: '#c01818' }} />
+          <AlertTriangle style={{ width: 20, height: 20, color: 'var(--brand-ink)' }} />
           <div className="text-center">
-            <p className="font-medium" style={{ fontSize: 13, color: '#1b1517' }}>
+            <p className="font-medium" style={{ fontSize: 13, color: 'var(--ink)' }}>
               {this.props.fallbackTitle ?? 'Ошибка блока'}
             </p>
-            <p style={{ fontSize: 12, color: '#7d7174', marginTop: 2 }}>
+            <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>
               {this.state.error?.message || 'Что-то пошло не так'}
             </p>
           </div>
@@ -52,10 +52,10 @@ export default class DashboardErrorBoundary extends Component<Props, State> {
             onClick={this.reset}
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5"
             style={{
-              backgroundColor: '#fef2f2',
-              border: '1px solid #fecaca',
+              backgroundColor: 'var(--bad-tint)',
+              border: '1px solid var(--bad-border-soft)',
               fontSize: 12,
-              color: '#c01818',
+              color: 'var(--brand-ink)',
               cursor: 'pointer',
             }}
           >

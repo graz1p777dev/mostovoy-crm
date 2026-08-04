@@ -69,9 +69,15 @@ export default function Sidebar({ mobileOpen = false, onClose, approvalEnabled =
 
   return (
     <>
-      {/* Резерв места под свёрнутую панель: сама панель fixed, поэтому раскрытие
-          идёт поверх контента и не сдвигает страницу */}
-      <div aria-hidden className="hidden md:block w-16 flex-shrink-0" />
+      {/* Панель fixed, поэтому отдельная колонка синхронно резервирует её ширину
+          и сдвигает страницу при раскрытии на десктопе. */}
+      <div
+        aria-hidden
+        className={cn(
+          'hidden flex-shrink-0 transition-[width] duration-200 ease-out md:block',
+          hovered ? 'w-48' : 'w-16',
+        )}
+      />
 
       <aside
         onMouseEnter={() => setHovered(true)}

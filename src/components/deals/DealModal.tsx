@@ -21,6 +21,7 @@ import {
   updateDeal,
   deleteDeal,
   clearDealConversation,
+  deleteDealConversation,
   getDealConversation,
   sendDealMessage,
   setDealAiControl,
@@ -165,6 +166,26 @@ export default function DealModal({
         setMessages([])
         setChatNote('История очищена')
         toast.success('История лида очищена')
+      } else {
+        toast.error(res.error)
+      }
+    })
+  }
+
+  const handleDeleteConversation = () => {
+    if (
+      !deal ||
+      !window.confirm(
+        'Полностью удалить диалог на витрине? Для бота следующее сообщение от этого клиента снова станет первым контактом (приветствие, новая сделка). Используйте только для тестовых аккаунтов.'
+      )
+    )
+      return
+    startTransition(async () => {
+      const res = await deleteDealConversation(deal.id)
+      if (res.success) {
+        setMessages([])
+        setChatNote('Диалог на витрине удалён')
+        toast.success('Диалог удалён — для бота это снова новый контакт')
       } else {
         toast.error(res.error)
       }
@@ -389,6 +410,20 @@ export default function DealModal({
                   >
                     <Eraser size={12} />
                     Очистить историю
+                  </button>
+                )}
+                {me.role === 'owner' && (
+                  <button
+                    onClick={handleDeleteConversation}
+                    disabled={isPending}
+                    title="Для тестовых аккаунтов: следующее сообщение снова станет первым контактом"
+                    className={cn(
+                      'inline-flex items-center gap-1 text-[11px] text-gray-400 transition-colors hover:text-[#c01818] disabled:opacity-50',
+                      messages && messages.length > 0 ? '' : 'ml-auto'
+                    )}
+                  >
+                    <Trash2 size={12} />
+                    Удалить диалог
                   </button>
                 )}
               </div>
